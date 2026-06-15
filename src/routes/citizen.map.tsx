@@ -11,7 +11,8 @@ import { useState, useEffect } from "react";
 import { Map } from "@/components/map/map";
 import { MapProvider, useMapController } from "@/components/map/map-provider";
 import { mapService } from "@/services/mapService";
-import { Incident, Shelter } from "@/lib/mock-data";
+import { incidentService } from "@/services/incidentService";
+import { Shelter } from "@/lib/mock-data";
 import { MapMarker } from "@/components/map/types";
 import { Coordinate, DEFAULT_CENTER, DEFAULT_ZOOM } from "@/lib/constants/map-defaults";
 
@@ -28,28 +29,40 @@ function MapViewWrapper() {
   );
 }
 
+const mapCategoryToKey = (category: string) => {
+  const c = category?.toLowerCase() || "";
+  if (c.includes("medical")) return "medical";
+  if (c.includes("flood")) return "flood";
+  if (c.includes("fire")) return "fire";
+  if (c.includes("cyclone")) return "cyclone";
+  if (c.includes("earthquake")) return "earthquake";
+  if (c.includes("landslide")) return "landslide";
+  return "medical"; // fallback
+};
+
 function MapView() {
   const [filter, setFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [incidents, setIncidents] = useState<Incident[]>([]);
+  const [incidents, setIncidents] = useState<any[]>([]);
   const [shelters, setShelters] = useState<Shelter[]>([]);
   const [isLocating, setIsLocating] = useState<boolean>(false);
   const controller = useMapController();
 
   useEffect(() => {
-    // Retrieve coordinates from map service
-    mapService.getIncidents().then(setIncidents);
+    // Retrieve incidents from real MongoDB incidentService
+    incidentService.getIncidents().then(setIncidents).catch(err => console.error(err));
+    // Shelters remain mock data in this phase
     mapService.getShelters().then(setShelters);
   }, []);
 
   // Build uniform MapMarker items
   const incidentMarkers: MapMarker[] = incidents.map((inc) => ({
-    id: inc.id,
+    id: inc._id,
     position: inc.coordinates,
     type: "incident",
     title: inc.title,
-    subtitle: `${inc.caseId} · ${inc.location}`,
-    severity: inc.severity,
+    subtitle: `${inc.incidentNumber} · ${inc.address || `${inc.district}, ${inc.state}`}`,
+    severity: inc.severity.toLowerCase() as any,
     status: inc.status,
   }));
 
@@ -80,7 +93,6 @@ function MapView() {
         },
         (error) => {
           console.error("Error retrieving geolocation", error);
-          // Fallback to central default
           const fallback: Coordinate = DEFAULT_CENTER;
           controller.setUserLocation(fallback);
           controller.panTo(fallback, 13);
@@ -95,30 +107,33 @@ function MapView() {
 
   // Filter & Search Logic
   const filteredMarkers = allMarkers.filter((marker) => {
-    // 1. Search Query filter
     const matchesSearch =
       marker.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (marker.subtitle && marker.subtitle.toLowerCase().includes(searchQuery.toLowerCase()));
 
     if (!matchesSearch) return false;
 
-    // 2. Tab Filter
     if (filter === "all") return true;
     if (filter === "shelter") return marker.type === "shelter";
 
-    // If filter is incident type, cross reference original incident
     if (marker.type === "incident") {
-      const originalIncident = incidents.find((i) => i.id === marker.id);
-      return originalIncident?.type === filter;
+      const originalIncident = incidents.find((i) => i._id === marker.id);
+      if (!originalIncident) return false;
+      const key = mapCategoryToKey(originalIncident.category);
+      return key === filter;
     }
 
     return false;
   });
 
-  // Highlight list elements in UI
   const visibleIncidentsList = incidents.filter((i) => {
-    const matchesSearch = i.title.toLowerCase().includes(searchQuery.toLowerCase()) || i.location.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter = filter === "all" || filter === i.type;
+    const matchesSearch =
+      i.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (i.address && i.address.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      i.incidentNumber.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const key = mapCategoryToKey(i.category);
+    const matchesFilter = filter === "all" || filter === key;
     return matchesSearch && matchesFilter;
   });
 
@@ -197,21 +212,22 @@ function MapView() {
                   <SectionTitle title="Nearby incidents" />
                   <ul className="space-y-1.5 max-h-[160px] overflow-y-auto pr-1">
                     {visibleIncidentsList.slice(0, 10).map((i) => {
-                      const Icon = typeIcon[i.type] || ShieldAlert;
+                      const key = mapCategoryToKey(i.category);
+                      const Icon = typeIcon[key] || ShieldAlert;
                       return (
                         <li
-                          key={i.id}
+                          key={i._id}
                           onClick={() => controller.panTo(i.coordinates, 14)}
                           className="flex items-center gap-3 rounded-xl border p-2 cursor-pointer transition hover:bg-accent/40"
                         >
-                          <div className={cn("h-8 w-8 rounded-lg grid place-items-center shrink-0", typeColor[i.type])}>
+                          <div className={cn("h-8 w-8 rounded-lg grid place-items-center shrink-0", typeColor[key] || "bg-primary/10 text-primary")}>
                             <Icon className="h-4 w-4" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="text-xs font-semibold truncate">{i.title}</div>
                             <div className="text-[10px] text-muted-foreground truncate">
                               <MapPin className="h-3 w-3 inline mr-0.5" />
-                              {i.location}
+                              {i.address || `${i.district}, ${i.state}`}
                             </div>
                           </div>
                           <SeverityBadge severity={i.severity} />

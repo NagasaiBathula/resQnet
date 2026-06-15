@@ -16,18 +16,32 @@ export const typeColor: Record<EmergencyType, string> = {
   landslide: "text-warning bg-warning/10", medical: "text-emergency bg-emergency/10",
 };
 
-export function SeverityBadge({ severity }: { severity: Severity }) {
-  const map = {
+export const mapCategoryToKey = (category: string): EmergencyType => {
+  const c = category?.toLowerCase() || "";
+  if (c.includes("medical")) return "medical";
+  if (c.includes("flood")) return "flood";
+  if (c.includes("fire")) return "fire";
+  if (c.includes("cyclone")) return "cyclone";
+  if (c.includes("earthquake")) return "earthquake";
+  if (c.includes("landslide")) return "landslide";
+  return "medical"; // fallback
+};
+
+export function SeverityBadge({ severity }: { severity: string }) {
+  const normalized = (severity || "").toLowerCase();
+  const map: Record<string, string> = {
     low: "bg-success/10 text-success border-success/20",
     medium: "bg-info/10 text-info border-info/20",
     high: "bg-warning/10 text-warning border-warning/20",
     critical: "bg-emergency/10 text-emergency border-emergency/20",
   };
-  return <Badge variant="outline" className={cn("capitalize font-medium", map[severity])}>{severity}</Badge>;
+  const style = map[normalized] || "bg-muted text-muted-foreground border-muted/20";
+  return <Badge variant="outline" className={cn("capitalize font-medium", style)}>{severity}</Badge>;
 }
 
-export function StatusBadge({ status }: { status: IncidentStatus }) {
-  const map: Record<IncidentStatus, string> = {
+export function StatusBadge({ status }: { status: string }) {
+  const map: Record<string, string> = {
+    // mock statuses
     reported: "bg-muted text-foreground",
     triaged: "bg-info/10 text-info",
     dispatched: "bg-primary/10 text-primary",
@@ -35,8 +49,16 @@ export function StatusBadge({ status }: { status: IncidentStatus }) {
     "on-site": "bg-warning/10 text-warning",
     resolved: "bg-success/10 text-success",
     escalated: "bg-emergency/10 text-emergency",
+    
+    // new centralized statuses
+    Reported: "bg-info/10 text-info",
+    Verified: "bg-primary/10 text-primary",
+    Assigned: "bg-warning/10 text-warning",
+    "In Progress": "bg-warning/10 text-warning",
+    Resolved: "bg-success/10 text-success",
   };
-  return <Badge className={cn("capitalize font-medium border-0", map[status])}>{status.replace("-", " ")}</Badge>;
+  const tone = map[status] || "bg-muted text-foreground";
+  return <Badge className={cn("capitalize font-medium border-0", tone)}>{status.replace("-", " ")}</Badge>;
 }
 
 export function StatCard({

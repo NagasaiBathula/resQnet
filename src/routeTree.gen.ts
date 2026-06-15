@@ -27,6 +27,7 @@ import { Route as VolunteerResourcesRouteImport } from './routes/volunteer.resou
 import { Route as VolunteerProfileRouteImport } from './routes/volunteer.profile'
 import { Route as VolunteerNotificationsRouteImport } from './routes/volunteer.notifications'
 import { Route as VolunteerMissionsRouteImport } from './routes/volunteer.missions'
+import { Route as VolunteerIncidentsRouteImport } from './routes/volunteer.incidents'
 import { Route as VolunteerActiveRouteImport } from './routes/volunteer.active'
 import { Route as VolunteerAchievementsRouteImport } from './routes/volunteer.achievements'
 import { Route as RescueVehiclesRouteImport } from './routes/rescue.vehicles'
@@ -43,6 +44,7 @@ import { Route as CitizenProfileRouteImport } from './routes/citizen.profile'
 import { Route as CitizenNotificationsRouteImport } from './routes/citizen.notifications'
 import { Route as CitizenMedicalRouteImport } from './routes/citizen.medical'
 import { Route as CitizenMapRouteImport } from './routes/citizen.map'
+import { Route as CitizenIncidentsRouteImport } from './routes/citizen.incidents'
 import { Route as CitizenHistoryRouteImport } from './routes/citizen.history'
 import { Route as CitizenAssistantRouteImport } from './routes/citizen.assistant'
 import { Route as AuthorityVolunteersRouteImport } from './routes/authority.volunteers'
@@ -52,6 +54,7 @@ import { Route as AuthorityResourcesRouteImport } from './routes/authority.resou
 import { Route as AuthorityRequestsRouteImport } from './routes/authority.requests'
 import { Route as AuthorityProfileRouteImport } from './routes/authority.profile'
 import { Route as AuthorityMonitoringRouteImport } from './routes/authority.monitoring'
+import { Route as AuthorityIncidentsRouteImport } from './routes/authority.incidents'
 import { Route as AuthorityAnalyticsRouteImport } from './routes/authority.analytics'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
@@ -149,6 +152,11 @@ const VolunteerMissionsRoute = VolunteerMissionsRouteImport.update({
   path: '/missions',
   getParentRoute: () => VolunteerRoute,
 } as any)
+const VolunteerIncidentsRoute = VolunteerIncidentsRouteImport.update({
+  id: '/incidents',
+  path: '/incidents',
+  getParentRoute: () => VolunteerRoute,
+} as any)
 const VolunteerActiveRoute = VolunteerActiveRouteImport.update({
   id: '/active',
   path: '/active',
@@ -229,6 +237,11 @@ const CitizenMapRoute = CitizenMapRouteImport.update({
   path: '/map',
   getParentRoute: () => CitizenRoute,
 } as any)
+const CitizenIncidentsRoute = CitizenIncidentsRouteImport.update({
+  id: '/incidents',
+  path: '/incidents',
+  getParentRoute: () => CitizenRoute,
+} as any)
 const CitizenHistoryRoute = CitizenHistoryRouteImport.update({
   id: '/history',
   path: '/history',
@@ -272,6 +285,11 @@ const AuthorityProfileRoute = AuthorityProfileRouteImport.update({
 const AuthorityMonitoringRoute = AuthorityMonitoringRouteImport.update({
   id: '/monitoring',
   path: '/monitoring',
+  getParentRoute: () => AuthorityRoute,
+} as any)
+const AuthorityIncidentsRoute = AuthorityIncidentsRouteImport.update({
+  id: '/incidents',
+  path: '/incidents',
   getParentRoute: () => AuthorityRoute,
 } as any)
 const AuthorityAnalyticsRoute = AuthorityAnalyticsRouteImport.update({
@@ -319,6 +337,7 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/authority/analytics': typeof AuthorityAnalyticsRoute
+  '/authority/incidents': typeof AuthorityIncidentsRoute
   '/authority/monitoring': typeof AuthorityMonitoringRoute
   '/authority/profile': typeof AuthorityProfileRoute
   '/authority/requests': typeof AuthorityRequestsRoute
@@ -328,6 +347,7 @@ export interface FileRoutesByFullPath {
   '/authority/volunteers': typeof AuthorityVolunteersRoute
   '/citizen/assistant': typeof CitizenAssistantRoute
   '/citizen/history': typeof CitizenHistoryRoute
+  '/citizen/incidents': typeof CitizenIncidentsRoute
   '/citizen/map': typeof CitizenMapRoute
   '/citizen/medical': typeof CitizenMedicalRoute
   '/citizen/notifications': typeof CitizenNotificationsRoute
@@ -344,6 +364,7 @@ export interface FileRoutesByFullPath {
   '/rescue/vehicles': typeof RescueVehiclesRoute
   '/volunteer/achievements': typeof VolunteerAchievementsRoute
   '/volunteer/active': typeof VolunteerActiveRoute
+  '/volunteer/incidents': typeof VolunteerIncidentsRoute
   '/volunteer/missions': typeof VolunteerMissionsRoute
   '/volunteer/notifications': typeof VolunteerNotificationsRoute
   '/volunteer/profile': typeof VolunteerProfileRoute
@@ -365,6 +386,7 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/authority/analytics': typeof AuthorityAnalyticsRoute
+  '/authority/incidents': typeof AuthorityIncidentsRoute
   '/authority/monitoring': typeof AuthorityMonitoringRoute
   '/authority/profile': typeof AuthorityProfileRoute
   '/authority/requests': typeof AuthorityRequestsRoute
@@ -374,6 +396,7 @@ export interface FileRoutesByTo {
   '/authority/volunteers': typeof AuthorityVolunteersRoute
   '/citizen/assistant': typeof CitizenAssistantRoute
   '/citizen/history': typeof CitizenHistoryRoute
+  '/citizen/incidents': typeof CitizenIncidentsRoute
   '/citizen/map': typeof CitizenMapRoute
   '/citizen/medical': typeof CitizenMedicalRoute
   '/citizen/notifications': typeof CitizenNotificationsRoute
@@ -390,6 +413,7 @@ export interface FileRoutesByTo {
   '/rescue/vehicles': typeof RescueVehiclesRoute
   '/volunteer/achievements': typeof VolunteerAchievementsRoute
   '/volunteer/active': typeof VolunteerActiveRoute
+  '/volunteer/incidents': typeof VolunteerIncidentsRoute
   '/volunteer/missions': typeof VolunteerMissionsRoute
   '/volunteer/notifications': typeof VolunteerNotificationsRoute
   '/volunteer/profile': typeof VolunteerProfileRoute
@@ -417,6 +441,7 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/authority/analytics': typeof AuthorityAnalyticsRoute
+  '/authority/incidents': typeof AuthorityIncidentsRoute
   '/authority/monitoring': typeof AuthorityMonitoringRoute
   '/authority/profile': typeof AuthorityProfileRoute
   '/authority/requests': typeof AuthorityRequestsRoute
@@ -426,6 +451,7 @@ export interface FileRoutesById {
   '/authority/volunteers': typeof AuthorityVolunteersRoute
   '/citizen/assistant': typeof CitizenAssistantRoute
   '/citizen/history': typeof CitizenHistoryRoute
+  '/citizen/incidents': typeof CitizenIncidentsRoute
   '/citizen/map': typeof CitizenMapRoute
   '/citizen/medical': typeof CitizenMedicalRoute
   '/citizen/notifications': typeof CitizenNotificationsRoute
@@ -442,6 +468,7 @@ export interface FileRoutesById {
   '/rescue/vehicles': typeof RescueVehiclesRoute
   '/volunteer/achievements': typeof VolunteerAchievementsRoute
   '/volunteer/active': typeof VolunteerActiveRoute
+  '/volunteer/incidents': typeof VolunteerIncidentsRoute
   '/volunteer/missions': typeof VolunteerMissionsRoute
   '/volunteer/notifications': typeof VolunteerNotificationsRoute
   '/volunteer/profile': typeof VolunteerProfileRoute
@@ -470,6 +497,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/users'
     | '/authority/analytics'
+    | '/authority/incidents'
     | '/authority/monitoring'
     | '/authority/profile'
     | '/authority/requests'
@@ -479,6 +507,7 @@ export interface FileRouteTypes {
     | '/authority/volunteers'
     | '/citizen/assistant'
     | '/citizen/history'
+    | '/citizen/incidents'
     | '/citizen/map'
     | '/citizen/medical'
     | '/citizen/notifications'
@@ -495,6 +524,7 @@ export interface FileRouteTypes {
     | '/rescue/vehicles'
     | '/volunteer/achievements'
     | '/volunteer/active'
+    | '/volunteer/incidents'
     | '/volunteer/missions'
     | '/volunteer/notifications'
     | '/volunteer/profile'
@@ -516,6 +546,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/users'
     | '/authority/analytics'
+    | '/authority/incidents'
     | '/authority/monitoring'
     | '/authority/profile'
     | '/authority/requests'
@@ -525,6 +556,7 @@ export interface FileRouteTypes {
     | '/authority/volunteers'
     | '/citizen/assistant'
     | '/citizen/history'
+    | '/citizen/incidents'
     | '/citizen/map'
     | '/citizen/medical'
     | '/citizen/notifications'
@@ -541,6 +573,7 @@ export interface FileRouteTypes {
     | '/rescue/vehicles'
     | '/volunteer/achievements'
     | '/volunteer/active'
+    | '/volunteer/incidents'
     | '/volunteer/missions'
     | '/volunteer/notifications'
     | '/volunteer/profile'
@@ -567,6 +600,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/users'
     | '/authority/analytics'
+    | '/authority/incidents'
     | '/authority/monitoring'
     | '/authority/profile'
     | '/authority/requests'
@@ -576,6 +610,7 @@ export interface FileRouteTypes {
     | '/authority/volunteers'
     | '/citizen/assistant'
     | '/citizen/history'
+    | '/citizen/incidents'
     | '/citizen/map'
     | '/citizen/medical'
     | '/citizen/notifications'
@@ -592,6 +627,7 @@ export interface FileRouteTypes {
     | '/rescue/vehicles'
     | '/volunteer/achievements'
     | '/volunteer/active'
+    | '/volunteer/incidents'
     | '/volunteer/missions'
     | '/volunteer/notifications'
     | '/volunteer/profile'
@@ -744,6 +780,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VolunteerMissionsRouteImport
       parentRoute: typeof VolunteerRoute
     }
+    '/volunteer/incidents': {
+      id: '/volunteer/incidents'
+      path: '/incidents'
+      fullPath: '/volunteer/incidents'
+      preLoaderRoute: typeof VolunteerIncidentsRouteImport
+      parentRoute: typeof VolunteerRoute
+    }
     '/volunteer/active': {
       id: '/volunteer/active'
       path: '/active'
@@ -856,6 +899,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CitizenMapRouteImport
       parentRoute: typeof CitizenRoute
     }
+    '/citizen/incidents': {
+      id: '/citizen/incidents'
+      path: '/incidents'
+      fullPath: '/citizen/incidents'
+      preLoaderRoute: typeof CitizenIncidentsRouteImport
+      parentRoute: typeof CitizenRoute
+    }
     '/citizen/history': {
       id: '/citizen/history'
       path: '/history'
@@ -917,6 +967,13 @@ declare module '@tanstack/react-router' {
       path: '/monitoring'
       fullPath: '/authority/monitoring'
       preLoaderRoute: typeof AuthorityMonitoringRouteImport
+      parentRoute: typeof AuthorityRoute
+    }
+    '/authority/incidents': {
+      id: '/authority/incidents'
+      path: '/incidents'
+      fullPath: '/authority/incidents'
+      preLoaderRoute: typeof AuthorityIncidentsRouteImport
       parentRoute: typeof AuthorityRoute
     }
     '/authority/analytics': {
@@ -984,6 +1041,7 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface AuthorityRouteChildren {
   AuthorityAnalyticsRoute: typeof AuthorityAnalyticsRoute
+  AuthorityIncidentsRoute: typeof AuthorityIncidentsRoute
   AuthorityMonitoringRoute: typeof AuthorityMonitoringRoute
   AuthorityProfileRoute: typeof AuthorityProfileRoute
   AuthorityRequestsRoute: typeof AuthorityRequestsRoute
@@ -996,6 +1054,7 @@ interface AuthorityRouteChildren {
 
 const AuthorityRouteChildren: AuthorityRouteChildren = {
   AuthorityAnalyticsRoute: AuthorityAnalyticsRoute,
+  AuthorityIncidentsRoute: AuthorityIncidentsRoute,
   AuthorityMonitoringRoute: AuthorityMonitoringRoute,
   AuthorityProfileRoute: AuthorityProfileRoute,
   AuthorityRequestsRoute: AuthorityRequestsRoute,
@@ -1013,6 +1072,7 @@ const AuthorityRouteWithChildren = AuthorityRoute._addFileChildren(
 interface CitizenRouteChildren {
   CitizenAssistantRoute: typeof CitizenAssistantRoute
   CitizenHistoryRoute: typeof CitizenHistoryRoute
+  CitizenIncidentsRoute: typeof CitizenIncidentsRoute
   CitizenMapRoute: typeof CitizenMapRoute
   CitizenMedicalRoute: typeof CitizenMedicalRoute
   CitizenNotificationsRoute: typeof CitizenNotificationsRoute
@@ -1026,6 +1086,7 @@ interface CitizenRouteChildren {
 const CitizenRouteChildren: CitizenRouteChildren = {
   CitizenAssistantRoute: CitizenAssistantRoute,
   CitizenHistoryRoute: CitizenHistoryRoute,
+  CitizenIncidentsRoute: CitizenIncidentsRoute,
   CitizenMapRoute: CitizenMapRoute,
   CitizenMedicalRoute: CitizenMedicalRoute,
   CitizenNotificationsRoute: CitizenNotificationsRoute,
@@ -1079,6 +1140,7 @@ const RescueRouteWithChildren =
 interface VolunteerRouteChildren {
   VolunteerAchievementsRoute: typeof VolunteerAchievementsRoute
   VolunteerActiveRoute: typeof VolunteerActiveRoute
+  VolunteerIncidentsRoute: typeof VolunteerIncidentsRoute
   VolunteerMissionsRoute: typeof VolunteerMissionsRoute
   VolunteerNotificationsRoute: typeof VolunteerNotificationsRoute
   VolunteerProfileRoute: typeof VolunteerProfileRoute
@@ -1090,6 +1152,7 @@ interface VolunteerRouteChildren {
 const VolunteerRouteChildren: VolunteerRouteChildren = {
   VolunteerAchievementsRoute: VolunteerAchievementsRoute,
   VolunteerActiveRoute: VolunteerActiveRoute,
+  VolunteerIncidentsRoute: VolunteerIncidentsRoute,
   VolunteerMissionsRoute: VolunteerMissionsRoute,
   VolunteerNotificationsRoute: VolunteerNotificationsRoute,
   VolunteerProfileRoute: VolunteerProfileRoute,

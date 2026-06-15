@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
+import incidentRoutes from "./routes/incidents.js";
 import User from "./models/User.js";
 import bcrypt from "bcryptjs";
 
@@ -134,6 +135,7 @@ connectDB().then(async () => {
 // Register routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/incidents", incidentRoutes);
 
 // Health Check API
 app.get("/api/health", (req, res) => {

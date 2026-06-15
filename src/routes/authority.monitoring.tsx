@@ -3,6 +3,7 @@ import { FeaturePage, PillBadge } from "@/components/feature-page";
 import { Activity, AlertTriangle, Radio, Eye, Globe2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { mapService } from "@/services/mapService";
+import { incidentService } from "@/services/incidentService";
 import { Incident, Shelter } from "@/lib/mock-data";
 import { Map } from "@/components/map/map";
 import { MapProvider } from "@/components/map/map-provider";
@@ -24,24 +25,39 @@ function AuthorityMonitoringWrapper() {
   );
 }
 
+const mapCategoryToKey = (category: string) => {
+  const c = category?.toLowerCase() || "";
+  if (c.includes("medical")) return "medical";
+  if (c.includes("flood")) return "flood";
+  if (c.includes("fire")) return "fire";
+  if (c.includes("cyclone")) return "cyclone";
+  if (c.includes("earthquake")) return "earthquake";
+  if (c.includes("landslide")) return "landslide";
+  return "medical"; // fallback
+};
+
 function AuthorityMonitoring() {
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
-  const [incidents, setIncidents] = useState<Incident[]>([]);
+  const [incidents, setIncidents] = useState<any[]>([]);
   const [shelters, setShelters] = useState<Shelter[]>([]);
 
-  useEffect(() => {
-    mapService.getIncidents().then(setIncidents);
+  const loadData = () => {
+    incidentService.getIncidents().then(setIncidents).catch(err => console.error(err));
     mapService.getShelters().then(setShelters);
+  };
+
+  useEffect(() => {
+    loadData();
   }, []);
 
   // Build uniform MapMarkers for Leaflet Map
   const incidentMarkers: MapMarker[] = incidents.map((i) => ({
-    id: i.id,
+    id: i._id,
     position: i.coordinates,
     type: "incident",
     title: i.title,
-    subtitle: `${i.caseId} · ${i.location}`,
-    severity: i.severity,
+    subtitle: `${i.incidentNumber} · ${i.address || `${i.district}, ${i.state}`}`,
+    severity: i.severity.toLowerCase() as any,
     status: i.status,
   }));
 
@@ -57,26 +73,27 @@ function AuthorityMonitoring() {
   const markers = [...incidentMarkers, ...shelterMarkers];
 
   const columns = [
-    { key: "caseId", label: "Case", render: (r: Incident) => <span className="font-mono text-xs">{r.caseId}</span> },
+    { key: "incidentNumber", label: "Case", render: (r: any) => <span className="font-mono text-xs font-bold">{r.incidentNumber}</span> },
     {
-      key: "type",
+      key: "category",
       label: "Type",
-      render: (r: Incident) => {
-        const Icon = typeIcon[r.type] || AlertTriangle;
+      render: (r: any) => {
+        const Icon = typeIcon[mapCategoryToKey(r.category)] || AlertTriangle;
+        const key = mapCategoryToKey(r.category);
         return (
           <span className="inline-flex items-center gap-2">
-            <span className={cn("h-7 w-7 rounded-lg grid place-items-center shrink-0", typeColor[r.type])}>
+            <span className={cn("h-7 w-7 rounded-lg grid place-items-center shrink-0", typeColor[key] || "bg-primary/10 text-primary")}>
               <Icon className="h-3.5 w-3.5" />
             </span>
-            <span className="capitalize text-sm">{r.type}</span>
+            <span className="capitalize text-sm">{r.category}</span>
           </span>
         );
       },
     },
-    { key: "city", label: "Region" },
-    { key: "affectedPeople", label: "Affected", render: (r: Incident) => <span className="text-sm">{r.affectedPeople}</span> },
-    { key: "severity", label: "Severity", render: (r: Incident) => <SeverityBadge severity={r.severity} /> },
-    { key: "status", label: "Status", render: (r: Incident) => <StatusBadge status={r.status} /> },
+    { key: "district", label: "Region", render: (r: any) => <span className="text-sm">{r.district}, {r.state}</span> },
+    { key: "affectedPeople", label: "Description", render: (r: any) => <span className="text-xs truncate max-w-xs block">{r.description}</span> },
+    { key: "severity", label: "Severity", render: (r: any) => <SeverityBadge severity={r.severity} /> },
+    { key: "status", label: "Status", render: (r: any) => <StatusBadge status={r.status} /> },
   ];
 
   return (
@@ -84,7 +101,7 @@ function AuthorityMonitoring() {
       title="Live monitoring"
       subtitle="National incident stream, sensor feeds, and broadcast controls."
       stats={[
-        { label: "Live incidents", value: incidents.length.toString(), sublabel: `${incidents.filter((i) => i.severity === "critical").length} critical`, icon: AlertTriangle, accent: "emergency" },
+        { label: "Live incidents", value: incidents.length.toString(), sublabel: `${incidents.filter((i) => i.severity.toLowerCase() === "critical").length} critical`, icon: AlertTriangle, accent: "emergency" },
         { label: "Sensor feeds", value: "1,284", sublabel: "98% online", icon: Activity, accent: "success" },
         { label: "Broadcasts today", value: "9", sublabel: "3 active", icon: Radio, accent: "warning" },
         { label: "Eyes on map", value: "182", sublabel: "all roles", icon: Eye, accent: "info" },

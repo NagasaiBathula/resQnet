@@ -10,6 +10,8 @@ import { Activity, Award, Users, Target, MapPin, Clock, ArrowRight, TrendingUp, 
 import { motion } from "framer-motion";
 import { LineChart, Line, ResponsiveContainer, Tooltip, CartesianGrid, XAxis, YAxis } from "recharts";
 import { cn } from "@/lib/utils";
+import { useState, useEffect } from "react";
+import { incidentService } from "@/services/incidentService";
 
 export const Route = createFileRoute("/volunteer/")({
   head: () => ({ meta: [{ title: "Volunteer Dashboard — ResQNet" }] }),
@@ -17,13 +19,25 @@ export const Route = createFileRoute("/volunteer/")({
 });
 
 function VolunteerDashboard() {
+  const [assignedMissions, setAssignedMissions] = useState<any[]>([]);
+  
+  useEffect(() => {
+    incidentService.getMyIncidents()
+      .then(setAssignedMissions)
+      .catch(err => console.error("Error loading volunteer incidents:", err));
+  }, []);
+
   const available = missions.filter(m => m.status === "available").slice(0, 4);
+  const activeCount = assignedMissions.filter(i => i.status !== "Resolved").length;
+
   return (
-    <AppShell title="Mission control" actions={<Button asChild className="rounded-full shadow-glow"><Link to="/volunteer/missions">Browse missions <ArrowRight className="h-4 w-4 ml-1.5" /></Link></Button>}>
+    <AppShell title="Mission control" actions={<Button asChild className="rounded-full shadow-glow"><Link to="/volunteer/incidents">My Active Missions <ArrowRight className="h-4 w-4 ml-1.5" /></Link></Button>}>
       <p className="text-muted-foreground -mt-1 mb-6">You've helped <span className="text-foreground font-medium">142 citizens</span> this quarter. Keep going.</p>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatCard label="Active missions" value="2" sublabel="1 in progress" icon={Activity} accent="primary" delay={0} />
+        <Link to="/volunteer/incidents" className="contents">
+          <StatCard label="Active missions" value={activeCount.toString()} sublabel={`${assignedMissions.filter(i => i.status === "In Progress").length} in progress`} icon={Activity} accent="primary" delay={0} />
+        </Link>
         <StatCard label="Completed" value="38" sublabel="this year" icon={Target} accent="success" delay={0.05} />
         <StatCard label="Citizens assisted" value="142" sublabel="+12 this week" icon={Heart} accent="info" delay={0.1} />
         <StatCard label="Impact score" value="9,420" sublabel="Top 4% nationwide" icon={Award} accent="warning" delay={0.15} />

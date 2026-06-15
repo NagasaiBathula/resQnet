@@ -135,7 +135,7 @@ function AppSidebar() {
   return (
     <Sidebar collapsible="icon" className="border-r">
       <SidebarHeader className="border-b">
-        <div className="flex items-center gap-2.5 px-1.5 py-1">
+        <Link to="/" className="flex items-center gap-2.5 px-1.5 py-1 hover:opacity-85 transition cursor-pointer">
           <Logo size={36} className="shrink-0 shadow-glow" />
           {!collapsed && (
             <div className="min-w-0">
@@ -143,7 +143,7 @@ function AppSidebar() {
               <p className="truncate text-[10px] text-muted-foreground uppercase tracking-wider">{ROLE_LABEL[user.role]} workspace</p>
             </div>
           )}
-        </div>
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         {sections.map(sec => (

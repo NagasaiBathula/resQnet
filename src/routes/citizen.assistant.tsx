@@ -7,8 +7,9 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { aiSuggestedPrompts, generateAIResponse } from "@/lib/mock-data";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Send, ShieldAlert } from "lucide-react";
+import { Sparkles, Send, ShieldAlert, Mic, MicOff } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/citizen/assistant")({
   head: () => ({ meta: [{ title: "AI Disaster Assistant — ResQNet" }] }),
@@ -23,13 +24,85 @@ function AssistantPage() {
   ]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  
   const scrollRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, typing]);
 
+  // Speech Recognition Setup
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    
+    const SpeechRecognition =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      
+    if (SpeechRecognition) {
+      const rec = new SpeechRecognition();
+      rec.continuous = true;
+      rec.interimResults = true;
+      rec.lang = "en-IN"; // Set to Indian English for general locale match
+
+      rec.onresult = (event: any) => {
+        let transcript = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        if (transcript.trim()) {
+          setInput(transcript);
+        }
+      };
+
+      rec.onerror = (event: any) => {
+        console.error("Speech recognition error:", event.error);
+        if (event.error === "not-allowed") {
+          toast.error("Microphone permission denied.");
+        } else {
+          toast.error(`Voice error: ${event.error}`);
+        }
+        setIsRecording(false);
+      };
+
+      rec.onend = () => {
+        setIsRecording(false);
+      };
+
+      recognitionRef.current = rec;
+    }
+  }, []);
+
+  const toggleRecording = () => {
+    if (!recognitionRef.current) {
+      toast.error("Speech recognition is not supported in this browser. Try Chrome, Edge, or Safari.");
+      return;
+    }
+
+    if (isRecording) {
+      recognitionRef.current.stop();
+      setIsRecording(false);
+      toast.success("Voice recording stopped.");
+    } else {
+      try {
+        recognitionRef.current.start();
+        setIsRecording(true);
+        toast.info("Listening... Speak now.");
+      } catch (err: any) {
+        console.error("Start speech recognition fail:", err);
+        toast.error("Could not start microphone session.");
+      }
+    }
+  };
+
   const send = (text?: string) => {
+    // If voice recognition is active, stop it
+    if (isRecording && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsRecording(false);
+    }
+
     const q = (text ?? input).trim();
     if (!q) return;
     setInput("");
@@ -101,7 +174,24 @@ function AssistantPage() {
           )}
 
           <form onSubmit={e => { e.preventDefault(); send(); }} className="border-t p-3 flex gap-2 glass">
-            <Input value={input} onChange={e => setInput(e.target.value)} placeholder="Message ResQNet…" className="bg-card/60 border-0 h-11 rounded-full px-5" />
+            <Input 
+              value={input} 
+              onChange={e => setInput(e.target.value)} 
+              placeholder={isRecording ? "Listening... Speak now" : "Message ResQNet…"} 
+              className="bg-card/60 border-0 h-11 rounded-full px-5" 
+            />
+            <Button
+              type="button"
+              size="icon"
+              variant="outline"
+              onClick={toggleRecording}
+              className={cn(
+                "h-11 w-11 rounded-full shrink-0 border border-border/40 transition-all",
+                isRecording && "bg-emergency/15 text-emergency hover:bg-emergency/25 border-emergency/30 animate-pulse"
+              )}
+            >
+              {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+            </Button>
             <Button type="submit" size="icon" className="h-11 w-11 rounded-full shadow-glow">
               <Send className="h-4 w-4" />
             </Button>
