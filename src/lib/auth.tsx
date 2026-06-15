@@ -5,11 +5,16 @@ import { API_URL } from "./config";
 
 export interface User {
   id: string;
+  _id?: string;
   email: string;
   name: string;
   role: Role;
   avatar: string;
   location: string;
+  state?: string;
+  district?: string;
+  mobileNumber?: string;
+  address?: string;
 }
 
 interface AuthContextValue {
@@ -137,7 +142,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Generate email based on plan.md specifications (.ai domains)
     const email = `${role}@resqnet.ai`;
     const password = "demo123";
-    
+
     const res = await login(email, password);
     if (!res.ok) {
       toast.error(res.error || `Could not sign in as ${role}`);
@@ -152,7 +157,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider value={{ user, loading, login, registerUser, loginAs, logout }}>
-      {!loading ? children : <div className="h-screen w-screen grid place-items-center bg-background text-muted-foreground">Loading ResQNet AI...</div>}
+      {!loading ? (
+        children
+      ) : (
+        <div className="h-screen w-screen grid place-items-center bg-background text-muted-foreground">
+          Loading ResQNet AI...
+        </div>
+      )}
     </AuthContext.Provider>
   );
 }
@@ -165,10 +176,15 @@ export function useAuth() {
 
 export function roleHome(role: Role): string {
   switch (role) {
-    case "citizen": return "/citizen";
-    case "volunteer": return "/volunteer";
-    case "rescue": return "/rescue";
-    case "authority": return "/authority";
-    case "admin": return "/admin";
+    case "citizen":
+      return "/citizen";
+    case "volunteer":
+      return "/volunteer";
+    case "rescue":
+      return "/rescue";
+    case "authority":
+      return "/authority";
+    case "admin":
+      return "/admin";
   }
 }

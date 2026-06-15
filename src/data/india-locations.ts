@@ -10,15 +10,38 @@ export const INDIA_LOCATIONS: StateData[] = [
   },
   {
     state: "Tamil Nadu",
-    districts: ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", "Tirunelveli", "Vellore"],
+    districts: [
+      "Chennai",
+      "Coimbatore",
+      "Madurai",
+      "Tiruchirappalli",
+      "Salem",
+      "Tirunelveli",
+      "Vellore",
+    ],
   },
   {
     state: "Delhi",
-    districts: ["New Delhi", "North Delhi", "South Delhi", "East Delhi", "West Delhi", "Central Delhi"],
+    districts: [
+      "New Delhi",
+      "North Delhi",
+      "South Delhi",
+      "East Delhi",
+      "West Delhi",
+      "Central Delhi",
+    ],
   },
   {
     state: "Karnataka",
-    districts: ["Bengaluru", "Mysuru", "Hubballi-Dharwad", "Mangaluru", "Belagavi", "Davangere", "Ballari"],
+    districts: [
+      "Bengaluru",
+      "Mysuru",
+      "Hubballi-Dharwad",
+      "Mangaluru",
+      "Belagavi",
+      "Davangere",
+      "Ballari",
+    ],
   },
   {
     state: "West Bengal",
@@ -30,7 +53,15 @@ export const INDIA_LOCATIONS: StateData[] = [
   },
   {
     state: "Andhra Pradesh",
-    districts: ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Tirupati", "Kakinada", "Kurnool"],
+    districts: [
+      "Visakhapatnam",
+      "Vijayawada",
+      "Guntur",
+      "Nellore",
+      "Tirupati",
+      "Kakinada",
+      "Kurnool",
+    ],
   },
   {
     state: "Gujarat",
@@ -42,6 +73,14 @@ export const INDIA_LOCATIONS: StateData[] = [
   },
   {
     state: "Kerala",
-    districts: ["Kochi", "Thiruvananthapuram", "Kozhikode", "Thrissur", "Kollam", "Alappuzha", "Kannur"],
+    districts: [
+      "Kochi",
+      "Thiruvananthapuram",
+      "Kozhikode",
+      "Thrissur",
+      "Kollam",
+      "Alappuzha",
+      "Kannur",
+    ],
   },
 ];

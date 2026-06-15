@@ -13,12 +13,38 @@ export const Route = createFileRoute("/admin/")({
 function AdminDashboard() {
   return (
     <AppShell title="System overview">
-      <p className="text-muted-foreground -mt-1 mb-6">Platform health, users, and ops · everything you need at a glance.</p>
+      <p className="text-muted-foreground -mt-1 mb-6">
+        Platform health, users, and ops · everything you need at a glance.
+      </p>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatCard label="Total users" value="14,284" sublabel="+184 today" icon={Users} accent="primary" />
-        <StatCard label="Daily active" value="6,210" sublabel="43% engagement" icon={Activity} accent="success" />
-        <StatCard label="Uptime" value="99.98%" sublabel="last 30 days" icon={Server} accent="info" />
-        <StatCard label="Security" value="A+" sublabel="all checks pass" icon={ShieldCheck} accent="warning" />
+        <StatCard
+          label="Total users"
+          value="14,284"
+          sublabel="+184 today"
+          icon={Users}
+          accent="primary"
+        />
+        <StatCard
+          label="Daily active"
+          value="6,210"
+          sublabel="43% engagement"
+          icon={Activity}
+          accent="success"
+        />
+        <StatCard
+          label="Uptime"
+          value="99.98%"
+          sublabel="last 30 days"
+          icon={Server}
+          accent="info"
+        />
+        <StatCard
+          label="Security"
+          value="A+"
+          sublabel="all checks pass"
+          icon={ShieldCheck}
+          accent="warning"
+        />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-4 mt-6">
@@ -31,10 +57,13 @@ function AdminDashboard() {
                 { icon: Database, t: "Primary DB", p: 58, v: "58% load" },
                 { icon: Server, t: "Edge workers", p: 21, v: "21% capacity" },
                 { icon: Activity, t: "Realtime channel", p: 44, v: "44% sockets" },
-              ].map(r => (
+              ].map((r) => (
                 <li key={r.t}>
                   <div className="flex items-center justify-between text-sm mb-1.5">
-                    <span className="flex items-center gap-2"><r.icon className="h-4 w-4 text-muted-foreground" />{r.t}</span>
+                    <span className="flex items-center gap-2">
+                      <r.icon className="h-4 w-4 text-muted-foreground" />
+                      {r.t}
+                    </span>
                     <span className="text-xs text-muted-foreground">{r.v}</span>
                   </div>
                   <Progress value={r.p} className="h-1.5" />

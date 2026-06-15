@@ -27,7 +27,13 @@ export interface UpdateResourceInput {
 }
 
 export const resourceService = {
-  async getResources(filters?: { status?: string; type?: string; state?: string; district?: string; assignedIncident?: string }): Promise<any[]> {
+  async getResources(filters?: {
+    status?: string;
+    type?: string;
+    state?: string;
+    district?: string;
+    assignedIncident?: string;
+  }): Promise<any[]> {
     const params = new URLSearchParams();
     if (filters?.status) params.append("status", filters.status);
     if (filters?.type) params.append("type", filters.type);

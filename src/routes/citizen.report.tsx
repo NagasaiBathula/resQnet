@@ -10,7 +10,16 @@ import { Progress } from "@/components/ui/progress";
 import { EmergencyType, Severity } from "@/lib/mock-data";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ArrowLeft, MapPin, Camera, CheckCircle2, Upload, ShieldAlert, Locate } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowLeft,
+  MapPin,
+  Camera,
+  CheckCircle2,
+  Upload,
+  ShieldAlert,
+  Locate,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
@@ -101,7 +110,7 @@ function ReportPage() {
           controller.panTo(fallback, 12);
           setIsLocating(false);
           toast.error("Could not fetch location automatically. Drop a pin on the map.");
-        }
+        },
       );
     } else {
       setIsLocating(false);
@@ -127,7 +136,7 @@ function ReportPage() {
         coordinates,
         attachments: [],
       });
-      setCaseId(result.incidentNumber);
+      setCaseId(result.incidentNumber || "");
       setStep(total);
       toast.success(`Report submitted · ${result.incidentNumber}`);
     } catch (err: any) {
@@ -173,10 +182,14 @@ function ReportPage() {
 
   return (
     <AppShell title="Report emergency">
-      <p className="text-muted-foreground -mt-1 mb-6">Help us coordinate relief. Universal reporting form.</p>
+      <p className="text-muted-foreground -mt-1 mb-6">
+        Help us coordinate relief. Universal reporting form.
+      </p>
       <div className="max-w-3xl mx-auto">
         <div className="mb-4 flex items-center justify-between text-xs text-muted-foreground">
-          <span>Step {Math.min(step, total - 1)} of {total - 1}</span>
+          <span>
+            Step {Math.min(step, total - 1)} of {total - 1}
+          </span>
           <span>{Math.round(progress)}% complete</span>
         </div>
         <Progress value={progress} className="h-1.5 mb-6" />
@@ -185,9 +198,16 @@ function ReportPage() {
           <CardContent className="p-6 md:p-8">
             <AnimatePresence mode="wait">
               {step === 1 && (
-                <motion.div key="1" initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }}>
+                <motion.div
+                  key="1"
+                  initial={{ opacity: 0, x: 12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -12 }}
+                >
                   <h2 className="text-xl font-semibold tracking-tight">What kind of emergency?</h2>
-                  <p className="text-sm text-muted-foreground mt-1">Select the closest match for the incident category.</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Select the closest match for the incident category.
+                  </p>
                   <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-3">
                     {TYPES.map((t) => {
                       const Icon = getLucideIcon(t.value);
@@ -198,10 +218,15 @@ function ReportPage() {
                           onClick={() => setCategory(t.value)}
                           className={cn(
                             "rounded-2xl border p-5 text-left transition hover:border-primary/40 hover:bg-accent/40 cursor-pointer",
-                            active && "border-primary bg-primary/5 shadow-glow"
+                            active && "border-primary bg-primary/5 shadow-glow",
                           )}
                         >
-                          <div className={cn("h-11 w-11 rounded-xl flex items-center justify-center", getBadgeColor(t.value))}>
+                          <div
+                            className={cn(
+                              "h-11 w-11 rounded-xl flex items-center justify-center",
+                              getBadgeColor(t.value),
+                            )}
+                          >
                             <Icon className="h-5 w-5" />
                           </div>
                           <div className="mt-3 font-medium text-sm">{t.label}</div>
@@ -213,10 +238,17 @@ function ReportPage() {
               )}
 
               {step === 2 && (
-                <motion.div key="2" initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }}>
+                <motion.div
+                  key="2"
+                  initial={{ opacity: 0, x: 12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -12 }}
+                >
                   <h2 className="text-xl font-semibold tracking-tight">Where is it happening?</h2>
-                  <p className="text-sm text-muted-foreground mt-1">Set jurisdiction and pin coordinates on the interactive map.</p>
-                  
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Set jurisdiction and pin coordinates on the interactive map.
+                  </p>
+
                   <div className="mt-4 space-y-4">
                     <LocationSelector
                       selectedState={state}
@@ -236,7 +268,9 @@ function ReportPage() {
                           disabled={isLocating}
                           className="h-7 text-xs rounded-full"
                         >
-                          <Locate className={cn("h-3.5 w-3.5 mr-1", isLocating && "animate-spin")} />
+                          <Locate
+                            className={cn("h-3.5 w-3.5 mr-1", isLocating && "animate-spin")}
+                          />
                           {isLocating ? "Fetching..." : "Pin my location"}
                         </Button>
                       </div>
@@ -244,7 +278,14 @@ function ReportPage() {
                         <Map
                           markers={
                             coordinates
-                              ? [{ id: "pin", position: coordinates, type: "user", title: "Selected Location" }]
+                              ? [
+                                  {
+                                    id: "pin",
+                                    position: coordinates,
+                                    type: "user",
+                                    title: "Selected Location",
+                                  },
+                                ]
                               : []
                           }
                           className="h-full w-full"
@@ -275,26 +316,48 @@ function ReportPage() {
               )}
 
               {step === 3 && (
-                <motion.div key="3" initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }}>
-                  <h2 className="text-xl font-semibold tracking-tight">Add photos (MVP Metadata)</h2>
-                  <p className="text-sm text-muted-foreground mt-1">Optional. Helps responders understand the situation on-site.</p>
+                <motion.div
+                  key="3"
+                  initial={{ opacity: 0, x: 12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -12 }}
+                >
+                  <h2 className="text-xl font-semibold tracking-tight">
+                    Add photos (MVP Metadata)
+                  </h2>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Optional. Helps responders understand the situation on-site.
+                  </p>
                   <div className="mt-6 grid grid-cols-3 gap-3">
                     {[1, 2, 3].map((i) => (
-                      <button key={i} className="aspect-square rounded-2xl border-2 border-dashed flex flex-col items-center justify-center text-muted-foreground hover:bg-accent/40 hover:border-primary/40 transition">
+                      <button
+                        key={i}
+                        className="aspect-square rounded-2xl border-2 border-dashed flex flex-col items-center justify-center text-muted-foreground hover:bg-accent/40 hover:border-primary/40 transition"
+                      >
                         <Camera className="h-6 w-6" />
                         <span className="text-xs mt-1.5">Photo {i}</span>
                       </button>
                     ))}
                   </div>
-                  <Button variant="outline" className="mt-4 rounded-full"><Upload className="h-4 w-4 mr-1.5" />Upload metadata profile</Button>
+                  <Button variant="outline" className="mt-4 rounded-full">
+                    <Upload className="h-4 w-4 mr-1.5" />
+                    Upload metadata profile
+                  </Button>
                 </motion.div>
               )}
 
               {step === 4 && (
-                <motion.div key="4" initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }}>
+                <motion.div
+                  key="4"
+                  initial={{ opacity: 0, x: 12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -12 }}
+                >
                   <h2 className="text-xl font-semibold tracking-tight">Describe the emergency</h2>
-                  <p className="text-sm text-muted-foreground mt-1">Provide a brief case title and detailed log of what is happening.</p>
-                  
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Provide a brief case title and detailed log of what is happening.
+                  </p>
+
                   <div className="mt-6 space-y-4">
                     <div>
                       <Label htmlFor="title-input">Incident Summary Title</Label>
@@ -322,9 +385,16 @@ function ReportPage() {
               )}
 
               {step === 5 && (
-                <motion.div key="5" initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }}>
+                <motion.div
+                  key="5"
+                  initial={{ opacity: 0, x: 12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -12 }}
+                >
                   <h2 className="text-xl font-semibold tracking-tight">Select severity level</h2>
-                  <p className="text-sm text-muted-foreground mt-1">Your reading helps command centers triage responders.</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Your reading helps command centers triage responders.
+                  </p>
                   <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
                     {SEVERITIES.map((s) => (
                       <button
@@ -332,7 +402,7 @@ function ReportPage() {
                         onClick={() => setSeverity(s)}
                         className={cn(
                           "rounded-2xl border p-5 text-left transition capitalize hover:border-primary/40 cursor-pointer",
-                          severity === s && "border-primary bg-primary/5 shadow-glow"
+                          severity === s && "border-primary bg-primary/5 shadow-glow",
                         )}
                       >
                         <SeverityBadge severity={s} />
@@ -350,17 +420,30 @@ function ReportPage() {
               )}
 
               {step === 6 && (
-                <motion.div key="6" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-6">
-                  <motion.div initial={{ scale: 0.5 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200 }}
-                    className="mx-auto h-16 w-16 rounded-full bg-success/15 grid place-items-center">
+                <motion.div
+                  key="6"
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-center py-6"
+                >
+                  <motion.div
+                    initial={{ scale: 0.5 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "spring", stiffness: 200 }}
+                    className="mx-auto h-16 w-16 rounded-full bg-success/15 grid place-items-center"
+                  >
                     <CheckCircle2 className="h-9 w-9 text-success" />
                   </motion.div>
                   <h2 className="mt-5 text-2xl font-bold tracking-tight">Report submitted</h2>
                   <p className="mt-2 text-muted-foreground">
-                    Case Number: <span className="font-mono font-bold text-foreground">{caseId}</span> · Status: Reported
+                    Case Number:{" "}
+                    <span className="font-mono font-bold text-foreground">{caseId}</span> · Status:
+                    Reported
                   </p>
                   <div className="mt-6 max-w-md mx-auto rounded-2xl border p-4 text-left bg-gradient-to-br from-primary/5 to-transparent">
-                    <div className="text-xs uppercase tracking-wider text-muted-foreground">Next steps</div>
+                    <div className="text-xs uppercase tracking-wider text-muted-foreground">
+                      Next steps
+                    </div>
                     <ul className="mt-2 space-y-2 text-xs text-muted-foreground">
                       <li>· Command center will verify details and assign resources</li>
                       <li>· You'll receive real-time updates on your incidents dashboard</li>
@@ -370,7 +453,8 @@ function ReportPage() {
                   <div className="mt-7 flex flex-wrap justify-center gap-2">
                     <Button asChild className="rounded-full">
                       <Link to="/citizen/sos">
-                        <ShieldAlert className="h-4 w-4 mr-1.5" />Open SOS center
+                        <ShieldAlert className="h-4 w-4 mr-1.5" />
+                        Open SOS center
                       </Link>
                     </Button>
                     <Button asChild variant="outline" className="rounded-full">
@@ -383,7 +467,10 @@ function ReportPage() {
 
             {step < 6 && (
               <div className="flex items-center justify-between mt-8 pt-6 border-t">
-                <Button variant="ghost" onClick={back} disabled={step === 1}><ArrowLeft className="h-4 w-4 mr-1.5" />Back</Button>
+                <Button variant="ghost" onClick={back} disabled={step === 1}>
+                  <ArrowLeft className="h-4 w-4 mr-1.5" />
+                  Back
+                </Button>
                 {step < 5 ? (
                   <Button
                     onClick={next}
@@ -393,7 +480,8 @@ function ReportPage() {
                     }
                     className="rounded-full"
                   >
-                    Continue<ArrowRight className="h-4 w-4 ml-1.5" />
+                    Continue
+                    <ArrowRight className="h-4 w-4 ml-1.5" />
                   </Button>
                 ) : (
                   <Button

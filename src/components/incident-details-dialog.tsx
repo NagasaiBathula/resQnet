@@ -1,12 +1,37 @@
 import React, { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import { Calendar, User, Phone, MapPin, ShieldAlert, CheckCircle2, Clock, Eye, AlertTriangle, Truck, History, Wrench, Play } from "lucide-react";
-import { getStatusBadgeTone, INCIDENT_STATUS, VALID_TRANSITIONS } from "@/lib/constants/incident-status";
+import {
+  Calendar,
+  User,
+  Phone,
+  MapPin,
+  ShieldAlert,
+  CheckCircle2,
+  Clock,
+  Eye,
+  AlertTriangle,
+  Truck,
+  History,
+  Wrench,
+  Play,
+} from "lucide-react";
+import {
+  getStatusBadgeTone,
+  INCIDENT_STATUS,
+  VALID_TRANSITIONS,
+} from "@/lib/constants/incident-status";
 import { incidentService } from "@/services/incidentService";
 import { resourceService } from "@/services/resourceService";
 import { dispatchService } from "@/services/dispatchService";
@@ -23,13 +48,18 @@ interface IncidentDetailsDialogProps {
   onUpdate?: () => void;
 }
 
-export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }: IncidentDetailsDialogProps) {
+export function IncidentDetailsDialog({
+  incident,
+  open,
+  onOpenChange,
+  onUpdate,
+}: IncidentDetailsDialogProps) {
   const { user } = useAuth();
   const [activeIncident, setActiveIncident] = useState<any>(incident);
   const [rescueTeams, setRescueTeams] = useState<any[]>([]);
   const [volunteers, setVolunteers] = useState<any[]>([]);
   const [resources, setResources] = useState<any[]>([]);
-  
+
   const [selectedRescueTeam, setSelectedRescueTeam] = useState<string>("");
   const [selectedVolunteers, setSelectedVolunteers] = useState<string[]>([]);
   const [selectedAllocateResources, setSelectedAllocateResources] = useState<string[]>([]);
@@ -39,7 +69,7 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
   // Fetch updated incident and lists of available responders
   const loadRespondersAndResources = () => {
     if (!incident || !open) return;
-    
+
     const token = localStorage.getItem("resqnet.token");
     const headers = {
       "Content-Type": "application/json",
@@ -47,14 +77,15 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
     };
 
     // Reload incident to get latest activityLog and allocatedResources
-    incidentService.getIncidentById(incident._id || incident.incidentNumber)
-      .then(data => {
+    incidentService
+      .getIncidentById(incident._id || incident.incidentNumber)
+      .then((data) => {
         setActiveIncident(data);
         setSelectedRescueTeam(data.assignedRescueTeam?._id || data.assignedRescueTeam || "");
         setSelectedVolunteers((data.assignedVolunteers || []).map((v: any) => v._id || v));
         setResolutionNotes(data.resolutionNotes || "");
       })
-      .catch(err => console.error("Error refreshing incident:", err));
+      .catch((err) => console.error("Error refreshing incident:", err));
 
     if (user && (user.role === "authority" || user.role === "admin")) {
       // Fetch rescue responders
@@ -71,7 +102,8 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
     }
 
     // Fetch all resources (for allocation and monitoring)
-    resourceService.getResources()
+    resourceService
+      .getResources()
       .then((data) => setResources(Array.isArray(data) ? data : []))
       .catch((err) => console.error("Error fetching resources:", err));
   };
@@ -102,7 +134,8 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
     activeIncident.assignedRescueTeam?._id?.toString() === user?.id?.toString();
 
   // Allowed transitions
-  const allowedTransitions = VALID_TRANSITIONS[currentStatus as keyof typeof VALID_TRANSITIONS] || [];
+  const allowedTransitions =
+    VALID_TRANSITIONS[currentStatus as keyof typeof VALID_TRANSITIONS] || [];
 
   // Submit status update
   const handleStatusTransition = async (nextStatus: string) => {
@@ -111,7 +144,7 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
       const updated = await incidentService.updateIncidentStatus(
         activeIncident._id,
         nextStatus,
-        nextStatus === INCIDENT_STATUS.RESOLVED ? resolutionNotes : undefined
+        nextStatus === INCIDENT_STATUS.RESOLVED ? resolutionNotes : undefined,
       );
       setActiveIncident(updated);
       toast.success(`Status updated to ${nextStatus}`);
@@ -145,7 +178,7 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
 
   const handleVolunteerToggle = (volId: string) => {
     setSelectedVolunteers((prev) =>
-      prev.includes(volId) ? prev.filter((id) => id !== volId) : [...prev, volId]
+      prev.includes(volId) ? prev.filter((id) => id !== volId) : [...prev, volId],
     );
   };
 
@@ -153,7 +186,10 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
     if (selectedAllocateResources.length === 0) return;
     setIsSubmitting(true);
     try {
-      const result = await dispatchService.allocateResources(activeIncident._id, selectedAllocateResources);
+      const result = await dispatchService.allocateResources(
+        activeIncident._id,
+        selectedAllocateResources,
+      );
       setActiveIncident(result.incident);
       toast.success("Resources allocated successfully");
       setSelectedAllocateResources([]);
@@ -194,14 +230,15 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
 
   // Filter local stockpiles
   const activeResources = resources.filter(
-    (r) => r.assignedIncident?._id === activeIncident._id || r.assignedIncident === activeIncident._id
+    (r) =>
+      r.assignedIncident?._id === activeIncident._id || r.assignedIncident === activeIncident._id,
   );
 
   const availableResources = resources.filter(
     (r) =>
       r.status === "Available" &&
       (user?.role === "admin" ||
-        (r.managedByState === user?.state && r.managedByDistrict === user?.district))
+        (r.managedByState === user?.state && r.managedByDistrict === user?.district)),
   );
 
   return (
@@ -219,17 +256,23 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
                     {activeIncident.incidentNumber || "Incident Details"}
                   </DialogTitle>
                   <DialogDescription className="text-xs text-muted-foreground mt-0.5">
-                    Category: <span className="font-semibold text-foreground">{activeIncident.category}</span>
+                    Category:{" "}
+                    <span className="font-semibold text-foreground">{activeIncident.category}</span>
                     {" · "}
                     Reported: {formatDate(activeIncident.createdAt)}
                   </DialogDescription>
                 </div>
               </div>
               <div className="flex gap-2">
-                <Badge className={cn("rounded-full px-2.5 py-0.5", getStatusBadgeTone(currentStatus))}>
+                <Badge
+                  className={cn("rounded-full px-2.5 py-0.5", getStatusBadgeTone(currentStatus))}
+                >
                   {currentStatus}
                 </Badge>
-                <Badge variant="outline" className="rounded-full px-2.5 py-0.5 uppercase tracking-wider text-[10px]">
+                <Badge
+                  variant="outline"
+                  className="rounded-full px-2.5 py-0.5 uppercase tracking-wider text-[10px]"
+                >
                   {activeIncident.severity} Severity
                 </Badge>
               </div>
@@ -240,14 +283,24 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
         <Tabs defaultValue="overview" className="w-full">
           <div className="px-6 bg-muted/40 border-b">
             <TabsList className="bg-transparent h-12 p-0 gap-6 border-b-0">
-              <TabsTrigger value="overview" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none h-full px-1 text-sm font-medium">
+              <TabsTrigger
+                value="overview"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none h-full px-1 text-sm font-medium"
+              >
                 Overview
               </TabsTrigger>
-              <TabsTrigger value="resources" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none h-full px-1 text-sm font-medium flex items-center gap-1.5">
+              <TabsTrigger
+                value="resources"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none h-full px-1 text-sm font-medium flex items-center gap-1.5"
+              >
                 <Truck className="h-4 w-4" /> Allocated Resources ({activeResources.length})
               </TabsTrigger>
-              <TabsTrigger value="timeline" className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none h-full px-1 text-sm font-medium flex items-center gap-1.5">
-                <History className="h-4 w-4" /> Activity Timeline ({activeIncident.activityLog?.length || 0})
+              <TabsTrigger
+                value="timeline"
+                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none h-full px-1 text-sm font-medium flex items-center gap-1.5"
+              >
+                <History className="h-4 w-4" /> Activity Timeline (
+                {activeIncident.activityLog?.length || 0})
               </TabsTrigger>
             </TabsList>
           </div>
@@ -278,12 +331,15 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
                     <MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
                     <div>
                       <div className="text-[10px] text-muted-foreground uppercase">Address</div>
-                      <div className="font-medium">{activeIncident.address || "No address details"}</div>
+                      <div className="font-medium">
+                        {activeIncident.address || "No address details"}
+                      </div>
                       <div className="text-xs text-muted-foreground font-mono mt-0.5">
                         {activeIncident.district}, {activeIncident.state}
                       </div>
                       <div className="text-[10px] text-muted-foreground font-mono mt-0.5">
-                        ({activeIncident.coordinates.lat.toFixed(5)}° N, {activeIncident.coordinates.lng.toFixed(5)}° E)
+                        ({activeIncident.coordinates.lat.toFixed(5)}° N,{" "}
+                        {activeIncident.coordinates.lng.toFixed(5)}° E)
                       </div>
                     </div>
                   </div>
@@ -315,23 +371,33 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border bg-card p-4 rounded-xl">
                   <div>
-                    <div className="text-[10px] text-muted-foreground uppercase font-semibold">Rescue Team</div>
+                    <div className="text-[10px] text-muted-foreground uppercase font-semibold">
+                      Rescue Team
+                    </div>
                     {activeIncident.assignedRescueTeam ? (
                       <div className="mt-1">
                         <div className="font-medium">{activeIncident.assignedRescueTeam.name}</div>
-                        <div className="text-xs text-muted-foreground">{activeIncident.assignedRescueTeam.organizationName}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {activeIncident.assignedRescueTeam.organizationName}
+                        </div>
                         <div className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
-                          <Phone className="h-3 w-3" /> {activeIncident.assignedRescueTeam.mobileNumber}
+                          <Phone className="h-3 w-3" />{" "}
+                          {activeIncident.assignedRescueTeam.mobileNumber}
                         </div>
                       </div>
                     ) : (
-                      <div className="text-xs text-muted-foreground mt-1 italic">No Rescue Team assigned yet</div>
+                      <div className="text-xs text-muted-foreground mt-1 italic">
+                        No Rescue Team assigned yet
+                      </div>
                     )}
                   </div>
 
                   <div>
-                    <div className="text-[10px] text-muted-foreground uppercase font-semibold">Volunteers</div>
-                    {activeIncident.assignedVolunteers && activeIncident.assignedVolunteers.length > 0 ? (
+                    <div className="text-[10px] text-muted-foreground uppercase font-semibold">
+                      Volunteers
+                    </div>
+                    {activeIncident.assignedVolunteers &&
+                    activeIncident.assignedVolunteers.length > 0 ? (
                       <div className="mt-1.5 flex flex-wrap gap-1">
                         {activeIncident.assignedVolunteers.map((vol: any) => (
                           <Badge key={vol._id} variant="secondary" className="rounded-full text-xs">
@@ -340,7 +406,9 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
                         ))}
                       </div>
                     ) : (
-                      <div className="text-xs text-muted-foreground mt-1 italic">No volunteers assigned</div>
+                      <div className="text-xs text-muted-foreground mt-1 italic">
+                        No volunteers assigned
+                      </div>
                     )}
                   </div>
                 </div>
@@ -349,7 +417,9 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
               {/* Resolution Notes (If Resolved) */}
               {currentStatus === INCIDENT_STATUS.RESOLVED && activeIncident.resolutionNotes && (
                 <div className="bg-success/5 border border-success/20 p-4 rounded-xl">
-                  <div className="text-[10px] text-success uppercase font-semibold tracking-wider">Resolution Summary</div>
+                  <div className="text-[10px] text-success uppercase font-semibold tracking-wider">
+                    Resolution Summary
+                  </div>
                   <p className="text-sm font-medium text-foreground mt-1.5 whitespace-pre-line leading-relaxed">
                     {activeIncident.resolutionNotes}
                   </p>
@@ -366,7 +436,9 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
                   <div className="space-y-3">
                     {/* Select Rescue Team */}
                     <div>
-                      <Label htmlFor="rescue-select" className="text-xs text-muted-foreground">Select Response Unit</Label>
+                      <Label htmlFor="rescue-select" className="text-xs text-muted-foreground">
+                        Select Response Unit
+                      </Label>
                       <select
                         id="rescue-select"
                         value={selectedRescueTeam}
@@ -385,7 +457,9 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
                     {/* Select Volunteers */}
                     {volunteers.length > 0 && (
                       <div>
-                        <Label className="text-xs text-muted-foreground">Select Auxiliary Volunteers</Label>
+                        <Label className="text-xs text-muted-foreground">
+                          Select Auxiliary Volunteers
+                        </Label>
                         <div className="grid grid-cols-2 gap-2 mt-1.5 max-h-40 overflow-y-auto border p-3 rounded-lg bg-background/50">
                           {volunteers.map((vol) => {
                             const checked = selectedVolunteers.includes(vol._id);
@@ -394,7 +468,7 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
                                 key={vol._id}
                                 className={cn(
                                   "flex items-center gap-2 p-1.5 rounded-lg border text-xs cursor-pointer hover:bg-accent/40 transition",
-                                  checked && "bg-primary/5 border-primary/30"
+                                  checked && "bg-primary/5 border-primary/30",
                                 )}
                               >
                                 <input
@@ -429,25 +503,27 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
                 </h3>
 
                 {/* Authority: Verify Ticket */}
-                {user && (user.role === "authority" || user.role === "admin") && currentStatus === INCIDENT_STATUS.REPORTED && (
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={() => handleStatusTransition(INCIDENT_STATUS.VERIFIED)}
-                      disabled={isSubmitting}
-                      className="flex-1 rounded-full shadow-glow"
-                    >
-                      <CheckCircle2 className="h-4 w-4 mr-1.5" /> Verify & Approve Incident
-                    </Button>
-                    <Button
-                      onClick={() => handleStatusTransition(INCIDENT_STATUS.RESOLVED)}
-                      disabled={isSubmitting}
-                      variant="outline"
-                      className="rounded-full text-emergency border-emergency/25 hover:bg-emergency/5"
-                    >
-                      Dismiss / Cancel
-                    </Button>
-                  </div>
-                )}
+                {user &&
+                  (user.role === "authority" || user.role === "admin") &&
+                  currentStatus === INCIDENT_STATUS.REPORTED && (
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => handleStatusTransition(INCIDENT_STATUS.VERIFIED)}
+                        disabled={isSubmitting}
+                        className="flex-1 rounded-full shadow-glow"
+                      >
+                        <CheckCircle2 className="h-4 w-4 mr-1.5" /> Verify & Approve Incident
+                      </Button>
+                      <Button
+                        onClick={() => handleStatusTransition(INCIDENT_STATUS.RESOLVED)}
+                        disabled={isSubmitting}
+                        variant="outline"
+                        className="rounded-full text-emergency border-emergency/25 hover:bg-emergency/5"
+                      >
+                        Dismiss / Cancel
+                      </Button>
+                    </div>
+                  )}
 
                 {/* Rescue Team: Mark In Progress / Resolve */}
                 {isRescueAssigned && (
@@ -465,7 +541,12 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
                     {currentStatus === INCIDENT_STATUS.IN_PROGRESS && (
                       <div className="space-y-3">
                         <div>
-                          <Label htmlFor="res-notes" className="text-xs text-muted-foreground font-semibold">Resolution Notes</Label>
+                          <Label
+                            htmlFor="res-notes"
+                            className="text-xs text-muted-foreground font-semibold"
+                          >
+                            Resolution Notes
+                          </Label>
                           <Textarea
                             id="res-notes"
                             placeholder="Provide details on action taken, citizens evacuated, or supplies delivered..."
@@ -513,7 +594,9 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
               <div>
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 flex items-center justify-between">
                   <span>Currently Assigned Stockpile Assets (Live)</span>
-                  <span className="text-muted-foreground text-[10px] normal-case">Operational updates and release controls</span>
+                  <span className="text-muted-foreground text-[10px] normal-case">
+                    Operational updates and release controls
+                  </span>
                 </h3>
                 {activeResources.length === 0 ? (
                   <div className="text-sm italic text-muted-foreground bg-muted/30 border p-6 rounded-xl text-center">
@@ -522,33 +605,49 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
                 ) : (
                   <div className="space-y-2">
                     {activeResources.map((res) => {
-                      const isAssignedRescue = user?.role === "rescue" && activeIncident.assignedRescueTeam?._id?.toString() === user?.id?.toString();
+                      const isAssignedRescue =
+                        user?.role === "rescue" &&
+                        activeIncident.assignedRescueTeam?._id?.toString() === user?.id?.toString();
                       return (
-                        <Card key={res._id} className="border bg-card p-3 rounded-xl hover:shadow-sm transition">
+                        <Card
+                          key={res._id}
+                          className="border bg-card p-3 rounded-xl hover:shadow-sm transition"
+                        >
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                             <div>
                               <div className="flex items-center gap-2">
-                                <span className="font-mono text-xs text-primary font-semibold">{res.resourceId}</span>
+                                <span className="font-mono text-xs text-primary font-semibold">
+                                  {res.resourceId}
+                                </span>
                                 <span className="font-semibold text-sm">{res.name}</span>
-                                <Badge variant="outline" className="text-[10px] px-1.5 py-0.5 rounded">
+                                <Badge
+                                  variant="outline"
+                                  className="text-[10px] px-1.5 py-0.5 rounded"
+                                >
                                   {res.type}
                                 </Badge>
                               </div>
                               <div className="text-xs text-muted-foreground mt-1 flex flex-wrap gap-x-4">
-                                <span>State/Dist: {res.district}, {res.state}</span>
+                                <span>
+                                  State/Dist: {res.district}, {res.state}
+                                </span>
                                 <span>Assignments: {res.totalAssignments}</span>
                                 <span>Util: {res.totalUsageHours} hrs</span>
                               </div>
                             </div>
-                            
+
                             <div className="flex items-center gap-2 self-end sm:self-center">
                               {/* Status Badge */}
-                              <Badge className={cn(
-                                "rounded-full px-2 py-0.5 text-xs font-medium",
-                                res.status === "In Use" ? "bg-emergency/15 text-emergency border border-emergency/25" :
-                                res.status === "Assigned" ? "bg-info/15 text-info border border-info/25" :
-                                "bg-muted text-muted-foreground"
-                              )}>
+                              <Badge
+                                className={cn(
+                                  "rounded-full px-2 py-0.5 text-xs font-medium",
+                                  res.status === "In Use"
+                                    ? "bg-emergency/15 text-emergency border border-emergency/25"
+                                    : res.status === "Assigned"
+                                      ? "bg-info/15 text-info border border-info/25"
+                                      : "bg-muted text-muted-foreground",
+                                )}
+                              >
                                 {res.status}
                               </Badge>
 
@@ -569,7 +668,9 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
                                     <Button
                                       size="sm"
                                       variant="outline"
-                                      onClick={() => handleResourceStatusChange(res._id, "Available")}
+                                      onClick={() =>
+                                        handleResourceStatusChange(res._id, "Available")
+                                      }
                                       className="h-7 text-xs px-2 text-success hover:bg-success/5 border-success/20"
                                     >
                                       <CheckCircle2 className="h-3 w-3 mr-1" /> Mission Done
@@ -606,7 +707,8 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
                   </h3>
                   {availableResources.length === 0 ? (
                     <div className="text-xs italic text-muted-foreground bg-muted/10 border p-4 rounded-xl">
-                      No available assets found in your command jurisdiction ({user.district}, {user.state}). Register assets first.
+                      No available assets found in your command jurisdiction ({user.district},{" "}
+                      {user.state}). Register assets first.
                     </div>
                   ) : (
                     <div className="space-y-3">
@@ -618,7 +720,7 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
                               key={res._id}
                               className={cn(
                                 "flex items-center justify-between p-2 rounded-lg border text-xs cursor-pointer hover:bg-accent/40 transition",
-                                checked && "bg-primary/5 border-primary/30"
+                                checked && "bg-primary/5 border-primary/30",
                               )}
                             >
                               <div className="flex items-center gap-2">
@@ -626,17 +728,25 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
                                   type="checkbox"
                                   checked={checked}
                                   onChange={() => {
-                                    setSelectedAllocateResources(prev =>
-                                      prev.includes(res._id) ? prev.filter(id => id !== res._id) : [...prev, res._id]
+                                    setSelectedAllocateResources((prev) =>
+                                      prev.includes(res._id)
+                                        ? prev.filter((id) => id !== res._id)
+                                        : [...prev, res._id],
                                     );
                                   }}
                                   className="rounded border-gray-300 text-primary focus:ring-primary h-3.5 w-3.5"
                                 />
-                                <span className="font-mono font-semibold text-primary">{res.resourceId}</span>
+                                <span className="font-mono font-semibold text-primary">
+                                  {res.resourceId}
+                                </span>
                                 <span className="font-medium">{res.name}</span>
-                                <Badge variant="outline" className="text-[9px] px-1 py-0.5">{res.type}</Badge>
+                                <Badge variant="outline" className="text-[9px] px-1 py-0.5">
+                                  {res.type}
+                                </Badge>
                               </div>
-                              <span className="text-muted-foreground text-[10px]">{res.district}, {res.state}</span>
+                              <span className="text-muted-foreground text-[10px]">
+                                {res.district}, {res.state}
+                              </span>
                             </label>
                           );
                         })}
@@ -656,10 +766,14 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
               {/* Historical Incident Resource Snapshot */}
               <div className="border-t pt-4">
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1.5">
-                  <History className="h-3.5 w-3.5 text-muted-foreground" /> Incident Resource Snapshot (Historical Record)
+                  <History className="h-3.5 w-3.5 text-muted-foreground" /> Incident Resource
+                  Snapshot (Historical Record)
                 </h3>
-                {!activeIncident.allocatedResources || activeIncident.allocatedResources.length === 0 ? (
-                  <div className="text-xs italic text-muted-foreground">No historical resources recorded.</div>
+                {!activeIncident.allocatedResources ||
+                activeIncident.allocatedResources.length === 0 ? (
+                  <div className="text-xs italic text-muted-foreground">
+                    No historical resources recorded.
+                  </div>
                 ) : (
                   <div className="border rounded-xl overflow-hidden bg-background/40">
                     <table className="w-full text-xs text-left">
@@ -674,10 +788,14 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
                       <tbody className="divide-y">
                         {activeIncident.allocatedResources.map((snap: any, index: number) => (
                           <tr key={index} className="hover:bg-muted/10">
-                            <td className="p-2.5 font-mono text-[10px] font-semibold text-primary">{snap.resourceNumber}</td>
+                            <td className="p-2.5 font-mono text-[10px] font-semibold text-primary">
+                              {snap.resourceNumber}
+                            </td>
                             <td className="p-2.5 font-medium">{snap.name}</td>
                             <td className="p-2.5 text-muted-foreground">{snap.type}</td>
-                            <td className="p-2.5 text-right text-muted-foreground">{new Date(snap.assignedAt).toLocaleString()}</td>
+                            <td className="p-2.5 text-right text-muted-foreground">
+                              {new Date(snap.assignedAt).toLocaleString()}
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -702,21 +820,34 @@ export function IncidentDetailsDialog({ incident, open, onOpenChange, onUpdate }
                     return (
                       <div key={index} className="relative">
                         {/* Dot indicator */}
-                        <div className={cn(
-                          "absolute -left-[27px] top-1 h-3.5 w-3.5 rounded-full border-2 border-background grid place-items-center",
-                          log.action.includes("Resolved") ? "bg-success" :
-                          log.action.includes("Assigned") ? "bg-primary" :
-                          log.action.includes("Reported") ? "bg-muted-foreground" :
-                          "bg-info"
-                        )} />
-                        
+                        <div
+                          className={cn(
+                            "absolute -left-[27px] top-1 h-3.5 w-3.5 rounded-full border-2 border-background grid place-items-center",
+                            log.action.includes("Resolved")
+                              ? "bg-success"
+                              : log.action.includes("Assigned")
+                                ? "bg-primary"
+                                : log.action.includes("Reported")
+                                  ? "bg-muted-foreground"
+                                  : "bg-info",
+                          )}
+                        />
+
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="font-semibold text-sm text-foreground">{log.action}</span>
-                            <span className="text-[10px] text-muted-foreground">{formatDate(log.timestamp)}</span>
+                            <span className="font-semibold text-sm text-foreground">
+                              {log.action}
+                            </span>
+                            <span className="text-[10px] text-muted-foreground">
+                              {formatDate(log.timestamp)}
+                            </span>
                           </div>
                           <div className="text-xs text-muted-foreground mt-0.5">
-                            Performed By: <span className="font-medium text-foreground">{log.performedBy?.name || "System"}</span> (Role: <span className="capitalize">{log.performedByRole}</span>)
+                            Performed By:{" "}
+                            <span className="font-medium text-foreground">
+                              {log.performedBy?.name || "System"}
+                            </span>{" "}
+                            (Role: <span className="capitalize">{log.performedByRole}</span>)
                           </div>
                           {log.notes && (
                             <p className="text-xs mt-1 text-foreground font-medium bg-muted/30 border p-2 rounded-lg leading-relaxed whitespace-pre-line">

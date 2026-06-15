@@ -155,14 +155,15 @@ export function ProfileSettings({ role, title }: { role: string; title?: string 
       title={title ?? "Profile & settings"}
       actions={
         <Button onClick={handleSaveChanges} className="rounded-full shadow-glow">
-          <Save className="h-4 w-4 mr-1.5" />Save changes
+          <Save className="h-4 w-4 mr-1.5" />
+          Save changes
         </Button>
       }
     >
       <p className="text-muted-foreground -mt-1 mb-6">
         Manage your account, security, and preferences for the {role} workspace.
       </p>
-      
+
       <div className="grid lg:grid-cols-[240px_1fr] gap-4">
         {/* Sidebar Nav */}
         <Card className="h-fit">
@@ -185,10 +186,13 @@ export function ProfileSettings({ role, title }: { role: string; title?: string 
                   onClick={() => setTab(t.id)}
                   className={cn(
                     "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition cursor-pointer text-left",
-                    tab === t.id ? "bg-primary/10 text-primary font-medium" : "hover:bg-accent/50 text-muted-foreground"
+                    tab === t.id
+                      ? "bg-primary/10 text-primary font-medium"
+                      : "hover:bg-accent/50 text-muted-foreground",
                   )}
                 >
-                  <t.icon className="h-4 w-4" />{t.label}
+                  <t.icon className="h-4 w-4" />
+                  {t.label}
                 </button>
               ))}
             </div>
@@ -214,10 +218,22 @@ export function ProfileSettings({ role, title }: { role: string; title?: string 
               <>
                 <SectionTitle title="Personal information" />
                 <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5"><Label>Full name</Label><Input defaultValue={user.name} /></div>
-                  <div className="space-y-1.5"><Label>Email</Label><Input defaultValue={user.email} /></div>
-                  <div className="space-y-1.5"><Label>Phone</Label><Input defaultValue="+91 98800 12340" /></div>
-                  <div className="space-y-1.5"><Label>Location</Label><Input defaultValue={user.location} /></div>
+                  <div className="space-y-1.5">
+                    <Label>Full name</Label>
+                    <Input defaultValue={user.name} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>Email</Label>
+                    <Input defaultValue={user.email} />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>Phone</Label>
+                    <Input defaultValue="+91 98800 12340" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>Location</Label>
+                    <Input defaultValue={user.location} />
+                  </div>
                   <div className="space-y-1.5 sm:col-span-2">
                     <Label>Bio</Label>
                     <Input defaultValue="Coordinating relief operations across the regional sector." />
@@ -226,9 +242,15 @@ export function ProfileSettings({ role, title }: { role: string; title?: string 
                 <div className="mt-8">
                   <SectionTitle title="Role & access" />
                   <div className="flex flex-wrap gap-2">
-                    <Badge variant="outline" className="rounded-full capitalize">{user.role}</Badge>
-                    <Badge variant="outline" className="rounded-full">Verified</Badge>
-                    <Badge variant="outline" className="rounded-full">2FA enabled</Badge>
+                    <Badge variant="outline" className="rounded-full capitalize">
+                      {user.role}
+                    </Badge>
+                    <Badge variant="outline" className="rounded-full">
+                      Verified
+                    </Badge>
+                    <Badge variant="outline" className="rounded-full">
+                      2FA enabled
+                    </Badge>
                   </div>
                 </div>
               </>
@@ -238,15 +260,26 @@ export function ProfileSettings({ role, title }: { role: string; title?: string 
               <>
                 <SectionTitle title="Security" />
                 <div className="space-y-4 max-w-md">
-                  <div className="space-y-1.5"><Label>Current password</Label><Input type="password" defaultValue="••••••••" /></div>
-                  <div className="space-y-1.5"><Label>New password</Label><Input type="password" /></div>
-                  <div className="space-y-1.5"><Label>Confirm new password</Label><Input type="password" /></div>
+                  <div className="space-y-1.5">
+                    <Label>Current password</Label>
+                    <Input type="password" defaultValue="••••••••" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>New password</Label>
+                    <Input type="password" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label>Confirm new password</Label>
+                    <Input type="password" />
+                  </div>
                 </div>
                 <div className="mt-8 space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium text-sm">Two-factor authentication</div>
-                      <div className="text-xs text-muted-foreground">Require a code from your authenticator app.</div>
+                      <div className="text-xs text-muted-foreground">
+                        Require a code from your authenticator app.
+                      </div>
                     </div>
                     <Switch
                       checked={!!settings.twoFactor}
@@ -256,7 +289,9 @@ export function ProfileSettings({ role, title }: { role: string; title?: string 
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium text-sm">Biometric sign in</div>
-                      <div className="text-xs text-muted-foreground">Face ID / Touch ID on supported devices.</div>
+                      <div className="text-xs text-muted-foreground">
+                        Face ID / Touch ID on supported devices.
+                      </div>
                     </div>
                     <Switch
                       checked={!!settings.biometric}
@@ -266,7 +301,9 @@ export function ProfileSettings({ role, title }: { role: string; title?: string 
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-medium text-sm">Active sessions alerts</div>
-                      <div className="text-xs text-muted-foreground">Email when a new device signs in.</div>
+                      <div className="text-xs text-muted-foreground">
+                        Email when a new device signs in.
+                      </div>
                     </div>
                     <Switch
                       checked={!!settings.sessionAlerts}
@@ -344,7 +381,7 @@ export function ProfileSettings({ role, title }: { role: string; title?: string 
                         onClick={() => changeTheme(mode)}
                         className={cn(
                           "rounded-xl border p-4 text-sm font-medium hover:border-primary transition cursor-pointer",
-                          active ? "border-primary bg-primary/5 text-primary" : "border-border"
+                          active ? "border-primary bg-primary/5 text-primary" : "border-border",
                         )}
                       >
                         {m}

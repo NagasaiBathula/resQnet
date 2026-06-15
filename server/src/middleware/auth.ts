@@ -35,7 +35,9 @@ export const protect = async (req: AuthenticatedRequest, res: Response, next: Ne
 export const authorize = (...roles: string[]) => {
   return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     if (!req.user || !roles.includes(req.user.role)) {
-      return res.status(403).json({ message: `User role '${req.user?.role}' is not authorized to access this resource` });
+      return res.status(403).json({
+        message: `User role '${req.user?.role}' is not authorized to access this resource`,
+      });
     }
     next();
   };

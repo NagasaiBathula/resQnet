@@ -47,7 +47,14 @@ router.post("/register", async (req, res) => {
       name,
       role,
       status,
-      avatar: avatar || name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2),
+      avatar:
+        avatar ||
+        name
+          .split(" ")
+          .map((n: string) => n[0])
+          .join("")
+          .toUpperCase()
+          .slice(0, 2),
       location: location || "India",
     });
 
@@ -103,7 +110,9 @@ router.post("/login", async (req, res) => {
       return res.status(403).json({ message: "Your account is awaiting approval." });
     }
     if (user.status === "rejected") {
-      return res.status(403).json({ message: "Your registration request has been rejected. Please contact support." });
+      return res
+        .status(403)
+        .json({ message: "Your registration request has been rejected. Please contact support." });
     }
 
     return res.json({
@@ -131,13 +140,15 @@ router.get("/me", protect, async (req: AuthenticatedRequest, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    
+
     // Safety check for active JWT from later revoked users
     if (user.status === "pending") {
       return res.status(403).json({ message: "Your account is awaiting approval." });
     }
     if (user.status === "rejected") {
-      return res.status(403).json({ message: "Your registration request has been rejected. Please contact support." });
+      return res
+        .status(403)
+        .json({ message: "Your registration request has been rejected. Please contact support." });
     }
 
     return res.json(user);

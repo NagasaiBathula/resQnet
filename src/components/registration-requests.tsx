@@ -15,14 +15,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { API_URL } from "@/lib/config";
 
 export function RegistrationRequests() {
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   // Filters and search
   const [statusFilter, setStatusFilter] = useState<string>("pending");
   const [roleFilter, setRoleFilter] = useState<string>("all");
@@ -31,7 +37,7 @@ export function RegistrationRequests() {
   // Modals state
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
-  
+
   // Rejection modal state
   const [rejectUser, setRejectUser] = useState<any | null>(null);
   const [rejectionReason, setRejectionReason] = useState("Verification Failed");
@@ -42,7 +48,7 @@ export function RegistrationRequests() {
     try {
       setLoading(true);
       const token = localStorage.getItem("resqnet.token");
-      
+
       const params = new URLSearchParams();
       if (statusFilter !== "all") params.append("status", statusFilter);
       if (roleFilter !== "all") params.append("role", roleFilter);
@@ -111,7 +117,7 @@ export function RegistrationRequests() {
 
   const handleRejectSubmit = async () => {
     if (!rejectUser) return;
-    
+
     const finalReason = rejectionReason === "Other" ? customReason : rejectionReason;
     if (!finalReason.trim()) {
       toast.error("Please specify a rejection reason");
@@ -120,17 +126,20 @@ export function RegistrationRequests() {
 
     try {
       const token = localStorage.getItem("resqnet.token");
-      const res = await fetch(`${API_URL}/api/users/requests/${rejectUser._id || rejectUser.id}/status`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        `${API_URL}/api/users/requests/${rejectUser._id || rejectUser.id}/status`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            status: "rejected",
+            rejectionReason: finalReason,
+          }),
         },
-        body: JSON.stringify({
-          status: "rejected",
-          rejectionReason: finalReason,
-        }),
-      });
+      );
 
       if (!res.ok) {
         throw new Error("Failed to reject application");
@@ -156,9 +165,14 @@ export function RegistrationRequests() {
       {/* Search and Filters */}
       <Card className="shadow-elegant border-border/60">
         <CardContent className="p-5">
-          <form onSubmit={handleSearchSubmit} className="grid md:grid-cols-[1.5fr_1fr_1fr_auto] gap-3 items-end">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="grid md:grid-cols-[1.5fr_1fr_1fr_auto] gap-3 items-end"
+          >
             <div className="space-y-1.5">
-              <label className="text-xs text-muted-foreground font-semibold">Search Applicant</label>
+              <label className="text-xs text-muted-foreground font-semibold">
+                Search Applicant
+              </label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -169,7 +183,7 @@ export function RegistrationRequests() {
                 />
               </div>
             </div>
-            
+
             <div className="space-y-1.5">
               <label className="text-xs text-muted-foreground font-semibold">Filter Status</label>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -187,7 +201,7 @@ export function RegistrationRequests() {
 
             <div className="space-y-1.5">
               <label className="text-xs text-muted-foreground font-semibold">Filter Role</label>
-              <Select value={roleFilter} onValueChange={roleFilter => setRoleFilter(roleFilter)}>
+              <Select value={roleFilter} onValueChange={(roleFilter) => setRoleFilter(roleFilter)}>
                 <SelectTrigger className="h-11 rounded-xl">
                   <SelectValue placeholder="Select Role" />
                 </SelectTrigger>
@@ -240,7 +254,10 @@ export function RegistrationRequests() {
                 </thead>
                 <tbody>
                   {requests.map((r) => (
-                    <tr key={r._id || r.id} className="border-b last:border-0 hover:bg-accent/40 transition">
+                    <tr
+                      key={r._id || r.id}
+                      className="border-b last:border-0 hover:bg-accent/40 transition"
+                    >
                       <td className="p-4 font-semibold">{r.name}</td>
                       <td className="p-4 text-xs">
                         <div>{r.email}</div>
@@ -258,21 +275,45 @@ export function RegistrationRequests() {
                         {new Date(r.createdAt || r.registrationDate).toLocaleDateString("en-IN")}
                       </td>
                       <td className="p-4">
-                        <PillBadge tone={r.status === "approved" ? "success" : r.status === "pending" ? "warning" : "emergency"}>
+                        <PillBadge
+                          tone={
+                            r.status === "approved"
+                              ? "success"
+                              : r.status === "pending"
+                                ? "warning"
+                                : "emergency"
+                          }
+                        >
                           {r.status}
                         </PillBadge>
                       </td>
                       <td className="p-4 text-right">
                         <div className="flex justify-end gap-1.5">
-                          <Button size="icon" variant="ghost" className="h-8 w-8 rounded-lg" onClick={() => openDetails(r)} title="Inspect Application">
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-8 w-8 rounded-lg"
+                            onClick={() => openDetails(r)}
+                            title="Inspect Application"
+                          >
                             <Eye className="h-4 w-4" />
                           </Button>
                           {r.status === "pending" && (
                             <>
-                              <Button size="icon" className="h-8 w-8 bg-success/10 text-success hover:bg-success/20 rounded-lg border-0" onClick={() => handleApprove(r._id || r.id, r.name)} title="Approve Request">
+                              <Button
+                                size="icon"
+                                className="h-8 w-8 bg-success/10 text-success hover:bg-success/20 rounded-lg border-0"
+                                onClick={() => handleApprove(r._id || r.id, r.name)}
+                                title="Approve Request"
+                              >
                                 <Check className="h-4 w-4" />
                               </Button>
-                              <Button size="icon" className="h-8 w-8 bg-emergency/10 text-emergency hover:bg-emergency/20 rounded-lg border-0" onClick={() => handleRejectClick(r)} title="Reject Request">
+                              <Button
+                                size="icon"
+                                className="h-8 w-8 bg-emergency/10 text-emergency hover:bg-emergency/20 rounded-lg border-0"
+                                onClick={() => handleRejectClick(r)}
+                                title="Reject Request"
+                              >
                                 <X className="h-4 w-4" />
                               </Button>
                             </>
@@ -296,10 +337,19 @@ export function RegistrationRequests() {
         actions={
           selectedUser?.status === "pending" && (
             <>
-              <Button variant="ghost" className="rounded-full text-emergency hover:text-emergency hover:bg-emergency/5" onClick={() => handleRejectClick(selectedUser)}>
+              <Button
+                variant="ghost"
+                className="rounded-full text-emergency hover:text-emergency hover:bg-emergency/5"
+                onClick={() => handleRejectClick(selectedUser)}
+              >
                 <X className="h-4 w-4 mr-1.5" /> Reject Request
               </Button>
-              <Button className="rounded-full bg-success text-white hover:bg-success/90 shadow-glow" onClick={() => handleApprove(selectedUser._id || selectedUser.id, selectedUser.name)}>
+              <Button
+                className="rounded-full bg-success text-white hover:bg-success/90 shadow-glow"
+                onClick={() =>
+                  handleApprove(selectedUser._id || selectedUser.id, selectedUser.name)
+                }
+              >
                 <Check className="h-4 w-4 mr-1.5" /> Approve Request
               </Button>
             </>
@@ -355,7 +405,10 @@ export function RegistrationRequests() {
             <Button variant="ghost" className="rounded-full" onClick={() => setRejectOpen(false)}>
               Cancel
             </Button>
-            <Button className="rounded-full bg-emergency text-white hover:bg-emergency/90 shadow-glow" onClick={handleRejectSubmit}>
+            <Button
+              className="rounded-full bg-emergency text-white hover:bg-emergency/90 shadow-glow"
+              onClick={handleRejectSubmit}
+            >
               Submit Rejection
             </Button>
           </DialogFooter>

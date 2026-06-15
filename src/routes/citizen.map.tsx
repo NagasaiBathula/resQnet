@@ -52,9 +52,15 @@ function MapView() {
 
   useEffect(() => {
     // Retrieve incidents from real MongoDB incidentService
-    incidentService.getIncidents().then(setIncidents).catch(err => console.error(err));
+    incidentService
+      .getIncidents()
+      .then(setIncidents)
+      .catch((err) => console.error(err));
     // Retrieve resources
-    resourceService.getResources().then(setResources).catch(err => console.error(err));
+    resourceService
+      .getResources()
+      .then(setResources)
+      .catch((err) => console.error(err));
     // Shelters remain mock data in this phase
     mapService.getShelters().then(setShelters);
   }, []);
@@ -80,10 +86,10 @@ function MapView() {
   }));
 
   const resourceMarkers: MapMarker[] = resources
-    .filter(res => (res.status === "Assigned" || res.status === "In Use") && res.assignedIncident)
-    .map(res => {
+    .filter((res) => (res.status === "Assigned" || res.status === "In Use") && res.assignedIncident)
+    .map((res) => {
       const incId = res.assignedIncident?._id || res.assignedIncident;
-      const inc = incidents.find(i => i._id === incId);
+      const inc = incidents.find((i) => i._id === incId);
       if (!inc) return null;
       return {
         id: res._id,
@@ -122,7 +128,7 @@ function MapView() {
           controller.panTo(fallback, 13);
           setIsLocating(false);
         },
-        { enableHighAccuracy: true, timeout: 5000 }
+        { enableHighAccuracy: true, timeout: 5000 },
       );
     } else {
       setIsLocating(false);
@@ -163,7 +169,9 @@ function MapView() {
   });
 
   const visibleSheltersList = shelters.filter((s) => {
-    const matchesSearch = s.name.toLowerCase().includes(searchQuery.toLowerCase()) || s.address.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch =
+      s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      s.address.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter = filter === "all" || filter === "shelter";
     return matchesSearch && matchesFilter;
   });
@@ -185,7 +193,7 @@ function MapView() {
       <p className="text-muted-foreground -mt-1 mb-6">
         Live incidents, shelters, and active stockpile resources in your region.
       </p>
-      
+
       <div className="grid lg:grid-cols-[1fr_360px] gap-4">
         {/* Interactive OSM Map Container */}
         <Card className="overflow-hidden shadow-elegant h-[520px] relative border-border/60">
@@ -223,7 +231,7 @@ function MapView() {
                       "rounded-full cursor-pointer capitalize text-xs px-2.5 py-0.5 transition",
                       filter === f
                         ? "bg-primary/10 text-primary border-primary/30 font-medium"
-                        : "text-muted-foreground hover:bg-muted"
+                        : "text-muted-foreground hover:bg-muted",
                     )}
                   >
                     {f}
@@ -245,7 +253,12 @@ function MapView() {
                           onClick={() => controller.panTo(i.coordinates, 14)}
                           className="flex items-center gap-3 rounded-xl border p-2 cursor-pointer transition hover:bg-accent/40"
                         >
-                          <div className={cn("h-8 w-8 rounded-lg grid place-items-center shrink-0", typeColor[key] || "bg-primary/10 text-primary")}>
+                          <div
+                            className={cn(
+                              "h-8 w-8 rounded-lg grid place-items-center shrink-0",
+                              typeColor[key] || "bg-primary/10 text-primary",
+                            )}
+                          >
                             <Icon className="h-4 w-4" />
                           </div>
                           <div className="flex-1 min-w-0">
@@ -278,7 +291,10 @@ function MapView() {
                           <Building2 className="h-3.5 w-3.5 text-success shrink-0" />
                           {s.name}
                         </span>
-                        <Badge variant="outline" className="rounded-full shrink-0 text-[10px] scale-90">
+                        <Badge
+                          variant="outline"
+                          className="rounded-full shrink-0 text-[10px] scale-90"
+                        >
                           {s.distanceKm} km
                         </Badge>
                       </li>

@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { Check, ChevronsUpDown, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { INDIA_LOCATIONS } from "@/data/india-locations";
@@ -34,7 +41,7 @@ export function LocationSelector({
   useEffect(() => {
     if (selectedState) {
       const stateObj = INDIA_LOCATIONS.find(
-        (loc) => loc.state.toLowerCase() === selectedState.toLowerCase()
+        (loc) => loc.state.toLowerCase() === selectedState.toLowerCase(),
       );
       setDistricts(stateObj ? stateObj.districts : []);
     } else {
@@ -80,23 +87,31 @@ export function LocationSelector({
               disabled={disabled}
               className={cn(
                 "h-11 justify-between text-left font-normal rounded-xl bg-card border-border/80 shadow-elegant px-3.5",
-                !selectedState && "text-muted-foreground"
+                !selectedState && "text-muted-foreground",
               )}
             >
               <span className="truncate">
                 {selectedState
-                  ? INDIA_LOCATIONS.find((loc) => loc.state.toLowerCase() === selectedState.toLowerCase())?.state || selectedState
+                  ? INDIA_LOCATIONS.find(
+                      (loc) => loc.state.toLowerCase() === selectedState.toLowerCase(),
+                    )?.state || selectedState
                   : "Select state..."}
               </span>
               <div className="flex items-center gap-1 shrink-0">
                 {selectedState && !disabled && (
-                  <X className="h-4 w-4 opacity-50 hover:opacity-100 cursor-pointer" onClick={clearState} />
+                  <X
+                    className="h-4 w-4 opacity-50 hover:opacity-100 cursor-pointer"
+                    onClick={clearState}
+                  />
                 )}
                 <ChevronsUpDown className="h-4 w-4 opacity-50" />
               </div>
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-0 rounded-xl glass-strong border shadow-elegant" align="start">
+          <PopoverContent
+            className="w-[200px] p-0 rounded-xl glass-strong border shadow-elegant"
+            align="start"
+          >
             <Command>
               <CommandInput placeholder="Search state..." className="h-9" />
               <CommandList>
@@ -111,7 +126,9 @@ export function LocationSelector({
                       <Check
                         className={cn(
                           "mr-2 h-4 w-4",
-                          selectedState.toLowerCase() === loc.state.toLowerCase() ? "opacity-100" : "opacity-0"
+                          selectedState.toLowerCase() === loc.state.toLowerCase()
+                            ? "opacity-100"
+                            : "opacity-0",
                         )}
                       />
                       {loc.state}
@@ -137,7 +154,7 @@ export function LocationSelector({
               className={cn(
                 "h-11 justify-between text-left font-normal rounded-xl bg-card border-border/80 shadow-elegant px-3.5",
                 !selectedDistrict && "text-muted-foreground",
-                !selectedState && "opacity-60 cursor-not-allowed bg-muted/20"
+                !selectedState && "opacity-60 cursor-not-allowed bg-muted/20",
               )}
             >
               <span className="truncate">
@@ -145,28 +162,32 @@ export function LocationSelector({
               </span>
               <div className="flex items-center gap-1 shrink-0">
                 {selectedDistrict && !disabled && (
-                  <X className="h-4 w-4 opacity-50 hover:opacity-100 cursor-pointer" onClick={clearDistrict} />
+                  <X
+                    className="h-4 w-4 opacity-50 hover:opacity-100 cursor-pointer"
+                    onClick={clearDistrict}
+                  />
                 )}
                 <ChevronsUpDown className="h-4 w-4 opacity-50" />
               </div>
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-0 rounded-xl glass-strong border shadow-elegant" align="start">
+          <PopoverContent
+            className="w-[200px] p-0 rounded-xl glass-strong border shadow-elegant"
+            align="start"
+          >
             <Command>
               <CommandInput placeholder="Search district..." className="h-9" />
               <CommandList>
                 <CommandEmpty>No district found.</CommandEmpty>
                 <CommandGroup>
                   {districts.map((d) => (
-                    <CommandItem
-                      key={d}
-                      value={d}
-                      onSelect={() => handleDistrictSelect(d)}
-                    >
+                    <CommandItem key={d} value={d} onSelect={() => handleDistrictSelect(d)}>
                       <Check
                         className={cn(
                           "mr-2 h-4 w-4",
-                          selectedDistrict.toLowerCase() === d.toLowerCase() ? "opacity-100" : "opacity-0"
+                          selectedDistrict.toLowerCase() === d.toLowerCase()
+                            ? "opacity-100"
+                            : "opacity-0",
                         )}
                       />
                       {d}

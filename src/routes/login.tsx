@@ -7,7 +7,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { ShieldAlert, ArrowRight, User, HeartHandshake, Truck, Landmark, Settings } from "lucide-react";
+import {
+  ShieldAlert,
+  ArrowRight,
+  User,
+  HeartHandshake,
+  Truck,
+  Landmark,
+  Settings,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
@@ -19,7 +27,11 @@ export const Route = createFileRoute("/login")({
 
 const ROLE_META = {
   citizen: { icon: User, label: "Citizen", desc: "Report emergencies, find shelter, get AI help" },
-  volunteer: { icon: HeartHandshake, label: "Volunteer", desc: "Accept missions and assist responders" },
+  volunteer: {
+    icon: HeartHandshake,
+    label: "Volunteer",
+    desc: "Accept missions and assist responders",
+  },
   rescue: { icon: Truck, label: "Rescue Team", desc: "Dispatch, deploy, coordinate operations" },
   authority: { icon: Landmark, label: "Authority", desc: "National oversight and analytics" },
   admin: { icon: Settings, label: "Admin", desc: "Platform & user management" },
@@ -44,7 +56,10 @@ function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const r = await login(email, password);
-    if (!r.ok) { toast.error(r.error || "Login failed"); return; }
+    if (!r.ok) {
+      toast.error(r.error || "Login failed");
+      return;
+    }
     toast.success("Welcome back!");
   };
 
@@ -64,12 +79,18 @@ function LoginPage() {
           </Link>
         </div>
         <div className="relative">
-          <h2 className="text-4xl font-bold tracking-tight leading-tight">Turning chaos into <br />coordinated action.</h2>
+          <h2 className="text-4xl font-bold tracking-tight leading-tight">
+            Turning chaos into <br />
+            coordinated action.
+          </h2>
           <p className="mt-4 text-muted-foreground max-w-md">
             One-click into any role and explore the entire disaster response platform.
           </p>
           <div className="mt-8 flex items-center gap-3 text-xs text-muted-foreground">
-            <Badge variant="outline" className="rounded-full gap-1.5 bg-background/60 backdrop-blur">
+            <Badge
+              variant="outline"
+              className="rounded-full gap-1.5 bg-background/60 backdrop-blur"
+            >
               <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" /> Live demo
             </Badge>
             <span>·</span>
@@ -88,18 +109,36 @@ function LoginPage() {
           <span className="font-semibold tracking-tight">ResQNet</span>
         </Link>
 
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="flex-1 flex flex-col justify-center max-w-md mx-auto w-full">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex-1 flex flex-col justify-center max-w-md mx-auto w-full"
+        >
           <h1 className="text-3xl font-bold tracking-tight">Welcome back</h1>
-          <p className="mt-1.5 text-sm text-muted-foreground">Sign in with credentials or jump into a role.</p>
+          <p className="mt-1.5 text-sm text-muted-foreground">
+            Sign in with credentials or jump into a role.
+          </p>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-4">
             <div className="space-y-1.5">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} className="h-11" />
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="h-11"
+              />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="pw">Password</Label>
-              <Input id="pw" type="password" value={password} onChange={e => setPassword(e.target.value)} className="h-11" />
+              <Input
+                id="pw"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="h-11"
+              />
             </div>
             <Button type="submit" className="w-full h-11 rounded-xl shadow-glow">
               Sign in <ArrowRight className="h-4 w-4 ml-1.5" />
@@ -107,8 +146,14 @@ function LoginPage() {
           </form>
 
           <div className="my-7 relative">
-            <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
-            <div className="relative flex justify-center"><span className="bg-background px-3 text-xs uppercase tracking-wider text-muted-foreground">One-click demo</span></div>
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="bg-background px-3 text-xs uppercase tracking-wider text-muted-foreground">
+                One-click demo
+              </span>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -117,7 +162,9 @@ function LoginPage() {
               return (
                 <motion.button
                   key={r}
-                  initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.04 }}
                   onClick={() => oneClick(r)}
                   className="group text-left rounded-2xl border bg-card hover:bg-accent/40 hover:border-primary/40 transition p-3.5 flex items-center gap-3"
                 >
@@ -142,7 +189,15 @@ function LoginPage() {
           </div>
 
           <p className="mt-8 text-center text-xs text-muted-foreground">
-            By continuing you agree to our <a className="underline hover:text-foreground" href="#">Terms</a> & <a className="underline hover:text-foreground" href="#">Privacy</a>.
+            By continuing you agree to our{" "}
+            <a className="underline hover:text-foreground" href="#">
+              Terms
+            </a>{" "}
+            &{" "}
+            <a className="underline hover:text-foreground" href="#">
+              Privacy
+            </a>
+            .
           </p>
         </motion.div>
       </div>

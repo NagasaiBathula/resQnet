@@ -37,7 +37,11 @@ export const incidentService = {
     return res.json();
   },
 
-  async getIncidents(filters?: { status?: string; category?: string; severity?: string }): Promise<Incident[]> {
+  async getIncidents(filters?: {
+    status?: string;
+    category?: string;
+    severity?: string;
+  }): Promise<Incident[]> {
     const params = new URLSearchParams();
     if (filters?.status) params.append("status", filters.status);
     if (filters?.category) params.append("category", filters.category);
@@ -76,7 +80,11 @@ export const incidentService = {
     return res.json();
   },
 
-  async updateIncidentStatus(id: string, status: string, resolutionNotes?: string): Promise<Incident> {
+  async updateIncidentStatus(
+    id: string,
+    status: string,
+    resolutionNotes?: string,
+  ): Promise<Incident> {
     const res = await fetch(`${API_URL}/api/incidents/${id}/status`, {
       method: "PUT",
       headers: getHeaders(),
@@ -89,7 +97,10 @@ export const incidentService = {
     return res.json();
   },
 
-  async assignIncident(id: string, payload: { assignedRescueTeam?: string; assignedVolunteers?: string[] }): Promise<Incident> {
+  async assignIncident(
+    id: string,
+    payload: { assignedRescueTeam?: string; assignedVolunteers?: string[] },
+  ): Promise<Incident> {
     const res = await fetch(`${API_URL}/api/incidents/${id}/assign`, {
       method: "PUT",
       headers: getHeaders(),

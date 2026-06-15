@@ -81,17 +81,37 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "ResQNet — Turning Chaos Into Coordinated Action" },
-      { name: "description", content: "AI-powered disaster response platform connecting citizens, volunteers, rescue teams, and authorities in real time." },
+      {
+        name: "description",
+        content:
+          "AI-powered disaster response platform connecting citizens, volunteers, rescue teams, and authorities in real time.",
+      },
       { name: "author", content: "ResQNet" },
       { property: "og:title", content: "ResQNet — Turning Chaos Into Coordinated Action" },
-      { property: "og:description", content: "AI-powered disaster response platform connecting citizens, volunteers, rescue teams, and authorities in real time." },
+      {
+        property: "og:description",
+        content:
+          "AI-powered disaster response platform connecting citizens, volunteers, rescue teams, and authorities in real time.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "ResQNet — Turning Chaos Into Coordinated Action" },
-      { name: "twitter:description", content: "AI-powered disaster response platform connecting citizens, volunteers, rescue teams, and authorities in real time." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/41bab774-f871-45a9-8ef6-389e63246a03/id-preview-47126193--4ae786a9-a7b3-44f5-8e49-844b67377b4c.lovable.app-1781365913907.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/41bab774-f871-45a9-8ef6-389e63246a03/id-preview-47126193--4ae786a9-a7b3-44f5-8e49-844b67377b4c.lovable.app-1781365913907.png" },
+      {
+        name: "twitter:description",
+        content:
+          "AI-powered disaster response platform connecting citizens, volunteers, rescue teams, and authorities in real time.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/41bab774-f871-45a9-8ef6-389e63246a03/id-preview-47126193--4ae786a9-a7b3-44f5-8e49-844b67377b4c.lovable.app-1781365913907.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/41bab774-f871-45a9-8ef6-389e63246a03/id-preview-47126193--4ae786a9-a7b3-44f5-8e49-844b67377b4c.lovable.app-1781365913907.png",
+      },
     ],
     links: [
       {

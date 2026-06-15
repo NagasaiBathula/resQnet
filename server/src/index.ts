@@ -137,8 +137,18 @@ connectDB().then(async () => {
 
     // Ensure all demo users are marked as approved and active
     await User.updateMany(
-      { email: { $in: ["citizen@resqnet.ai", "volunteer@resqnet.ai", "rescue@resqnet.ai", "authority@resqnet.ai", "admin@resqnet.ai"] } },
-      { $set: { status: "approved" } }
+      {
+        email: {
+          $in: [
+            "citizen@resqnet.ai",
+            "volunteer@resqnet.ai",
+            "rescue@resqnet.ai",
+            "authority@resqnet.ai",
+            "admin@resqnet.ai",
+          ],
+        },
+      },
+      { $set: { status: "approved" } },
     );
     console.log("✓ Verified status of existing demo accounts");
   } catch (err) {

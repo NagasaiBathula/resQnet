@@ -3,7 +3,15 @@ import { AppShell } from "@/components/app-shell";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { StatCard, SectionTitle, typeIcon, typeColor, SeverityBadge, StatusBadge, mapCategoryToKey } from "@/components/shared";
+import {
+  StatCard,
+  SectionTitle,
+  typeIcon,
+  typeColor,
+  SeverityBadge,
+  StatusBadge,
+  mapCategoryToKey,
+} from "@/components/shared";
 import { AlertTriangle, Activity, Truck, Radio, Users, Search, Eye } from "lucide-react";
 import { motion } from "framer-motion";
 import { BarChart, Bar, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid } from "recharts";
@@ -49,10 +57,10 @@ function RescueDashboard() {
   };
 
   // Stats computation
-  const activeIncidents = incidentsList.filter(i => i.status !== "Resolved");
+  const activeIncidents = incidentsList.filter((i) => i.status !== "Resolved");
   const activeCount = activeIncidents.length;
   const criticalCount = activeIncidents.filter(
-    (i) => i.severity === "critical" || i.severity === "High" || i.severity === "Critical"
+    (i) => i.severity === "critical" || i.severity === "High" || i.severity === "Critical",
   ).length;
 
   const queue = activeIncidents
@@ -69,27 +77,75 @@ function RescueDashboard() {
     .slice(0, 6);
 
   return (
-    <AppShell title="Command center" actions={
-      <>
-        <Button variant="outline" className="rounded-full" asChild><Link to="/rescue/operations"><Truck className="h-4 w-4 mr-1.5" />Field operations</Link></Button>
-        <Button className="rounded-full shadow-glow" asChild><Link to="/rescue/incidents"><AlertTriangle className="h-4 w-4 mr-1.5" />Active Queue</Link></Button>
-      </>
-    }>
-      <p className="text-muted-foreground -mt-1 mb-6">{activeCount} active incidents · 4 teams deployed · system nominal</p>
+    <AppShell
+      title="Command center"
+      actions={
+        <>
+          <Button variant="outline" className="rounded-full" asChild>
+            <Link to="/rescue/operations">
+              <Truck className="h-4 w-4 mr-1.5" />
+              Field operations
+            </Link>
+          </Button>
+          <Button className="rounded-full shadow-glow" asChild>
+            <Link to="/rescue/incidents">
+              <AlertTriangle className="h-4 w-4 mr-1.5" />
+              Active Queue
+            </Link>
+          </Button>
+        </>
+      }
+    >
+      <p className="text-muted-foreground -mt-1 mb-6">
+        {activeCount} active incidents · 4 teams deployed · system nominal
+      </p>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <StatCard label="Active incidents" value={activeCount.toString()} sublabel={`${criticalCount} critical`} icon={AlertTriangle} accent="emergency" delay={0} />
-        <StatCard label="Teams deployed" value="4 / 8" sublabel="4 on standby" icon={Truck} accent="primary" delay={0.05} />
-        <StatCard label="Avg response" value="8m 42s" sublabel="−12% vs target" icon={Activity} accent="success" delay={0.1} />
-        <StatCard label="Personnel" value="74" sublabel="62 on duty" icon={Users} accent="info" delay={0.15} />
+        <StatCard
+          label="Active incidents"
+          value={activeCount.toString()}
+          sublabel={`${criticalCount} critical`}
+          icon={AlertTriangle}
+          accent="emergency"
+          delay={0}
+        />
+        <StatCard
+          label="Teams deployed"
+          value="4 / 8"
+          sublabel="4 on standby"
+          icon={Truck}
+          accent="primary"
+          delay={0.05}
+        />
+        <StatCard
+          label="Avg response"
+          value="8m 42s"
+          sublabel="−12% vs target"
+          icon={Activity}
+          accent="success"
+          delay={0.1}
+        />
+        <StatCard
+          label="Personnel"
+          value="74"
+          sublabel="62 on duty"
+          icon={Users}
+          accent="info"
+          delay={0.15}
+        />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4 mt-6">
         <Card className="lg:col-span-2">
           <CardContent className="p-5">
-            <SectionTitle title="Priority queue" action={
-              <Button asChild size="sm" variant="ghost"><Link to="/rescue/incidents">Open all</Link></Button>
-            } />
+            <SectionTitle
+              title="Priority queue"
+              action={
+                <Button asChild size="sm" variant="ghost">
+                  <Link to="/rescue/incidents">Open all</Link>
+                </Button>
+              }
+            />
             <div className="relative mb-3">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -101,9 +157,13 @@ function RescueDashboard() {
             </div>
             <div className="space-y-2">
               {loading ? (
-                <div className="text-center py-8 text-muted-foreground text-sm">Loading dispatch queue...</div>
+                <div className="text-center py-8 text-muted-foreground text-sm">
+                  Loading dispatch queue...
+                </div>
               ) : queue.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground text-sm">No active incidents in queue</div>
+                <div className="text-center py-8 text-muted-foreground text-sm">
+                  No active incidents in queue
+                </div>
               ) : (
                 queue.map((i) => {
                   const catKey = mapCategoryToKey(i.category);
@@ -114,20 +174,39 @@ function RescueDashboard() {
                       onClick={() => handleInspect(i)}
                       className="block cursor-pointer"
                     >
-                      <motion.div whileHover={{ x: 2 }} className="rounded-xl border p-3 hover:bg-accent/40 transition">
+                      <motion.div
+                        whileHover={{ x: 2 }}
+                        className="rounded-xl border p-3 hover:bg-accent/40 transition"
+                      >
                         <div className="flex items-center gap-3">
-                          <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center shrink-0", typeColor[catKey] || "bg-primary/10 text-primary")}><Icon className="h-5 w-5" /></div>
+                          <div
+                            className={cn(
+                              "h-10 w-10 rounded-xl flex items-center justify-center shrink-0",
+                              typeColor[catKey] || "bg-primary/10 text-primary",
+                            )}
+                          >
+                            <Icon className="h-5 w-5" />
+                          </div>
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <span className="font-mono text-xs font-bold text-muted-foreground">{i.incidentNumber}</span>
+                              <span className="font-mono text-xs font-bold text-muted-foreground">
+                                {i.incidentNumber}
+                              </span>
                               <span className="text-sm font-semibold truncate">{i.title}</span>
                             </div>
-                            <div className="text-xs text-muted-foreground truncate">{i.address || `${i.district}, ${i.state}`} · reported by {i.reportedBy?.name || "Citizen"}</div>
+                            <div className="text-xs text-muted-foreground truncate">
+                              {i.address || `${i.district}, ${i.state}`} · reported by{" "}
+                              {i.reportedBy?.name || "Citizen"}
+                            </div>
                           </div>
                           <div className="hidden md:flex items-center gap-2 shrink-0">
                             <SeverityBadge severity={i.severity} />
                             <StatusBadge status={i.status} />
-                            <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full shrink-0">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 rounded-full shrink-0"
+                            >
                               <Eye className="h-4 w-4" />
                             </Button>
                           </div>
@@ -151,14 +230,19 @@ function RescueDashboard() {
                 { t: "Drones", a: 4, total: 6 },
                 { t: "Medical kits", a: 142, total: 200 },
                 { t: "Comms units", a: 22, total: 30 },
-              ].map(r => (
+              ].map((r) => (
                 <li key={r.t} className="flex items-center justify-between gap-3">
                   <span>{r.t}</span>
                   <div className="flex items-center gap-2 min-w-[180px]">
                     <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
-                      <div className="h-full bg-primary" style={{ width: `${(r.a / r.total) * 100}%` }} />
+                      <div
+                        className="h-full bg-primary"
+                        style={{ width: `${(r.a / r.total) * 100}%` }}
+                      />
                     </div>
-                    <span className="text-xs text-muted-foreground w-14 text-right">{r.a}/{r.total}</span>
+                    <span className="text-xs text-muted-foreground w-14 text-right">
+                      {r.a}/{r.total}
+                    </span>
                   </div>
                 </li>
               ))}
@@ -176,7 +260,13 @@ function RescueDashboard() {
                 <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
                 <XAxis dataKey="city" fontSize={11} stroke="currentColor" opacity={0.5} />
                 <YAxis fontSize={11} stroke="currentColor" opacity={0.5} />
-                <Tooltip contentStyle={{ borderRadius: 12, border: "1px solid var(--color-border)", background: "var(--color-card)" }} />
+                <Tooltip
+                  contentStyle={{
+                    borderRadius: 12,
+                    border: "1px solid var(--color-border)",
+                    background: "var(--color-card)",
+                  }}
+                />
                 <Bar dataKey="incidents" fill="var(--color-primary)" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>

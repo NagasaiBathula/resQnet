@@ -10,7 +10,9 @@ export const Route = createFileRoute("/admin/requests")({
 function AdminRequestsPage() {
   return (
     <AppShell title="Registration Requests" actions={null}>
-      <p className="text-muted-foreground -mt-1 mb-6">Review and process platform volunteer and rescue team registrations.</p>
+      <p className="text-muted-foreground -mt-1 mb-6">
+        Review and process platform volunteer and rescue team registrations.
+      </p>
       <RegistrationRequests />
     </AppShell>
   );

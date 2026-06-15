@@ -13,13 +13,21 @@ export interface ListItem {
   title: string;
   subtitle?: string;
   meta?: string;
-  badge?: { text: string; tone?: "primary" | "success" | "warning" | "emergency" | "info" | "muted" };
+  badge?: {
+    text: string;
+    tone?: "primary" | "success" | "warning" | "emergency" | "info" | "muted";
+  };
   icon?: any;
   iconClass?: string;
 }
 
 export function DataPage({
-  pageTitle, pageSubtitle, items, headerExtra, sidePanel, emptyHint = "Nothing here yet.",
+  pageTitle,
+  pageSubtitle,
+  items,
+  headerExtra,
+  sidePanel,
+  emptyHint = "Nothing here yet.",
 }: {
   pageTitle: string;
   pageSubtitle?: string;
@@ -53,23 +61,41 @@ export function DataPage({
                 {items.map((it, i) => (
                   <motion.div
                     key={it.id}
-                    initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: Math.min(i * 0.02, 0.3) }}
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: Math.min(i * 0.02, 0.3) }}
                     className="flex items-center gap-3 py-3"
                   >
                     {it.icon && (
-                      <div className={cn("h-10 w-10 shrink-0 rounded-xl flex items-center justify-center", it.iconClass || "bg-primary/10 text-primary")}>
+                      <div
+                        className={cn(
+                          "h-10 w-10 shrink-0 rounded-xl flex items-center justify-center",
+                          it.iconClass || "bg-primary/10 text-primary",
+                        )}
+                      >
                         <it.icon className="h-5 w-5" />
                       </div>
                     )}
                     <div className="min-w-0 flex-1">
                       <div className="text-sm font-medium truncate">{it.title}</div>
-                      {it.subtitle && <div className="text-xs text-muted-foreground truncate">{it.subtitle}</div>}
+                      {it.subtitle && (
+                        <div className="text-xs text-muted-foreground truncate">{it.subtitle}</div>
+                      )}
                     </div>
-                    {it.meta && <div className="hidden sm:block text-xs text-muted-foreground">{it.meta}</div>}
-                    {it.badge && (
-                      <Badge variant="outline" className={cn("capitalize font-normal", toneMap[it.badge.tone || "muted"])}>{it.badge.text}</Badge>
+                    {it.meta && (
+                      <div className="hidden sm:block text-xs text-muted-foreground">{it.meta}</div>
                     )}
-                    <Button size="sm" variant="ghost" className="h-8">View</Button>
+                    {it.badge && (
+                      <Badge
+                        variant="outline"
+                        className={cn("capitalize font-normal", toneMap[it.badge.tone || "muted"])}
+                      >
+                        {it.badge.text}
+                      </Badge>
+                    )}
+                    <Button size="sm" variant="ghost" className="h-8">
+                      View
+                    </Button>
                   </motion.div>
                 ))}
               </div>

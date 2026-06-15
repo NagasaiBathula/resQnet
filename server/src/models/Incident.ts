@@ -181,7 +181,7 @@ const incidentSchema = new mongoose.Schema<IIncident>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Pre-save hook to generate sequential, human-friendly incidentNumber (INC-2026-XXXX)

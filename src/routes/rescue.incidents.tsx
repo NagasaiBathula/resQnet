@@ -4,10 +4,18 @@ import { AlertTriangle, Truck, Clock, Users, ShieldAlert, Radio, Eye } from "luc
 import { useState, useEffect } from "react";
 import { incidentService } from "@/services/incidentService";
 import { IncidentDetailsDialog } from "@/components/incident-details-dialog";
-import { SeverityBadge, StatusBadge, typeIcon, typeColor, mapCategoryToKey } from "@/components/shared";
+import {
+  SeverityBadge,
+  StatusBadge,
+  typeIcon,
+  typeColor,
+  mapCategoryToKey,
+} from "@/components/shared";
 import { getStatusBadgeTone } from "@/lib/constants/incident-status";
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/rescue/incidents")({
   head: () => ({ meta: [{ title: "Assigned Incidents — ResQNet" }] }),
@@ -45,15 +53,21 @@ function RescueIncidentsPage() {
 
   // Stats computation
   const activeCount = incidentsList.filter(
-    (i) => i.status === "Assigned" || i.status === "In Progress"
+    (i) => i.status === "Assigned" || i.status === "In Progress",
   ).length;
   const criticalCount = incidentsList.filter(
-    (i) => (i.severity === "critical" || i.severity === "High" || i.severity === "Critical") && i.status !== "Resolved"
+    (i) =>
+      (i.severity === "critical" || i.severity === "High" || i.severity === "Critical") &&
+      i.status !== "Resolved",
   ).length;
   const resolvedCount = incidentsList.filter((i) => i.status === "Resolved").length;
 
   const columns = [
-    { key: "incidentNumber", label: "Case", render: (r: any) => <span className="font-mono text-xs font-bold">{r.incidentNumber}</span> },
+    {
+      key: "incidentNumber",
+      label: "Case",
+      render: (r: any) => <span className="font-mono text-xs font-bold">{r.incidentNumber}</span>,
+    },
     {
       key: "category",
       label: "Type",
@@ -62,7 +76,12 @@ function RescueIncidentsPage() {
         const Icon = typeIcon[catKey] || AlertTriangle;
         return (
           <span className="inline-flex items-center gap-2">
-            <span className={cn("h-7 w-7 rounded-lg grid place-items-center shrink-0", typeColor[catKey] || "bg-primary/10 text-primary")}>
+            <span
+              className={cn(
+                "h-7 w-7 rounded-lg grid place-items-center shrink-0",
+                typeColor[catKey] || "bg-primary/10 text-primary",
+              )}
+            >
               <Icon className="h-3.5 w-3.5" />
             </span>
             <span className="capitalize text-sm">{r.category}</span>
@@ -70,9 +89,25 @@ function RescueIncidentsPage() {
         );
       },
     },
-    { key: "title", label: "Title", render: (r: any) => <span className="text-sm font-semibold">{r.title}</span> },
-    { key: "location", label: "Region", render: (r: any) => <span className="text-xs text-muted-foreground">{r.district}, {r.state}</span> },
-    { key: "severity", label: "Severity", render: (r: any) => <SeverityBadge severity={r.severity?.toLowerCase()} /> },
+    {
+      key: "title",
+      label: "Title",
+      render: (r: any) => <span className="text-sm font-semibold">{r.title}</span>,
+    },
+    {
+      key: "location",
+      label: "Region",
+      render: (r: any) => (
+        <span className="text-xs text-muted-foreground">
+          {r.district}, {r.state}
+        </span>
+      ),
+    },
+    {
+      key: "severity",
+      label: "Severity",
+      render: (r: any) => <SeverityBadge severity={r.severity?.toLowerCase()} />,
+    },
     { key: "status", label: "Status", render: (r: any) => <StatusBadge status={r.status} /> },
   ];
 
@@ -82,10 +117,34 @@ function RescueIncidentsPage() {
         title="Active assignments"
         subtitle="Your response queue, deployment status, and on-ground resolutions."
         stats={[
-          { label: "Active Tasks", value: activeCount.toString(), sublabel: "Response pending", icon: AlertTriangle, accent: "emergency" },
-          { label: "Critical Incidents", value: criticalCount.toString(), sublabel: "Life-threatening", icon: Truck, accent: "primary" },
-          { label: "Completed today", value: resolvedCount.toString(), sublabel: "Resolved cases", icon: Clock, accent: "success" },
-          { label: "Assigned personnel", value: "8", sublabel: "Ready for deployment", icon: Users, accent: "info" },
+          {
+            label: "Active Tasks",
+            value: activeCount.toString(),
+            sublabel: "Response pending",
+            icon: AlertTriangle,
+            accent: "emergency",
+          },
+          {
+            label: "Critical Incidents",
+            value: criticalCount.toString(),
+            sublabel: "Life-threatening",
+            icon: Truck,
+            accent: "primary",
+          },
+          {
+            label: "Completed today",
+            value: resolvedCount.toString(),
+            sublabel: "Resolved cases",
+            icon: Clock,
+            accent: "success",
+          },
+          {
+            label: "Assigned personnel",
+            value: "8",
+            sublabel: "Ready for deployment",
+            icon: Users,
+            accent: "info",
+          },
         ]}
         extraActions={[{ label: "Open Channels", icon: Radio }]}
         tableTitle="My dispatch queue"
@@ -101,7 +160,10 @@ function RescueIncidentsPage() {
           {
             title: "Emergency SLA Info",
             items: [
-              { label: "Triage response time", value: <PillBadge tone="success">Under 2m</PillBadge> },
+              {
+                label: "Triage response time",
+                value: <PillBadge tone="success">Under 2m</PillBadge>,
+              },
               { label: "Evacuation route", value: <PillBadge tone="success">Clear</PillBadge> },
             ],
           },
@@ -131,15 +193,24 @@ function RescueIncidentsPage() {
                     className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-3.5 border rounded-xl hover:bg-accent/40 cursor-pointer transition"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="font-mono text-xs font-bold text-muted-foreground">{inc.incidentNumber}</div>
+                      <div className="font-mono text-xs font-bold text-muted-foreground">
+                        {inc.incidentNumber}
+                      </div>
                       <div>
                         <div className="text-sm font-semibold">{inc.title}</div>
-                        <div className="text-xs text-muted-foreground mt-0.5">{inc.address || `${inc.district}, ${inc.state}`}</div>
+                        <div className="text-xs text-muted-foreground mt-0.5">
+                          {inc.address || `${inc.district}, ${inc.state}`}
+                        </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <SeverityBadge severity={inc.severity} />
-                      <Badge className={cn("rounded-full px-2 py-0.5 capitalize text-xs", getStatusBadgeTone(inc.status))}>
+                      <Badge
+                        className={cn(
+                          "rounded-full px-2 py-0.5 capitalize text-xs",
+                          getStatusBadgeTone(inc.status),
+                        )}
+                      >
                         {inc.status}
                       </Badge>
                       <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">

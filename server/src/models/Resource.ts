@@ -185,7 +185,7 @@ const resourceSchema = new mongoose.Schema<IResource>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Pre-save hook to generate sequential, human-friendly resourceId (RES-2026-XXXX)

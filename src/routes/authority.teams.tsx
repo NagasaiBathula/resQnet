@@ -27,7 +27,7 @@ function TeamsPage() {
         throw new Error("Failed to fetch rescue teams");
       }
       const data = await res.json();
-      
+
       const mapped = data.map((u: any) => ({
         id: u._id || u.id,
         name: u.organizationName || u.name,
@@ -58,8 +58,20 @@ function TeamsPage() {
         subtitle="Specialty units, readiness, and regional coverage."
         stats={[
           { label: "Teams", value: teams.length.toString(), icon: Shield, accent: "primary" },
-          { label: "Ready", value: teams.filter(t => t.readiness === "approved").length.toString(), sublabel: "approved strength", icon: Shield, accent: "success" },
-          { label: "Deployed", value: teams.filter(t => t.readiness === "pending").length.toString(), sublabel: "pending review", icon: Truck, accent: "warning" },
+          {
+            label: "Ready",
+            value: teams.filter((t) => t.readiness === "approved").length.toString(),
+            sublabel: "approved strength",
+            icon: Shield,
+            accent: "success",
+          },
+          {
+            label: "Deployed",
+            value: teams.filter((t) => t.readiness === "pending").length.toString(),
+            sublabel: "pending review",
+            icon: Truck,
+            accent: "warning",
+          },
           { label: "Personnel", value: (teams.length * 6).toString(), icon: Users, accent: "info" },
         ]}
         primaryAction={{
@@ -70,13 +82,33 @@ function TeamsPage() {
         filters={["All", "Approved", "Pending", "Rejected"]}
         tableTitle="Teams"
         tableCols={[
-          { key: "name", label: "Team", render: r => <span className="text-sm font-medium">{r.name}</span> },
+          {
+            key: "name",
+            label: "Team",
+            render: (r) => <span className="text-sm font-medium">{r.name}</span>,
+          },
           { key: "region", label: "Region" },
           { key: "specialty", label: "Specialty" },
           { key: "lead", label: "Responder" },
           { key: "members", label: "Experience (yrs)" },
           { key: "vehicles", label: "Vehicles" },
-          { key: "readiness", label: "Status", render: r => <PillBadge tone={r.readiness === "approved" ? "success" : r.readiness === "pending" ? "warning" : "emergency"}>{r.readiness}</PillBadge> },
+          {
+            key: "readiness",
+            label: "Status",
+            render: (r) => (
+              <PillBadge
+                tone={
+                  r.readiness === "approved"
+                    ? "success"
+                    : r.readiness === "pending"
+                      ? "warning"
+                      : "emergency"
+                }
+              >
+                {r.readiness}
+              </PillBadge>
+            ),
+          },
         ]}
         tableRows={teams}
       />

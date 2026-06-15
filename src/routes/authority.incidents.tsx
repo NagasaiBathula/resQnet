@@ -4,7 +4,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { SeverityBadge, StatusBadge, typeIcon, typeColor, mapCategoryToKey } from "@/components/shared";
+import {
+  SeverityBadge,
+  StatusBadge,
+  typeIcon,
+  typeColor,
+  mapCategoryToKey,
+} from "@/components/shared";
 import { getStatusBadgeTone } from "@/lib/constants/incident-status";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
@@ -22,7 +28,7 @@ function AuthorityIncidentsPage() {
   const [loading, setLoading] = useState(true);
   const [selectedIncident, setSelectedIncident] = useState<any>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  
+
   // Filtering states
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -61,7 +67,8 @@ function AuthorityIncidentsPage() {
       (i.address && i.address.toLowerCase().includes(search.toLowerCase()));
 
     const matchesStatus = statusFilter === "all" || i.status === statusFilter;
-    const matchesSeverity = severityFilter === "all" || i.severity.toLowerCase() === severityFilter.toLowerCase();
+    const matchesSeverity =
+      severityFilter === "all" || i.severity.toLowerCase() === severityFilter.toLowerCase();
     const matchesCategory = categoryFilter === "all" || i.category === categoryFilter;
 
     return matchesSearch && matchesStatus && matchesSeverity && matchesCategory;
@@ -70,7 +77,8 @@ function AuthorityIncidentsPage() {
   return (
     <AppShell title="Incident command center">
       <p className="text-muted-foreground -mt-1 mb-6">
-        Assess reported emergencies, dispatch rescue responders, and coordinate auxiliary volunteers.
+        Assess reported emergencies, dispatch rescue responders, and coordinate auxiliary
+        volunteers.
       </p>
 
       {/* Search & Filters */}
@@ -90,7 +98,7 @@ function AuthorityIncidentsPage() {
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
               <Filter className="h-3.5 w-3.5" /> Filters:
             </div>
-            
+
             {/* Status Selector */}
             <select
               value={statusFilter}
@@ -156,7 +164,9 @@ function AuthorityIncidentsPage() {
       {/* Incidents Table / List */}
       {loading ? (
         <div className="flex h-[300px] items-center justify-center">
-          <div className="animate-pulse text-muted-foreground text-sm font-medium">Loading command stream...</div>
+          <div className="animate-pulse text-muted-foreground text-sm font-medium">
+            Loading command stream...
+          </div>
         </div>
       ) : filteredList.length === 0 ? (
         <Card className="border-border/60">
@@ -183,7 +193,12 @@ function AuthorityIncidentsPage() {
               >
                 <CardContent className="p-4 md:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div className="flex items-start md:items-center gap-3 min-w-0">
-                    <div className={cn("h-11 w-11 rounded-xl flex items-center justify-center shrink-0 mt-0.5 md:mt-0", typeColor[catKey] || "bg-primary/10 text-primary")}>
+                    <div
+                      className={cn(
+                        "h-11 w-11 rounded-xl flex items-center justify-center shrink-0 mt-0.5 md:mt-0",
+                        typeColor[catKey] || "bg-primary/10 text-primary",
+                      )}
+                    >
                       <Icon className="h-5 w-5" />
                     </div>
                     <div className="min-w-0">
@@ -195,10 +210,12 @@ function AuthorityIncidentsPage() {
                       </div>
                       <div className="text-xs text-muted-foreground mt-1 flex flex-wrap gap-x-4 gap-y-1 items-center">
                         <span className="flex items-center gap-1">
-                          <MapPin className="h-3.5 w-3.5" /> {inc.address || `${inc.district}, ${inc.state}`}
+                          <MapPin className="h-3.5 w-3.5" />{" "}
+                          {inc.address || `${inc.district}, ${inc.state}`}
                         </span>
                         <span className="flex items-center gap-1">
-                          <Calendar className="h-3.5 w-3.5" /> {new Date(inc.createdAt).toLocaleDateString()}
+                          <Calendar className="h-3.5 w-3.5" />{" "}
+                          {new Date(inc.createdAt).toLocaleDateString()}
                         </span>
                         {inc.assignedRescueTeam && (
                           <span className="text-primary font-medium">
@@ -216,7 +233,12 @@ function AuthorityIncidentsPage() {
 
                   <div className="flex items-center gap-2.5 shrink-0 self-end md:self-center">
                     <SeverityBadge severity={inc.severity} />
-                    <Badge className={cn("rounded-full px-2.5 py-0.5 text-xs capitalize", getStatusBadgeTone(inc.status))}>
+                    <Badge
+                      className={cn(
+                        "rounded-full px-2.5 py-0.5 text-xs capitalize",
+                        getStatusBadgeTone(inc.status),
+                      )}
+                    >
                       {inc.status}
                     </Badge>
                     <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">

@@ -6,17 +6,23 @@ export const INCIDENT_STATUS = {
   RESOLVED: "Resolved",
 } as const;
 
-export type IncidentStatusType = typeof INCIDENT_STATUS[keyof typeof INCIDENT_STATUS];
+export type IncidentStatusType = (typeof INCIDENT_STATUS)[keyof typeof INCIDENT_STATUS];
 
 export const VALID_TRANSITIONS: Record<IncidentStatusType, IncidentStatusType[]> = {
   [INCIDENT_STATUS.REPORTED]: [INCIDENT_STATUS.VERIFIED, INCIDENT_STATUS.RESOLVED],
-  [INCIDENT_STATUS.VERIFIED]: [INCIDENT_STATUS.ASSIGNED, INCIDENT_STATUS.IN_PROGRESS, INCIDENT_STATUS.RESOLVED],
+  [INCIDENT_STATUS.VERIFIED]: [
+    INCIDENT_STATUS.ASSIGNED,
+    INCIDENT_STATUS.IN_PROGRESS,
+    INCIDENT_STATUS.RESOLVED,
+  ],
   [INCIDENT_STATUS.ASSIGNED]: [INCIDENT_STATUS.IN_PROGRESS, INCIDENT_STATUS.RESOLVED],
   [INCIDENT_STATUS.IN_PROGRESS]: [INCIDENT_STATUS.RESOLVED],
   [INCIDENT_STATUS.RESOLVED]: [],
 };
 
-export function getStatusBadgeTone(status: string): "info" | "primary" | "warning" | "success" | "muted" {
+export function getStatusBadgeTone(
+  status: string,
+): "info" | "primary" | "warning" | "success" | "muted" {
   switch (status) {
     case INCIDENT_STATUS.REPORTED:
       return "info";

@@ -4,9 +4,25 @@ import { useAuth, roleHome } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, User, HeartHandshake, Truck, MapPin, Phone, ShieldAlert, FileText, CheckCircle2 } from "lucide-react";
+import {
+  ArrowRight,
+  User,
+  HeartHandshake,
+  Truck,
+  MapPin,
+  Phone,
+  ShieldAlert,
+  FileText,
+  CheckCircle2,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
@@ -49,7 +65,9 @@ function RegisterPage() {
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("Male");
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-  const [availability, setAvailability] = useState<"Full Time" | "Part Time" | "Weekends">("Part Time");
+  const [availability, setAvailability] = useState<"Full Time" | "Part Time" | "Weekends">(
+    "Part Time",
+  );
   const [volunteerExperience, setVolunteerExperience] = useState("");
   const [emergName, setEmergName] = useState("");
   const [emergNumber, setEmergNumber] = useState("");
@@ -60,7 +78,9 @@ function RegisterPage() {
   const [designation, setDesignation] = useState("Medical Responder");
   const [experienceYears, setExperienceYears] = useState("");
   const [specialization, setSpecialization] = useState("Search & Rescue");
-  const [docMetadata, setDocMetadata] = useState<{ fileName: string; fileType: string } | null>(null);
+  const [docMetadata, setDocMetadata] = useState<{ fileName: string; fileType: string } | null>(
+    null,
+  );
 
   useEffect(() => {
     if (user) {
@@ -100,7 +120,16 @@ function RegisterPage() {
     e.preventDefault();
 
     // Validations
-    if (!name || !email || !mobileNumber || !password || !confirmPassword || !state || !district || !address) {
+    if (
+      !name ||
+      !email ||
+      !mobileNumber ||
+      !password ||
+      !confirmPassword ||
+      !state ||
+      !district ||
+      !address
+    ) {
       toast.error("Please fill in all common fields");
       return;
     }
@@ -143,7 +172,15 @@ function RegisterPage() {
         emergencyContactNumber: emergNumber,
       };
     } else if (role === "rescue") {
-      if (!orgName || !employeeId || !designation || !experienceYears || !specialization || !emergName || !emergNumber) {
+      if (
+        !orgName ||
+        !employeeId ||
+        !designation ||
+        !experienceYears ||
+        !specialization ||
+        !emergName ||
+        !emergNumber
+      ) {
         toast.error("Please fill in all rescue team details");
         return;
       }
@@ -174,9 +211,13 @@ function RegisterPage() {
 
       if (r.status === "pending") {
         if (role === "volunteer") {
-          toast.info("Your volunteer application has been submitted and is awaiting approval.", { duration: 6000 });
+          toast.info("Your volunteer application has been submitted and is awaiting approval.", {
+            duration: 6000,
+          });
         } else if (role === "rescue") {
-          toast.info("Your rescue team application has been submitted and is awaiting approval.", { duration: 6000 });
+          toast.info("Your rescue team application has been submitted and is awaiting approval.", {
+            duration: 6000,
+          });
         }
         navigate({ to: "/login" });
       } else {
@@ -201,12 +242,20 @@ function RegisterPage() {
           </Link>
         </div>
         <div className="relative">
-          <h2 className="text-4xl font-bold tracking-tight leading-tight">Join the network.<br />Save lives.</h2>
+          <h2 className="text-4xl font-bold tracking-tight leading-tight">
+            Join the network.
+            <br />
+            Save lives.
+          </h2>
           <p className="mt-4 text-muted-foreground max-w-md">
-            Register today to receive immediate AI emergency assistance, coordinate with rescue teams, or join as a volunteer.
+            Register today to receive immediate AI emergency assistance, coordinate with rescue
+            teams, or join as a volunteer.
           </p>
           <div className="mt-8 flex items-center gap-3 text-xs text-muted-foreground">
-            <Badge variant="outline" className="rounded-full gap-1.5 bg-background/60 backdrop-blur">
+            <Badge
+              variant="outline"
+              className="rounded-full gap-1.5 bg-background/60 backdrop-blur"
+            >
               <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" /> Live network
             </Badge>
             <span>·</span>
@@ -225,26 +274,51 @@ function RegisterPage() {
           <span className="font-semibold tracking-tight">ResQNet</span>
         </Link>
 
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="flex-1 flex flex-col justify-center max-w-lg mx-auto w-full">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex-1 flex flex-col justify-center max-w-lg mx-auto w-full"
+        >
           <h1 className="text-2xl font-bold tracking-tight">Create your account</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Start using the disaster response ecosystem.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Start using the disaster response ecosystem.
+          </p>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             {/* Common Block 1 */}
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
                 <Label htmlFor="name">Full Name</Label>
-                <Input id="name" value={name} onChange={e => setName(e.target.value)} placeholder="John Doe" required />
+                <Input
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="John Doe"
+                  required
+                />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="mobile">Mobile Number</Label>
-                <Input id="mobile" value={mobileNumber} onChange={e => setMobileNumber(e.target.value)} placeholder="10-digit number" required />
+                <Input
+                  id="mobile"
+                  value={mobileNumber}
+                  onChange={(e) => setMobileNumber(e.target.value)}
+                  placeholder="10-digit number"
+                  required
+                />
               </div>
             </div>
 
             <div className="space-y-1">
               <Label htmlFor="email">Email Address</Label>
-              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="name@example.com" required />
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="name@example.com"
+                required
+              />
             </div>
 
             <div className="space-y-1.5">
@@ -261,7 +335,8 @@ function RegisterPage() {
                   </SelectItem>
                   <SelectItem value="volunteer">
                     <span className="flex items-center gap-2">
-                      <HeartHandshake className="h-4 w-4 text-success" /> Volunteer (Assist Relief Teams)
+                      <HeartHandshake className="h-4 w-4 text-success" /> Volunteer (Assist Relief
+                      Teams)
                     </span>
                   </SelectItem>
                   <SelectItem value="rescue">
@@ -271,15 +346,17 @@ function RegisterPage() {
                   </SelectItem>
                 </SelectContent>
               </Select>
-              
+
               {role === "volunteer" && (
                 <p className="text-xs text-amber-600 dark:text-amber-400 mt-1 font-semibold flex items-center gap-1">
-                  <ShieldAlert className="h-3.5 w-3.5" /> Volunteer accounts require approval before activation.
+                  <ShieldAlert className="h-3.5 w-3.5" /> Volunteer accounts require approval before
+                  activation.
                 </p>
               )}
               {role === "rescue" && (
                 <p className="text-xs text-amber-600 dark:text-amber-400 mt-1 font-semibold flex items-center gap-1">
-                  <ShieldAlert className="h-3.5 w-3.5" /> Rescue Team accounts require approval before activation.
+                  <ShieldAlert className="h-3.5 w-3.5" /> Rescue Team accounts require approval
+                  before activation.
                 </p>
               )}
             </div>
@@ -294,19 +371,40 @@ function RegisterPage() {
 
             <div className="space-y-1">
               <Label htmlFor="address">Full Address</Label>
-              <Input id="address" value={address} onChange={e => setAddress(e.target.value)} placeholder="Flat, Street, Area" required />
+              <Input
+                id="address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="Flat, Street, Area"
+                required
+              />
             </div>
 
             {/* Dynamic Content */}
             <AnimatePresence mode="wait">
               {role === "volunteer" && (
-                <motion.div key="volunteer-fields" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="space-y-4 border-t pt-4">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">Volunteer Profile Form</h3>
-                  
+                <motion.div
+                  key="volunteer-fields"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="space-y-4 border-t pt-4"
+                >
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
+                    Volunteer Profile Form
+                  </h3>
+
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
                       <Label htmlFor="age">Age</Label>
-                      <Input id="age" type="number" value={age} onChange={e => setAge(e.target.value)} placeholder="e.g. 24" required />
+                      <Input
+                        id="age"
+                        type="number"
+                        value={age}
+                        onChange={(e) => setAge(e.target.value)}
+                        placeholder="e.g. 24"
+                        required
+                      />
                     </div>
                     <div className="space-y-1">
                       <Label htmlFor="gender">Gender</Label>
@@ -333,7 +431,12 @@ function RegisterPage() {
                             checked={selectedSkills.includes(s)}
                             onCheckedChange={(checked) => handleSkillChange(s, !!checked)}
                           />
-                          <label htmlFor={`skill-${s}`} className="text-xs font-medium cursor-pointer">{s}</label>
+                          <label
+                            htmlFor={`skill-${s}`}
+                            className="text-xs font-medium cursor-pointer"
+                          >
+                            {s}
+                          </label>
                         </div>
                       ))}
                     </div>
@@ -341,7 +444,10 @@ function RegisterPage() {
 
                   <div className="space-y-1">
                     <Label htmlFor="availability">Availability</Label>
-                    <Select value={availability} onValueChange={val => setAvailability(val as any)}>
+                    <Select
+                      value={availability}
+                      onValueChange={(val) => setAvailability(val as any)}
+                    >
                       <SelectTrigger className="h-10">
                         <SelectValue placeholder="Availability" />
                       </SelectTrigger>
@@ -355,34 +461,71 @@ function RegisterPage() {
 
                   <div className="space-y-1">
                     <Label htmlFor="volExp">Prior Volunteer Experience (Optional)</Label>
-                    <Input id="volExp" value={volunteerExperience} onChange={e => setVolunteerExperience(e.target.value)} placeholder="Brief description of past aid operations" />
+                    <Input
+                      id="volExp"
+                      value={volunteerExperience}
+                      onChange={(e) => setVolunteerExperience(e.target.value)}
+                      placeholder="Brief description of past aid operations"
+                    />
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
                       <Label htmlFor="vEmergName">Emergency Contact Name</Label>
-                      <Input id="vEmergName" value={emergName} onChange={e => setEmergName(e.target.value)} placeholder="Contact Name" required />
+                      <Input
+                        id="vEmergName"
+                        value={emergName}
+                        onChange={(e) => setEmergName(e.target.value)}
+                        placeholder="Contact Name"
+                        required
+                      />
                     </div>
                     <div className="space-y-1">
                       <Label htmlFor="vEmergNumber">Emergency Contact Phone</Label>
-                      <Input id="vEmergNumber" value={emergNumber} onChange={e => setEmergNumber(e.target.value)} placeholder="Phone Number" required />
+                      <Input
+                        id="vEmergNumber"
+                        value={emergNumber}
+                        onChange={(e) => setEmergNumber(e.target.value)}
+                        placeholder="Phone Number"
+                        required
+                      />
                     </div>
                   </div>
                 </motion.div>
               )}
 
               {role === "rescue" && (
-                <motion.div key="rescue-fields" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="space-y-4 border-t pt-4">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">Rescue Responder Profile Form</h3>
-                  
+                <motion.div
+                  key="rescue-fields"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="space-y-4 border-t pt-4"
+                >
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">
+                    Rescue Responder Profile Form
+                  </h3>
+
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
                       <Label htmlFor="orgName">Organization Name</Label>
-                      <Input id="orgName" value={orgName} onChange={e => setOrgName(e.target.value)} placeholder="e.g. NDRF, Fire Dept" required />
+                      <Input
+                        id="orgName"
+                        value={orgName}
+                        onChange={(e) => setOrgName(e.target.value)}
+                        placeholder="e.g. NDRF, Fire Dept"
+                        required
+                      />
                     </div>
                     <div className="space-y-1">
                       <Label htmlFor="empId">Employee / Officer ID</Label>
-                      <Input id="empId" value={employeeId} onChange={e => setEmployeeId(e.target.value)} placeholder="ID Code" required />
+                      <Input
+                        id="empId"
+                        value={employeeId}
+                        onChange={(e) => setEmployeeId(e.target.value)}
+                        placeholder="ID Code"
+                        required
+                      />
                     </div>
                   </div>
 
@@ -397,13 +540,22 @@ function RegisterPage() {
                           <SelectItem value="Fire Officer">Fire Officer</SelectItem>
                           <SelectItem value="Medical Responder">Medical Responder</SelectItem>
                           <SelectItem value="Police Officer">Police Officer</SelectItem>
-                          <SelectItem value="Disaster Response Officer">Disaster Response Officer</SelectItem>
+                          <SelectItem value="Disaster Response Officer">
+                            Disaster Response Officer
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div className="space-y-1">
                       <Label htmlFor="expYears">Years of Experience</Label>
-                      <Input id="expYears" type="number" value={experienceYears} onChange={e => setExperienceYears(e.target.value)} placeholder="e.g. 5" required />
+                      <Input
+                        id="expYears"
+                        type="number"
+                        value={experienceYears}
+                        onChange={(e) => setExperienceYears(e.target.value)}
+                        placeholder="e.g. 5"
+                        required
+                      />
                     </div>
                   </div>
 
@@ -425,11 +577,19 @@ function RegisterPage() {
                   <div className="space-y-1.5">
                     <Label htmlFor="idDoc">Official ID Document Upload (JPG, PNG, PDF)</Label>
                     <div className="flex items-center gap-3 border border-dashed rounded-xl p-3 bg-muted/10">
-                      <Input id="idDoc" type="file" onChange={handleFileChange} className="h-10 pt-1.5 text-xs border-0 file:rounded-md file:bg-primary file:text-primary-foreground" accept=".jpg,.jpeg,.png,.pdf" required />
+                      <Input
+                        id="idDoc"
+                        type="file"
+                        onChange={handleFileChange}
+                        className="h-10 pt-1.5 text-xs border-0 file:rounded-md file:bg-primary file:text-primary-foreground"
+                        accept=".jpg,.jpeg,.png,.pdf"
+                        required
+                      />
                     </div>
                     {docMetadata && (
                       <p className="text-[10px] text-muted-foreground mt-0.5">
-                        Selected: <span className="font-semibold">{docMetadata.fileName}</span> ({docMetadata.fileType})
+                        Selected: <span className="font-semibold">{docMetadata.fileName}</span> (
+                        {docMetadata.fileType})
                       </p>
                     )}
                   </div>
@@ -437,11 +597,23 @@ function RegisterPage() {
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
                       <Label htmlFor="rEmergName">Emergency Contact Name</Label>
-                      <Input id="rEmergName" value={emergName} onChange={e => setEmergName(e.target.value)} placeholder="Contact Name" required />
+                      <Input
+                        id="rEmergName"
+                        value={emergName}
+                        onChange={(e) => setEmergName(e.target.value)}
+                        placeholder="Contact Name"
+                        required
+                      />
                     </div>
                     <div className="space-y-1">
                       <Label htmlFor="rEmergNumber">Emergency Contact Phone</Label>
-                      <Input id="rEmergNumber" value={emergNumber} onChange={e => setEmergNumber(e.target.value)} placeholder="Phone Number" required />
+                      <Input
+                        id="rEmergNumber"
+                        value={emergNumber}
+                        onChange={(e) => setEmergNumber(e.target.value)}
+                        placeholder="Phone Number"
+                        required
+                      />
                     </div>
                   </div>
                 </motion.div>
@@ -452,11 +624,25 @@ function RegisterPage() {
             <div className="grid grid-cols-2 gap-3 border-t pt-4">
               <div className="space-y-1">
                 <Label htmlFor="pw">Password</Label>
-                <Input id="pw" type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required />
+                <Input
+                  id="pw"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="confirmPw">Confirm Password</Label>
-                <Input id="confirmPw" type="password" placeholder="••••••••" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required />
+                <Input
+                  id="confirmPw"
+                  type="password"
+                  placeholder="••••••••"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
               </div>
             </div>
 
@@ -473,7 +659,15 @@ function RegisterPage() {
           </div>
 
           <p className="mt-6 text-center text-xs text-muted-foreground">
-            By continuing you agree to our <a className="underline hover:text-foreground" href="#">Terms</a> & <a className="underline hover:text-foreground" href="#">Privacy</a>.
+            By continuing you agree to our{" "}
+            <a className="underline hover:text-foreground" href="#">
+              Terms
+            </a>{" "}
+            &{" "}
+            <a className="underline hover:text-foreground" href="#">
+              Privacy
+            </a>
+            .
           </p>
         </motion.div>
       </div>

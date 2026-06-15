@@ -10,7 +10,9 @@ export const Route = createFileRoute("/authority/requests")({
 function AuthorityRequestsPage() {
   return (
     <AppShell title="Registration Requests" actions={null}>
-      <p className="text-muted-foreground -mt-1 mb-6">Review pending Volunteer and Rescue Team registrations.</p>
+      <p className="text-muted-foreground -mt-1 mb-6">
+        Review pending Volunteer and Rescue Team registrations.
+      </p>
       <RegistrationRequests />
     </AppShell>
   );

@@ -5,7 +5,19 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { MapPin, Search, Phone, Navigation, Building2, Droplets, Wifi, BatteryCharging, Bed, Utensils, Cross } from "lucide-react";
+import {
+  MapPin,
+  Search,
+  Phone,
+  Navigation,
+  Building2,
+  Droplets,
+  Wifi,
+  BatteryCharging,
+  Bed,
+  Utensils,
+  Cross,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Map } from "@/components/map/map";
@@ -55,7 +67,7 @@ function ShelterPage() {
   const filtered = sheltersList.filter(
     (s) =>
       s.name.toLowerCase().includes(q.toLowerCase()) ||
-      s.city.toLowerCase().includes(q.toLowerCase())
+      s.city.toLowerCase().includes(q.toLowerCase()),
   );
 
   const sel = sheltersList.find((s) => s.id === selected);
@@ -92,7 +104,7 @@ function ShelterPage() {
       <p className="text-muted-foreground -mt-1 mb-6">
         {sheltersList.length} shelters across 10 cities · live capacity
       </p>
-      
+
       <div className="grid lg:grid-cols-[1fr_1.4fr] gap-4 h-[calc(100vh-200px)] min-h-[600px]">
         {/* List */}
         <div className="flex flex-col gap-3 min-h-0">
@@ -115,7 +127,7 @@ function ShelterPage() {
                   onClick={() => setSelected(s.id)}
                   className={cn(
                     "w-full text-left rounded-2xl border p-4 transition hover:border-primary/45 cursor-pointer",
-                    active && "border-primary bg-primary/5 shadow-glow"
+                    active && "border-primary bg-primary/5 shadow-glow",
                   )}
                 >
                   <div className="flex items-start justify-between gap-2">
@@ -129,7 +141,7 @@ function ShelterPage() {
                         "text-xs px-2 py-0.5",
                         s.status === "open" && "bg-success/10 text-success border-success/20",
                         s.status === "limited" && "bg-warning/10 text-warning border-warning/20",
-                        s.status === "full" && "bg-emergency/10 text-emergency border-emergency/20"
+                        s.status === "full" && "bg-emergency/10 text-emergency border-emergency/20",
                       )}
                     >
                       {s.status}
@@ -176,7 +188,7 @@ function ShelterPage() {
                   className={cn(
                     sel.status === "open" && "bg-success/10 text-success border-success/20",
                     sel.status === "limited" && "bg-warning/10 text-warning border-warning/20",
-                    sel.status === "full" && "bg-emergency/10 text-emergency border-emergency/20"
+                    sel.status === "full" && "bg-emergency/10 text-emergency border-emergency/20",
                   )}
                 >
                   {sel.status}
@@ -206,7 +218,11 @@ function ShelterPage() {
                   {sel.facilities.map((f) => {
                     const Icon = FACILITY_ICON[f] || Building2;
                     return (
-                      <Badge key={f} variant="secondary" className="rounded-full gap-1.5 font-normal py-1">
+                      <Badge
+                        key={f}
+                        variant="secondary"
+                        className="rounded-full gap-1.5 font-normal py-1"
+                      >
                         <Icon className="h-3 w-3" /> {f}
                       </Badge>
                     );

@@ -42,7 +42,10 @@ function AuthorityMonitoring() {
   const [shelters, setShelters] = useState<Shelter[]>([]);
 
   const loadData = () => {
-    incidentService.getIncidents().then(setIncidents).catch(err => console.error(err));
+    incidentService
+      .getIncidents()
+      .then(setIncidents)
+      .catch((err) => console.error(err));
     mapService.getShelters().then(setShelters);
   };
 
@@ -73,7 +76,11 @@ function AuthorityMonitoring() {
   const markers = [...incidentMarkers, ...shelterMarkers];
 
   const columns = [
-    { key: "incidentNumber", label: "Case", render: (r: any) => <span className="font-mono text-xs font-bold">{r.incidentNumber}</span> },
+    {
+      key: "incidentNumber",
+      label: "Case",
+      render: (r: any) => <span className="font-mono text-xs font-bold">{r.incidentNumber}</span>,
+    },
     {
       key: "category",
       label: "Type",
@@ -82,7 +89,12 @@ function AuthorityMonitoring() {
         const key = mapCategoryToKey(r.category);
         return (
           <span className="inline-flex items-center gap-2">
-            <span className={cn("h-7 w-7 rounded-lg grid place-items-center shrink-0", typeColor[key] || "bg-primary/10 text-primary")}>
+            <span
+              className={cn(
+                "h-7 w-7 rounded-lg grid place-items-center shrink-0",
+                typeColor[key] || "bg-primary/10 text-primary",
+              )}
+            >
               <Icon className="h-3.5 w-3.5" />
             </span>
             <span className="capitalize text-sm">{r.category}</span>
@@ -90,9 +102,25 @@ function AuthorityMonitoring() {
         );
       },
     },
-    { key: "district", label: "Region", render: (r: any) => <span className="text-sm">{r.district}, {r.state}</span> },
-    { key: "affectedPeople", label: "Description", render: (r: any) => <span className="text-xs truncate max-w-xs block">{r.description}</span> },
-    { key: "severity", label: "Severity", render: (r: any) => <SeverityBadge severity={r.severity} /> },
+    {
+      key: "district",
+      label: "Region",
+      render: (r: any) => (
+        <span className="text-sm">
+          {r.district}, {r.state}
+        </span>
+      ),
+    },
+    {
+      key: "affectedPeople",
+      label: "Description",
+      render: (r: any) => <span className="text-xs truncate max-w-xs block">{r.description}</span>,
+    },
+    {
+      key: "severity",
+      label: "Severity",
+      render: (r: any) => <SeverityBadge severity={r.severity} />,
+    },
     { key: "status", label: "Status", render: (r: any) => <StatusBadge status={r.status} /> },
   ];
 
@@ -101,9 +129,27 @@ function AuthorityMonitoring() {
       title="Live monitoring"
       subtitle="National incident stream, sensor feeds, and broadcast controls."
       stats={[
-        { label: "Live incidents", value: incidents.length.toString(), sublabel: `${incidents.filter((i) => i.severity.toLowerCase() === "critical").length} critical`, icon: AlertTriangle, accent: "emergency" },
-        { label: "Sensor feeds", value: "1,284", sublabel: "98% online", icon: Activity, accent: "success" },
-        { label: "Broadcasts today", value: "9", sublabel: "3 active", icon: Radio, accent: "warning" },
+        {
+          label: "Live incidents",
+          value: incidents.length.toString(),
+          sublabel: `${incidents.filter((i) => i.severity.toLowerCase() === "critical").length} critical`,
+          icon: AlertTriangle,
+          accent: "emergency",
+        },
+        {
+          label: "Sensor feeds",
+          value: "1,284",
+          sublabel: "98% online",
+          icon: Activity,
+          accent: "success",
+        },
+        {
+          label: "Broadcasts today",
+          value: "9",
+          sublabel: "3 active",
+          icon: Radio,
+          accent: "warning",
+        },
         { label: "Eyes on map", value: "182", sublabel: "all roles", icon: Eye, accent: "info" },
       ]}
       extraActions={[
@@ -122,15 +168,27 @@ function AuthorityMonitoring() {
         {
           title: "Active broadcasts",
           items: [
-            { label: "Cyclone watch · Tamil Nadu", value: <PillBadge tone="warning">Live</PillBadge> },
-            { label: "Flood advisory · Maharashtra", value: <PillBadge tone="warning">Live</PillBadge> },
-            { label: "Heat warning · Rajasthan", value: <PillBadge tone="warning">Live</PillBadge> },
+            {
+              label: "Cyclone watch · Tamil Nadu",
+              value: <PillBadge tone="warning">Live</PillBadge>,
+            },
+            {
+              label: "Flood advisory · Maharashtra",
+              value: <PillBadge tone="warning">Live</PillBadge>,
+            },
+            {
+              label: "Heat warning · Rajasthan",
+              value: <PillBadge tone="warning">Live</PillBadge>,
+            },
           ],
         },
         {
           title: "Sensor status",
           items: [
-            { label: "Coastal tide gauges", value: <PillBadge tone="success">412 / 420</PillBadge> },
+            {
+              label: "Coastal tide gauges",
+              value: <PillBadge tone="success">412 / 420</PillBadge>,
+            },
             { label: "Seismic stations", value: <PillBadge tone="success">288 / 290</PillBadge> },
             { label: "Air quality", value: <PillBadge tone="warning">580 / 612</PillBadge> },
           ],

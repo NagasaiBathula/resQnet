@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import { Coordinate } from "@/lib/constants/map-defaults";
-import { MapComponentProps, MapMarker } from "./types";
+import { MapComponentProps, MapMarker, MarkerType } from "./types";
 import { useMapController } from "./map-provider";
 
 // Resolve Leaflet default icon path bugs by using custom SVGs in L.divIcon
@@ -30,7 +30,7 @@ const getShelterColor = (status?: string) => {
   }
 };
 
-const createMarkerIcon = (type: "incident" | "shelter" | "user", severity?: string, status?: string) => {
+const createMarkerIcon = (type: MarkerType, severity?: string, status?: string) => {
   if (type === "user") {
     return L.divIcon({
       html: `
@@ -114,7 +114,9 @@ const MapUpdater: React.FC<{ center: Coordinate; zoom: number }> = ({ center, zo
 };
 
 // Component to handle map clicks
-const MapEventsHandler: React.FC<{ onMapClick?: (coord: Coordinate) => void }> = ({ onMapClick }) => {
+const MapEventsHandler: React.FC<{ onMapClick?: (coord: Coordinate) => void }> = ({
+  onMapClick,
+}) => {
   useMapEvents({
     click(e) {
       if (onMapClick) {
@@ -192,7 +194,9 @@ const LeafletMap: React.FC<MapComponentProps> = ({
           <Popup>
             <div className="p-1 min-w-[140px] text-foreground">
               <div className="font-semibold text-sm truncate">{marker.title}</div>
-              {marker.subtitle && <div className="text-xs text-muted-foreground mt-0.5">{marker.subtitle}</div>}
+              {marker.subtitle && (
+                <div className="text-xs text-muted-foreground mt-0.5">{marker.subtitle}</div>
+              )}
               <div className="mt-2 flex items-center justify-between text-[10px]">
                 {marker.type === "incident" && marker.severity && (
                   <span

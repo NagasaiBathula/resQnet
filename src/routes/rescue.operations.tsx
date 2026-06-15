@@ -9,10 +9,29 @@ import { useAuth } from "@/lib/auth";
 import { incidentService } from "@/services/incidentService";
 import { resourceService } from "@/services/resourceService";
 import { getStatusBadgeTone, INCIDENT_STATUS } from "@/lib/constants/incident-status";
-import { AlertTriangle, MapPin, Calendar, Users, Truck, CheckCircle2, Clock, Play, History, ShieldAlert } from "lucide-react";
+import {
+  AlertTriangle,
+  MapPin,
+  Calendar,
+  Users,
+  Truck,
+  CheckCircle2,
+  Clock,
+  Play,
+  History,
+  ShieldAlert,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+
+const formatDate = (dateString: string | Date) => {
+  if (!dateString) return "";
+  return new Date(dateString).toLocaleString("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
+};
 
 export const Route = createFileRoute("/rescue/operations")({
   head: () => ({ meta: [{ title: "My Field Operations — ResQNet" }] }),
@@ -26,7 +45,7 @@ function RescueOperationsPage() {
   const [resources, setResources] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  
+
   const [resolutionNotes, setResolutionNotes] = useState("");
 
   const loadOpsData = async () => {
@@ -34,10 +53,10 @@ function RescueOperationsPage() {
     try {
       const myInc = await incidentService.getMyIncidents();
       setIncidents(myInc);
-      
+
       // Update selected incident details
       if (activeIncident) {
-        const refreshed = myInc.find(i => i._id === activeIncident._id);
+        const refreshed = myInc.find((i) => i._id === activeIncident._id);
         if (refreshed) {
           setActiveIncident(refreshed);
           setResolutionNotes(refreshed.resolutionNotes || "");
@@ -74,7 +93,7 @@ function RescueOperationsPage() {
       const updated = await incidentService.updateIncidentStatus(
         activeIncident._id,
         nextStatus,
-        nextStatus === INCIDENT_STATUS.RESOLVED ? resolutionNotes : undefined
+        nextStatus === INCIDENT_STATUS.RESOLVED ? resolutionNotes : undefined,
       );
       toast.success(`Incident status updated to ${nextStatus}`);
       setActiveIncident(updated);
@@ -97,7 +116,8 @@ function RescueOperationsPage() {
   };
 
   const activeResources = resources.filter(
-    r => r.assignedIncident?._id === activeIncident?._id || r.assignedIncident === activeIncident?._id
+    (r) =>
+      r.assignedIncident?._id === activeIncident?._id || r.assignedIncident === activeIncident?._id,
   );
 
   return (
@@ -108,7 +128,9 @@ function RescueOperationsPage() {
 
       {loading ? (
         <div className="flex h-[400px] items-center justify-center">
-          <div className="animate-pulse text-muted-foreground text-sm font-medium">Loading field dispatch queue...</div>
+          <div className="animate-pulse text-muted-foreground text-sm font-medium">
+            Loading field dispatch queue...
+          </div>
         </div>
       ) : incidents.length === 0 ? (
         <Card className="border-border/60">
@@ -118,7 +140,8 @@ function RescueOperationsPage() {
             </div>
             <div className="font-semibold text-lg">No Active Dispatches</div>
             <p className="text-muted-foreground text-sm mt-1 max-w-sm">
-              Your rescue team is not currently assigned to any active incident tickets. Standby for command assignments.
+              Your rescue team is not currently assigned to any active incident tickets. Standby for
+              command assignments.
             </p>
           </CardContent>
         </Card>
@@ -138,17 +161,26 @@ function RescueOperationsPage() {
                     onClick={() => selectIncident(inc)}
                     className={cn(
                       "p-3.5 text-xs cursor-pointer hover:bg-accent/40 transition-colors space-y-1",
-                      isActive && "bg-primary/5 border-l-2 border-primary"
+                      isActive && "bg-primary/5 border-l-2 border-primary",
                     )}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-mono text-[10px] font-bold text-muted-foreground">{inc.incidentNumber}</span>
-                      <Badge className={cn("text-[9px] px-1.5 py-0 rounded-full capitalize", getStatusBadgeTone(inc.status))}>
+                      <span className="font-mono text-[10px] font-bold text-muted-foreground">
+                        {inc.incidentNumber}
+                      </span>
+                      <Badge
+                        className={cn(
+                          "text-[9px] px-1.5 py-0 rounded-full capitalize",
+                          getStatusBadgeTone(inc.status),
+                        )}
+                      >
                         {inc.status}
                       </Badge>
                     </div>
                     <div className="font-bold text-foreground truncate">{inc.title}</div>
-                    <div className="text-[10px] text-muted-foreground truncate">{inc.address || `${inc.district}, ${inc.state}`}</div>
+                    <div className="text-[10px] text-muted-foreground truncate">
+                      {inc.address || `${inc.district}, ${inc.state}`}
+                    </div>
                   </div>
                 );
               })}
@@ -162,17 +194,28 @@ function RescueOperationsPage() {
                 <CardContent className="p-6 space-y-4">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4">
                     <div>
-                      <span className="font-mono text-xs text-muted-foreground font-bold">{activeIncident.incidentNumber}</span>
+                      <span className="font-mono text-xs text-muted-foreground font-bold">
+                        {activeIncident.incidentNumber}
+                      </span>
                       <h2 className="text-lg font-bold">{activeIncident.title}</h2>
                       <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1.5">
-                        <Calendar className="h-3.5 w-3.5" /> Assigned: {formatDate(activeIncident.createdAt)}
+                        <Calendar className="h-3.5 w-3.5" /> Assigned:{" "}
+                        {formatDate(activeIncident.createdAt)}
                       </p>
                     </div>
                     <div className="flex gap-2">
-                      <Badge className={cn("rounded-full px-2.5 py-0.5 text-xs font-semibold", getStatusBadgeTone(activeIncident.status))}>
+                      <Badge
+                        className={cn(
+                          "rounded-full px-2.5 py-0.5 text-xs font-semibold",
+                          getStatusBadgeTone(activeIncident.status),
+                        )}
+                      >
                         {activeIncident.status}
                       </Badge>
-                      <Badge variant="outline" className="rounded-full px-2.5 py-0.5 text-xs uppercase">
+                      <Badge
+                        variant="outline"
+                        className="rounded-full px-2.5 py-0.5 text-xs uppercase"
+                      >
                         {activeIncident.severity} Severity
                       </Badge>
                     </div>
@@ -180,7 +223,9 @@ function RescueOperationsPage() {
 
                   {/* Summary */}
                   <div>
-                    <Label className="text-xs text-muted-foreground font-bold uppercase">Case Details</Label>
+                    <Label className="text-xs text-muted-foreground font-bold uppercase">
+                      Case Details
+                    </Label>
                     <p className="text-sm leading-relaxed bg-muted/20 border p-3.5 rounded-xl whitespace-pre-line">
                       {activeIncident.description}
                     </p>
@@ -189,18 +234,23 @@ function RescueOperationsPage() {
                   {/* Operational details */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     <div className="border p-3 rounded-xl bg-card">
-                      <div className="text-muted-foreground font-bold uppercase mb-1">Target Location</div>
+                      <div className="text-muted-foreground font-bold uppercase mb-1">
+                        Target Location
+                      </div>
                       <div className="font-medium">{activeIncident.address || "No address"}</div>
                       <div className="text-[10px] text-muted-foreground mt-0.5 font-mono">
                         {activeIncident.district}, {activeIncident.state}
                       </div>
                       <div className="text-[10px] text-muted-foreground font-mono">
-                        GPS: {activeIncident.coordinates.lat.toFixed(5)}° N, {activeIncident.coordinates.lng.toFixed(5)}° E
+                        GPS: {activeIncident.coordinates.lat.toFixed(5)}° N,{" "}
+                        {activeIncident.coordinates.lng.toFixed(5)}° E
                       </div>
                     </div>
 
                     <div className="border p-3 rounded-xl bg-card space-y-2">
-                      <div className="text-muted-foreground font-bold uppercase">Case Status Control</div>
+                      <div className="text-muted-foreground font-bold uppercase">
+                        Case Status Control
+                      </div>
                       {activeIncident.status === INCIDENT_STATUS.ASSIGNED && (
                         <Button
                           onClick={() => handleStatusTransition(INCIDENT_STATUS.IN_PROGRESS)}
@@ -244,7 +294,8 @@ function RescueOperationsPage() {
               <Card className="border-border/60 shadow-sm">
                 <CardHeader className="p-4 border-b">
                   <CardTitle className="text-sm font-bold flex items-center gap-1.5">
-                    <Truck className="h-4 w-4 text-primary" /> Deployed Stockpile Assets ({activeResources.length})
+                    <Truck className="h-4 w-4 text-primary" /> Deployed Stockpile Assets (
+                    {activeResources.length})
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="p-4">
@@ -255,14 +306,20 @@ function RescueOperationsPage() {
                   ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {activeResources.map((res) => (
-                        <div key={res._id} className="border p-3 rounded-xl bg-card flex items-center justify-between gap-3">
+                        <div
+                          key={res._id}
+                          className="border p-3 rounded-xl bg-card flex items-center justify-between gap-3"
+                        >
                           <div>
                             <div className="flex items-center gap-2">
-                              <span className="font-mono text-xs font-bold text-primary">{res.resourceId}</span>
+                              <span className="font-mono text-xs font-bold text-primary">
+                                {res.resourceId}
+                              </span>
                               <span className="font-semibold text-xs">{res.name}</span>
                             </div>
                             <div className="text-[10px] text-muted-foreground mt-0.5">
-                              Type: {res.type} · Status: <span className="font-bold text-foreground">{res.status}</span>
+                              Type: {res.type} · Status:{" "}
+                              <span className="font-bold text-foreground">{res.status}</span>
                             </div>
                           </div>
                           <div>
@@ -287,7 +344,9 @@ function RescueOperationsPage() {
                               </Button>
                             )}
                             {res.status !== "Assigned" && res.status !== "In Use" && (
-                              <Badge variant="outline" className="text-[9px] capitalize">{res.status}</Badge>
+                              <Badge variant="outline" className="text-[9px] capitalize">
+                                {res.status}
+                              </Badge>
                             )}
                           </div>
                         </div>
@@ -306,26 +365,42 @@ function RescueOperationsPage() {
                 </CardHeader>
                 <CardContent className="p-4">
                   {!activeIncident.activityLog || activeIncident.activityLog.length === 0 ? (
-                    <div className="text-xs italic text-muted-foreground text-center py-4">No events logged.</div>
+                    <div className="text-xs italic text-muted-foreground text-center py-4">
+                      No events logged.
+                    </div>
                   ) : (
                     <div className="relative border-l border-muted-foreground/20 pl-4 ml-2.5 space-y-4 py-1 text-xs">
                       {activeIncident.activityLog.map((log: any, idx: number) => (
                         <div key={idx} className="relative">
-                          <div className={cn(
-                            "absolute -left-[22px] top-1 h-2.5 w-2.5 rounded-full border border-background",
-                            log.action.includes("Resolved") ? "bg-success" :
-                            log.action.includes("Assigned") ? "bg-primary" :
-                            "bg-info"
-                          )} />
+                          <div
+                            className={cn(
+                              "absolute -left-[22px] top-1 h-2.5 w-2.5 rounded-full border border-background",
+                              log.action.includes("Resolved")
+                                ? "bg-success"
+                                : log.action.includes("Assigned")
+                                  ? "bg-primary"
+                                  : "bg-info",
+                            )}
+                          />
                           <div>
                             <div className="flex items-center gap-2">
                               <span className="font-semibold text-foreground">{log.action}</span>
-                              <span className="text-[10px] text-muted-foreground">{new Date(log.timestamp).toLocaleDateString()}</span>
+                              <span className="text-[10px] text-muted-foreground">
+                                {new Date(log.timestamp).toLocaleDateString()}
+                              </span>
                             </div>
                             <div className="text-[10px] text-muted-foreground">
-                              By: <span className="font-medium text-foreground">{log.performedBy?.name || "System"}</span> (Role: <span className="capitalize">{log.performedByRole}</span>)
+                              By:{" "}
+                              <span className="font-medium text-foreground">
+                                {log.performedBy?.name || "System"}
+                              </span>{" "}
+                              (Role: <span className="capitalize">{log.performedByRole}</span>)
                             </div>
-                            {log.notes && <p className="mt-1 text-muted-foreground italic bg-muted/20 border p-2 rounded-lg leading-relaxed">{log.notes}</p>}
+                            {log.notes && (
+                              <p className="mt-1 text-muted-foreground italic bg-muted/20 border p-2 rounded-lg leading-relaxed">
+                                {log.notes}
+                              </p>
+                            )}
                           </div>
                         </div>
                       ))}

@@ -7,13 +7,21 @@ import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 
 export const typeIcon: Record<EmergencyType, any> = {
-  flood: Droplets, cyclone: Wind, earthquake: Mountain, fire: Flame, landslide: Layers, medical: Heart,
+  flood: Droplets,
+  cyclone: Wind,
+  earthquake: Mountain,
+  fire: Flame,
+  landslide: Layers,
+  medical: Heart,
 };
 
 export const typeColor: Record<EmergencyType, string> = {
-  flood: "text-info bg-info/10", cyclone: "text-primary bg-primary/10",
-  earthquake: "text-warning bg-warning/10", fire: "text-emergency bg-emergency/10",
-  landslide: "text-warning bg-warning/10", medical: "text-emergency bg-emergency/10",
+  flood: "text-info bg-info/10",
+  cyclone: "text-primary bg-primary/10",
+  earthquake: "text-warning bg-warning/10",
+  fire: "text-emergency bg-emergency/10",
+  landslide: "text-warning bg-warning/10",
+  medical: "text-emergency bg-emergency/10",
 };
 
 export const mapCategoryToKey = (category: string): EmergencyType => {
@@ -36,7 +44,11 @@ export function SeverityBadge({ severity }: { severity: string }) {
     critical: "bg-emergency/10 text-emergency border-emergency/20",
   };
   const style = map[normalized] || "bg-muted text-muted-foreground border-muted/20";
-  return <Badge variant="outline" className={cn("capitalize font-medium", style)}>{severity}</Badge>;
+  return (
+    <Badge variant="outline" className={cn("capitalize font-medium", style)}>
+      {severity}
+    </Badge>
+  );
 }
 
 export function StatusBadge({ status }: { status: string }) {
@@ -49,7 +61,7 @@ export function StatusBadge({ status }: { status: string }) {
     "on-site": "bg-warning/10 text-warning",
     resolved: "bg-success/10 text-success",
     escalated: "bg-emergency/10 text-emergency",
-    
+
     // new centralized statuses
     Reported: "bg-info/10 text-info",
     Verified: "bg-primary/10 text-primary",
@@ -58,14 +70,27 @@ export function StatusBadge({ status }: { status: string }) {
     Resolved: "bg-success/10 text-success",
   };
   const tone = map[status] || "bg-muted text-foreground";
-  return <Badge className={cn("capitalize font-medium border-0", tone)}>{status.replace("-", " ")}</Badge>;
+  return (
+    <Badge className={cn("capitalize font-medium border-0", tone)}>
+      {status.replace("-", " ")}
+    </Badge>
+  );
 }
 
 export function StatCard({
-  label, value, sublabel, icon: Icon, accent = "primary", delay = 0,
+  label,
+  value,
+  sublabel,
+  icon: Icon,
+  accent = "primary",
+  delay = 0,
 }: {
-  label: string; value: ReactNode; sublabel?: ReactNode;
-  icon?: any; accent?: "primary" | "emergency" | "success" | "warning" | "info"; delay?: number;
+  label: string;
+  value: ReactNode;
+  sublabel?: ReactNode;
+  icon?: any;
+  accent?: "primary" | "emergency" | "success" | "warning" | "info";
+  delay?: number;
 }) {
   const accents = {
     primary: "from-primary/10 to-primary/0 text-primary",
@@ -76,20 +101,33 @@ export function StatCard({
   };
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay }}
     >
       <Card className="overflow-hidden border-border/60 shadow-elegant relative">
-        <div className={cn("absolute inset-0 bg-gradient-to-br opacity-50 pointer-events-none", accents[accent])} />
+        <div
+          className={cn(
+            "absolute inset-0 bg-gradient-to-br opacity-50 pointer-events-none",
+            accents[accent],
+          )}
+        />
         <CardContent className="p-5 relative">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">{label}</p>
+              <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">
+                {label}
+              </p>
               <p className="mt-2 text-3xl font-bold tracking-tight">{value}</p>
               {sublabel && <p className="mt-1 text-xs text-muted-foreground">{sublabel}</p>}
             </div>
             {Icon && (
-              <div className={cn("flex h-10 w-10 items-center justify-center rounded-xl bg-card/80 backdrop-blur", accents[accent].split(" ").pop())}>
+              <div
+                className={cn(
+                  "flex h-10 w-10 items-center justify-center rounded-xl bg-card/80 backdrop-blur",
+                  accents[accent].split(" ").pop(),
+                )}
+              >
                 <Icon className="h-5 w-5" />
               </div>
             )}

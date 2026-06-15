@@ -1,9 +1,22 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { LocationSelector } from "@/components/location-selector";
 import { API_URL } from "@/lib/config";
@@ -26,12 +39,7 @@ const SKILLS_LIST = [
   "Shelter Management",
 ];
 
-export function CreateUserDialog({
-  open,
-  onOpenChange,
-  role,
-  onSuccess,
-}: CreateUserDialogProps) {
+export function CreateUserDialog({ open, onOpenChange, role, onSuccess }: CreateUserDialogProps) {
   // Core/Common Fields
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -46,7 +54,9 @@ export function CreateUserDialog({
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("Male");
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-  const [availability, setAvailability] = useState<"Full Time" | "Part Time" | "Weekends">("Part Time");
+  const [availability, setAvailability] = useState<"Full Time" | "Part Time" | "Weekends">(
+    "Part Time",
+  );
   const [volunteerExperience, setVolunteerExperience] = useState("");
 
   // Rescue Fields
@@ -138,7 +148,15 @@ export function CreateUserDialog({
       payload.availability = availability;
       payload.volunteerExperience = volunteerExperience;
     } else if (role === "rescue") {
-      if (!orgName || !employeeId || !designation || !experienceYears || !specialization || !emergName || !emergNumber) {
+      if (
+        !orgName ||
+        !employeeId ||
+        !designation ||
+        !experienceYears ||
+        !specialization ||
+        !emergName ||
+        !emergNumber
+      ) {
         toast.error("Please fill in all rescue team details");
         return;
       }
@@ -167,7 +185,9 @@ export function CreateUserDialog({
         throw new Error(data.message || "Failed to create user");
       }
 
-      toast.success(`Successfully created ${role === "volunteer" ? "Volunteer" : "Rescue Team Member"} ${name}`);
+      toast.success(
+        `Successfully created ${role === "volunteer" ? "Volunteer" : "Rescue Team Member"} ${name}`,
+      );
       onOpenChange(false);
       if (onSuccess) {
         onSuccess();
@@ -181,16 +201,19 @@ export function CreateUserDialog({
   };
 
   const titleText = role === "volunteer" ? "Add Volunteer" : "Add Rescue Team";
-  const descText = role === "volunteer"
-    ? "Create a trusted Volunteer account. This account will be approved automatically."
-    : "Create a trusted Rescue Team account. This account will be approved automatically.";
+  const descText =
+    role === "volunteer"
+      ? "Create a trusted Volunteer account. This account will be approved automatically."
+      : "Create a trusted Rescue Team account. This account will be approved automatically.";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-xl rounded-2xl glass-strong border shadow-elegant max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">{titleText}</DialogTitle>
-          <DialogDescription className="text-xs text-muted-foreground">{descText}</DialogDescription>
+          <DialogDescription className="text-xs text-muted-foreground">
+            {descText}
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 py-3 text-sm">
@@ -198,17 +221,30 @@ export function CreateUserDialog({
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
               <Label htmlFor="cName">Full Name</Label>
-              <Input id="cName" value={name} onChange={e => setName(e.target.value)} required />
+              <Input id="cName" value={name} onChange={(e) => setName(e.target.value)} required />
             </div>
             <div className="space-y-1">
               <Label htmlFor="cMobile">Mobile Number</Label>
-              <Input id="cMobile" value={mobileNumber} onChange={e => setMobileNumber(e.target.value)} placeholder="10-digit number" required />
+              <Input
+                id="cMobile"
+                value={mobileNumber}
+                onChange={(e) => setMobileNumber(e.target.value)}
+                placeholder="10-digit number"
+                required
+              />
             </div>
           </div>
 
           <div className="space-y-1">
             <Label htmlFor="cEmail">Email Address</Label>
-            <Input id="cEmail" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="name@example.com" required />
+            <Input
+              id="cEmail"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="name@example.com"
+              required
+            />
           </div>
 
           {/* Location fields */}
@@ -221,17 +257,30 @@ export function CreateUserDialog({
 
           <div className="space-y-1">
             <Label htmlFor="cAddress">Address (Optional)</Label>
-            <Input id="cAddress" value={address} onChange={e => setAddress(e.target.value)} placeholder="Street, Flat, Area" />
+            <Input
+              id="cAddress"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="Street, Flat, Area"
+            />
           </div>
 
           {/* Volunteer specific fields */}
           {role === "volunteer" && (
             <div className="space-y-4 border-t pt-4">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Volunteer Details</h3>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                Volunteer Details
+              </h3>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <Label htmlFor="vAge">Age</Label>
-                  <Input id="vAge" type="number" value={age} onChange={e => setAge(e.target.value)} required />
+                  <Input
+                    id="vAge"
+                    type="number"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                    required
+                  />
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="vGender">Gender</Label>
@@ -258,7 +307,12 @@ export function CreateUserDialog({
                         checked={selectedSkills.includes(s)}
                         onCheckedChange={(checked) => handleSkillChange(s, !!checked)}
                       />
-                      <label htmlFor={`d-skill-${s}`} className="text-xs font-medium cursor-pointer">{s}</label>
+                      <label
+                        htmlFor={`d-skill-${s}`}
+                        className="text-xs font-medium cursor-pointer"
+                      >
+                        {s}
+                      </label>
                     </div>
                   ))}
                 </div>
@@ -266,7 +320,7 @@ export function CreateUserDialog({
 
               <div className="space-y-1">
                 <Label htmlFor="vAvailability">Availability</Label>
-                <Select value={availability} onValueChange={val => setAvailability(val as any)}>
+                <Select value={availability} onValueChange={(val) => setAvailability(val as any)}>
                   <SelectTrigger id="vAvailability" className="h-10">
                     <SelectValue placeholder="Availability" />
                   </SelectTrigger>
@@ -280,7 +334,12 @@ export function CreateUserDialog({
 
               <div className="space-y-1">
                 <Label htmlFor="vVolExp">Prior Volunteer Experience (Optional)</Label>
-                <Input id="vVolExp" value={volunteerExperience} onChange={e => setVolunteerExperience(e.target.value)} placeholder="Brief description" />
+                <Input
+                  id="vVolExp"
+                  value={volunteerExperience}
+                  onChange={(e) => setVolunteerExperience(e.target.value)}
+                  placeholder="Brief description"
+                />
               </div>
             </div>
           )}
@@ -288,15 +347,27 @@ export function CreateUserDialog({
           {/* Rescue specific fields */}
           {role === "rescue" && (
             <div className="space-y-4 border-t pt-4">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Rescue Team Details</h3>
+              <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                Rescue Team Details
+              </h3>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <Label htmlFor="rOrgName">Organization Name</Label>
-                  <Input id="rOrgName" value={orgName} onChange={e => setOrgName(e.target.value)} required />
+                  <Input
+                    id="rOrgName"
+                    value={orgName}
+                    onChange={(e) => setOrgName(e.target.value)}
+                    required
+                  />
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="rEmpId">Employee / Officer ID</Label>
-                  <Input id="rEmpId" value={employeeId} onChange={e => setEmployeeId(e.target.value)} required />
+                  <Input
+                    id="rEmpId"
+                    value={employeeId}
+                    onChange={(e) => setEmployeeId(e.target.value)}
+                    required
+                  />
                 </div>
               </div>
 
@@ -311,13 +382,21 @@ export function CreateUserDialog({
                       <SelectItem value="Fire Officer">Fire Officer</SelectItem>
                       <SelectItem value="Medical Responder">Medical Responder</SelectItem>
                       <SelectItem value="Police Officer">Police Officer</SelectItem>
-                      <SelectItem value="Disaster Response Officer">Disaster Response Officer</SelectItem>
+                      <SelectItem value="Disaster Response Officer">
+                        Disaster Response Officer
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-1">
                   <Label htmlFor="rExpYears">Years of Experience</Label>
-                  <Input id="rExpYears" type="number" value={experienceYears} onChange={e => setExperienceYears(e.target.value)} required />
+                  <Input
+                    id="rExpYears"
+                    type="number"
+                    value={experienceYears}
+                    onChange={(e) => setExperienceYears(e.target.value)}
+                    required
+                  />
                 </div>
               </div>
 
@@ -340,15 +419,28 @@ export function CreateUserDialog({
 
           {/* Emergency Contact Block (Shared) */}
           <div className="space-y-4 border-t pt-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Emergency Contact</h3>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              Emergency Contact
+            </h3>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
                 <Label htmlFor="cEmergName">Contact Name</Label>
-                <Input id="cEmergName" value={emergName} onChange={e => setEmergName(e.target.value)} required />
+                <Input
+                  id="cEmergName"
+                  value={emergName}
+                  onChange={(e) => setEmergName(e.target.value)}
+                  required
+                />
               </div>
               <div className="space-y-1">
                 <Label htmlFor="cEmergNumber">Contact Phone</Label>
-                <Input id="cEmergNumber" value={emergNumber} onChange={e => setEmergNumber(e.target.value)} placeholder="10-digit number" required />
+                <Input
+                  id="cEmergNumber"
+                  value={emergNumber}
+                  onChange={(e) => setEmergNumber(e.target.value)}
+                  placeholder="10-digit number"
+                  required
+                />
               </div>
             </div>
           </div>
@@ -357,16 +449,36 @@ export function CreateUserDialog({
           <div className="grid grid-cols-2 gap-3 border-t pt-4">
             <div className="space-y-1">
               <Label htmlFor="cPw">Password</Label>
-              <Input id="cPw" type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required />
+              <Input
+                id="cPw"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
             </div>
             <div className="space-y-1">
               <Label htmlFor="cConfirmPw">Confirm Password</Label>
-              <Input id="cConfirmPw" type="password" placeholder="••••••••" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} required />
+              <Input
+                id="cConfirmPw"
+                type="password"
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
             </div>
           </div>
 
           <DialogFooter className="border-t pt-4">
-            <Button type="button" variant="ghost" className="rounded-full" onClick={() => onOpenChange(false)} disabled={submitting}>
+            <Button
+              type="button"
+              variant="ghost"
+              className="rounded-full"
+              onClick={() => onOpenChange(false)}
+              disabled={submitting}
+            >
               Cancel
             </Button>
             <Button type="submit" className="rounded-full shadow-glow" disabled={submitting}>

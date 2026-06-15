@@ -53,7 +53,9 @@ function VolunteerIncidentsPage() {
 
       {loading ? (
         <div className="flex h-[300px] items-center justify-center">
-          <div className="animate-pulse text-muted-foreground text-sm font-medium">Loading missions...</div>
+          <div className="animate-pulse text-muted-foreground text-sm font-medium">
+            Loading missions...
+          </div>
         </div>
       ) : incidentsList.length === 0 ? (
         <Card className="border-border/60">
@@ -80,20 +82,29 @@ function VolunteerIncidentsPage() {
               >
                 <CardContent className="p-4 md:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className={cn("h-11 w-11 rounded-xl flex items-center justify-center shrink-0", typeColor[catKey] || "bg-primary/10 text-primary")}>
+                    <div
+                      className={cn(
+                        "h-11 w-11 rounded-xl flex items-center justify-center shrink-0",
+                        typeColor[catKey] || "bg-primary/10 text-primary",
+                      )}
+                    >
                       <Icon className="h-5 w-5" />
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-mono text-xs text-muted-foreground font-semibold">{inc.incidentNumber}</span>
+                        <span className="font-mono text-xs text-muted-foreground font-semibold">
+                          {inc.incidentNumber}
+                        </span>
                         <span className="font-semibold text-sm truncate">{inc.title}</span>
                       </div>
                       <div className="text-xs text-muted-foreground mt-1 flex flex-wrap gap-x-3 gap-y-1 items-center">
                         <span className="flex items-center gap-1">
-                          <MapPin className="h-3.5 w-3.5" /> {inc.address || `${inc.district}, ${inc.state}`}
+                          <MapPin className="h-3.5 w-3.5" />{" "}
+                          {inc.address || `${inc.district}, ${inc.state}`}
                         </span>
                         <span className="flex items-center gap-1">
-                          <Calendar className="h-3.5 w-3.5" /> {new Date(inc.createdAt).toLocaleDateString()}
+                          <Calendar className="h-3.5 w-3.5" />{" "}
+                          {new Date(inc.createdAt).toLocaleDateString()}
                         </span>
                       </div>
                     </div>
@@ -101,7 +112,12 @@ function VolunteerIncidentsPage() {
 
                   <div className="flex items-center gap-2.5 shrink-0 self-end sm:self-center">
                     <SeverityBadge severity={inc.severity} />
-                    <Badge className={cn("rounded-full px-2.5 py-0.5 text-xs capitalize", getStatusBadgeTone(inc.status))}>
+                    <Badge
+                      className={cn(
+                        "rounded-full px-2.5 py-0.5 text-xs capitalize",
+                        getStatusBadgeTone(inc.status),
+                      )}
+                    >
                       {inc.status}
                     </Badge>
                     <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
