@@ -67,6 +67,25 @@ const createMarkerIcon = (type: "incident" | "shelter" | "user", severity?: stri
     });
   }
 
+  if (type === "resource") {
+    return L.divIcon({
+      html: `
+        <div class="flex items-center justify-center w-7 h-7 rounded-full shadow-elegant border-2 border-white text-white bg-primary transition-transform duration-200 hover:scale-110">
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="3" width="15" height="13" rx="2" ry="2"/>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/>
+            <circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+        </div>
+      `,
+      className: "custom-resource-marker",
+      iconSize: [28, 28],
+      iconAnchor: [14, 14],
+      popupAnchor: [0, -14],
+    });
+  }
+
   // Shelter icon
   const color = getShelterColor(status);
   return L.divIcon({

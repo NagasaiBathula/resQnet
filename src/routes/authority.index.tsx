@@ -22,9 +22,14 @@ function AuthorityDashboard() {
     <AppShell title="National command" actions={
       <>
         <Button variant="outline" className="rounded-full"><Download className="h-4 w-4 mr-1.5" />Export brief</Button>
-        <Button asChild className="rounded-full shadow-glow">
+        <Button asChild variant="outline" className="rounded-full">
           <Link to="/authority/monitoring">
             <Globe2 className="h-4 w-4 mr-1.5" />Live map
+          </Link>
+        </Button>
+        <Button asChild className="rounded-full shadow-glow">
+          <Link to="/authority/dispatch">
+            <Shield className="h-4 w-4 mr-1.5" />Dispatch console
           </Link>
         </Button>
       </>

@@ -25,6 +25,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as VolunteerTrainingRouteImport } from './routes/volunteer.training'
 import { Route as VolunteerResourcesRouteImport } from './routes/volunteer.resources'
 import { Route as VolunteerProfileRouteImport } from './routes/volunteer.profile'
+import { Route as VolunteerOperationsRouteImport } from './routes/volunteer.operations'
 import { Route as VolunteerNotificationsRouteImport } from './routes/volunteer.notifications'
 import { Route as VolunteerMissionsRouteImport } from './routes/volunteer.missions'
 import { Route as VolunteerIncidentsRouteImport } from './routes/volunteer.incidents'
@@ -34,6 +35,7 @@ import { Route as RescueVehiclesRouteImport } from './routes/rescue.vehicles'
 import { Route as RescueResourcesRouteImport } from './routes/rescue.resources'
 import { Route as RescueProfileRouteImport } from './routes/rescue.profile'
 import { Route as RescuePersonnelRouteImport } from './routes/rescue.personnel'
+import { Route as RescueOperationsRouteImport } from './routes/rescue.operations'
 import { Route as RescueIncidentsRouteImport } from './routes/rescue.incidents'
 import { Route as RescueDispatchRouteImport } from './routes/rescue.dispatch'
 import { Route as RescueAnalyticsRouteImport } from './routes/rescue.analytics'
@@ -55,6 +57,7 @@ import { Route as AuthorityRequestsRouteImport } from './routes/authority.reques
 import { Route as AuthorityProfileRouteImport } from './routes/authority.profile'
 import { Route as AuthorityMonitoringRouteImport } from './routes/authority.monitoring'
 import { Route as AuthorityIncidentsRouteImport } from './routes/authority.incidents'
+import { Route as AuthorityDispatchRouteImport } from './routes/authority.dispatch'
 import { Route as AuthorityAnalyticsRouteImport } from './routes/authority.analytics'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
@@ -142,6 +145,11 @@ const VolunteerProfileRoute = VolunteerProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => VolunteerRoute,
 } as any)
+const VolunteerOperationsRoute = VolunteerOperationsRouteImport.update({
+  id: '/operations',
+  path: '/operations',
+  getParentRoute: () => VolunteerRoute,
+} as any)
 const VolunteerNotificationsRoute = VolunteerNotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
@@ -185,6 +193,11 @@ const RescueProfileRoute = RescueProfileRouteImport.update({
 const RescuePersonnelRoute = RescuePersonnelRouteImport.update({
   id: '/personnel',
   path: '/personnel',
+  getParentRoute: () => RescueRoute,
+} as any)
+const RescueOperationsRoute = RescueOperationsRouteImport.update({
+  id: '/operations',
+  path: '/operations',
   getParentRoute: () => RescueRoute,
 } as any)
 const RescueIncidentsRoute = RescueIncidentsRouteImport.update({
@@ -292,6 +305,11 @@ const AuthorityIncidentsRoute = AuthorityIncidentsRouteImport.update({
   path: '/incidents',
   getParentRoute: () => AuthorityRoute,
 } as any)
+const AuthorityDispatchRoute = AuthorityDispatchRouteImport.update({
+  id: '/dispatch',
+  path: '/dispatch',
+  getParentRoute: () => AuthorityRoute,
+} as any)
 const AuthorityAnalyticsRoute = AuthorityAnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
@@ -337,6 +355,7 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/authority/analytics': typeof AuthorityAnalyticsRoute
+  '/authority/dispatch': typeof AuthorityDispatchRoute
   '/authority/incidents': typeof AuthorityIncidentsRoute
   '/authority/monitoring': typeof AuthorityMonitoringRoute
   '/authority/profile': typeof AuthorityProfileRoute
@@ -358,6 +377,7 @@ export interface FileRoutesByFullPath {
   '/rescue/analytics': typeof RescueAnalyticsRoute
   '/rescue/dispatch': typeof RescueDispatchRoute
   '/rescue/incidents': typeof RescueIncidentsRouteWithChildren
+  '/rescue/operations': typeof RescueOperationsRoute
   '/rescue/personnel': typeof RescuePersonnelRoute
   '/rescue/profile': typeof RescueProfileRoute
   '/rescue/resources': typeof RescueResourcesRoute
@@ -367,6 +387,7 @@ export interface FileRoutesByFullPath {
   '/volunteer/incidents': typeof VolunteerIncidentsRoute
   '/volunteer/missions': typeof VolunteerMissionsRoute
   '/volunteer/notifications': typeof VolunteerNotificationsRoute
+  '/volunteer/operations': typeof VolunteerOperationsRoute
   '/volunteer/profile': typeof VolunteerProfileRoute
   '/volunteer/resources': typeof VolunteerResourcesRoute
   '/volunteer/training': typeof VolunteerTrainingRoute
@@ -386,6 +407,7 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/authority/analytics': typeof AuthorityAnalyticsRoute
+  '/authority/dispatch': typeof AuthorityDispatchRoute
   '/authority/incidents': typeof AuthorityIncidentsRoute
   '/authority/monitoring': typeof AuthorityMonitoringRoute
   '/authority/profile': typeof AuthorityProfileRoute
@@ -407,6 +429,7 @@ export interface FileRoutesByTo {
   '/rescue/analytics': typeof RescueAnalyticsRoute
   '/rescue/dispatch': typeof RescueDispatchRoute
   '/rescue/incidents': typeof RescueIncidentsRouteWithChildren
+  '/rescue/operations': typeof RescueOperationsRoute
   '/rescue/personnel': typeof RescuePersonnelRoute
   '/rescue/profile': typeof RescueProfileRoute
   '/rescue/resources': typeof RescueResourcesRoute
@@ -416,6 +439,7 @@ export interface FileRoutesByTo {
   '/volunteer/incidents': typeof VolunteerIncidentsRoute
   '/volunteer/missions': typeof VolunteerMissionsRoute
   '/volunteer/notifications': typeof VolunteerNotificationsRoute
+  '/volunteer/operations': typeof VolunteerOperationsRoute
   '/volunteer/profile': typeof VolunteerProfileRoute
   '/volunteer/resources': typeof VolunteerResourcesRoute
   '/volunteer/training': typeof VolunteerTrainingRoute
@@ -441,6 +465,7 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/authority/analytics': typeof AuthorityAnalyticsRoute
+  '/authority/dispatch': typeof AuthorityDispatchRoute
   '/authority/incidents': typeof AuthorityIncidentsRoute
   '/authority/monitoring': typeof AuthorityMonitoringRoute
   '/authority/profile': typeof AuthorityProfileRoute
@@ -462,6 +487,7 @@ export interface FileRoutesById {
   '/rescue/analytics': typeof RescueAnalyticsRoute
   '/rescue/dispatch': typeof RescueDispatchRoute
   '/rescue/incidents': typeof RescueIncidentsRouteWithChildren
+  '/rescue/operations': typeof RescueOperationsRoute
   '/rescue/personnel': typeof RescuePersonnelRoute
   '/rescue/profile': typeof RescueProfileRoute
   '/rescue/resources': typeof RescueResourcesRoute
@@ -471,6 +497,7 @@ export interface FileRoutesById {
   '/volunteer/incidents': typeof VolunteerIncidentsRoute
   '/volunteer/missions': typeof VolunteerMissionsRoute
   '/volunteer/notifications': typeof VolunteerNotificationsRoute
+  '/volunteer/operations': typeof VolunteerOperationsRoute
   '/volunteer/profile': typeof VolunteerProfileRoute
   '/volunteer/resources': typeof VolunteerResourcesRoute
   '/volunteer/training': typeof VolunteerTrainingRoute
@@ -497,6 +524,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/users'
     | '/authority/analytics'
+    | '/authority/dispatch'
     | '/authority/incidents'
     | '/authority/monitoring'
     | '/authority/profile'
@@ -518,6 +546,7 @@ export interface FileRouteTypes {
     | '/rescue/analytics'
     | '/rescue/dispatch'
     | '/rescue/incidents'
+    | '/rescue/operations'
     | '/rescue/personnel'
     | '/rescue/profile'
     | '/rescue/resources'
@@ -527,6 +556,7 @@ export interface FileRouteTypes {
     | '/volunteer/incidents'
     | '/volunteer/missions'
     | '/volunteer/notifications'
+    | '/volunteer/operations'
     | '/volunteer/profile'
     | '/volunteer/resources'
     | '/volunteer/training'
@@ -546,6 +576,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/users'
     | '/authority/analytics'
+    | '/authority/dispatch'
     | '/authority/incidents'
     | '/authority/monitoring'
     | '/authority/profile'
@@ -567,6 +598,7 @@ export interface FileRouteTypes {
     | '/rescue/analytics'
     | '/rescue/dispatch'
     | '/rescue/incidents'
+    | '/rescue/operations'
     | '/rescue/personnel'
     | '/rescue/profile'
     | '/rescue/resources'
@@ -576,6 +608,7 @@ export interface FileRouteTypes {
     | '/volunteer/incidents'
     | '/volunteer/missions'
     | '/volunteer/notifications'
+    | '/volunteer/operations'
     | '/volunteer/profile'
     | '/volunteer/resources'
     | '/volunteer/training'
@@ -600,6 +633,7 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/users'
     | '/authority/analytics'
+    | '/authority/dispatch'
     | '/authority/incidents'
     | '/authority/monitoring'
     | '/authority/profile'
@@ -621,6 +655,7 @@ export interface FileRouteTypes {
     | '/rescue/analytics'
     | '/rescue/dispatch'
     | '/rescue/incidents'
+    | '/rescue/operations'
     | '/rescue/personnel'
     | '/rescue/profile'
     | '/rescue/resources'
@@ -630,6 +665,7 @@ export interface FileRouteTypes {
     | '/volunteer/incidents'
     | '/volunteer/missions'
     | '/volunteer/notifications'
+    | '/volunteer/operations'
     | '/volunteer/profile'
     | '/volunteer/resources'
     | '/volunteer/training'
@@ -766,6 +802,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VolunteerProfileRouteImport
       parentRoute: typeof VolunteerRoute
     }
+    '/volunteer/operations': {
+      id: '/volunteer/operations'
+      path: '/operations'
+      fullPath: '/volunteer/operations'
+      preLoaderRoute: typeof VolunteerOperationsRouteImport
+      parentRoute: typeof VolunteerRoute
+    }
     '/volunteer/notifications': {
       id: '/volunteer/notifications'
       path: '/notifications'
@@ -827,6 +870,13 @@ declare module '@tanstack/react-router' {
       path: '/personnel'
       fullPath: '/rescue/personnel'
       preLoaderRoute: typeof RescuePersonnelRouteImport
+      parentRoute: typeof RescueRoute
+    }
+    '/rescue/operations': {
+      id: '/rescue/operations'
+      path: '/operations'
+      fullPath: '/rescue/operations'
+      preLoaderRoute: typeof RescueOperationsRouteImport
       parentRoute: typeof RescueRoute
     }
     '/rescue/incidents': {
@@ -976,6 +1026,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthorityIncidentsRouteImport
       parentRoute: typeof AuthorityRoute
     }
+    '/authority/dispatch': {
+      id: '/authority/dispatch'
+      path: '/dispatch'
+      fullPath: '/authority/dispatch'
+      preLoaderRoute: typeof AuthorityDispatchRouteImport
+      parentRoute: typeof AuthorityRoute
+    }
     '/authority/analytics': {
       id: '/authority/analytics'
       path: '/analytics'
@@ -1041,6 +1098,7 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface AuthorityRouteChildren {
   AuthorityAnalyticsRoute: typeof AuthorityAnalyticsRoute
+  AuthorityDispatchRoute: typeof AuthorityDispatchRoute
   AuthorityIncidentsRoute: typeof AuthorityIncidentsRoute
   AuthorityMonitoringRoute: typeof AuthorityMonitoringRoute
   AuthorityProfileRoute: typeof AuthorityProfileRoute
@@ -1054,6 +1112,7 @@ interface AuthorityRouteChildren {
 
 const AuthorityRouteChildren: AuthorityRouteChildren = {
   AuthorityAnalyticsRoute: AuthorityAnalyticsRoute,
+  AuthorityDispatchRoute: AuthorityDispatchRoute,
   AuthorityIncidentsRoute: AuthorityIncidentsRoute,
   AuthorityMonitoringRoute: AuthorityMonitoringRoute,
   AuthorityProfileRoute: AuthorityProfileRoute,
@@ -1116,6 +1175,7 @@ interface RescueRouteChildren {
   RescueAnalyticsRoute: typeof RescueAnalyticsRoute
   RescueDispatchRoute: typeof RescueDispatchRoute
   RescueIncidentsRoute: typeof RescueIncidentsRouteWithChildren
+  RescueOperationsRoute: typeof RescueOperationsRoute
   RescuePersonnelRoute: typeof RescuePersonnelRoute
   RescueProfileRoute: typeof RescueProfileRoute
   RescueResourcesRoute: typeof RescueResourcesRoute
@@ -1127,6 +1187,7 @@ const RescueRouteChildren: RescueRouteChildren = {
   RescueAnalyticsRoute: RescueAnalyticsRoute,
   RescueDispatchRoute: RescueDispatchRoute,
   RescueIncidentsRoute: RescueIncidentsRouteWithChildren,
+  RescueOperationsRoute: RescueOperationsRoute,
   RescuePersonnelRoute: RescuePersonnelRoute,
   RescueProfileRoute: RescueProfileRoute,
   RescueResourcesRoute: RescueResourcesRoute,
@@ -1143,6 +1204,7 @@ interface VolunteerRouteChildren {
   VolunteerIncidentsRoute: typeof VolunteerIncidentsRoute
   VolunteerMissionsRoute: typeof VolunteerMissionsRoute
   VolunteerNotificationsRoute: typeof VolunteerNotificationsRoute
+  VolunteerOperationsRoute: typeof VolunteerOperationsRoute
   VolunteerProfileRoute: typeof VolunteerProfileRoute
   VolunteerResourcesRoute: typeof VolunteerResourcesRoute
   VolunteerTrainingRoute: typeof VolunteerTrainingRoute
@@ -1155,6 +1217,7 @@ const VolunteerRouteChildren: VolunteerRouteChildren = {
   VolunteerIncidentsRoute: VolunteerIncidentsRoute,
   VolunteerMissionsRoute: VolunteerMissionsRoute,
   VolunteerNotificationsRoute: VolunteerNotificationsRoute,
+  VolunteerOperationsRoute: VolunteerOperationsRoute,
   VolunteerProfileRoute: VolunteerProfileRoute,
   VolunteerResourcesRoute: VolunteerResourcesRoute,
   VolunteerTrainingRoute: VolunteerTrainingRoute,

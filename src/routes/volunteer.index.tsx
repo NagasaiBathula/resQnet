@@ -31,11 +31,11 @@ function VolunteerDashboard() {
   const activeCount = assignedMissions.filter(i => i.status !== "Resolved").length;
 
   return (
-    <AppShell title="Mission control" actions={<Button asChild className="rounded-full shadow-glow"><Link to="/volunteer/incidents">My Active Missions <ArrowRight className="h-4 w-4 ml-1.5" /></Link></Button>}>
+    <AppShell title="Mission control" actions={<Button asChild className="rounded-full shadow-glow"><Link to="/volunteer/operations">My Active Missions <ArrowRight className="h-4 w-4 ml-1.5" /></Link></Button>}>
       <p className="text-muted-foreground -mt-1 mb-6">You've helped <span className="text-foreground font-medium">142 citizens</span> this quarter. Keep going.</p>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <Link to="/volunteer/incidents" className="contents">
+        <Link to="/volunteer/operations" className="contents">
           <StatCard label="Active missions" value={activeCount.toString()} sublabel={`${assignedMissions.filter(i => i.status === "In Progress").length} in progress`} icon={Activity} accent="primary" delay={0} />
         </Link>
         <StatCard label="Completed" value="38" sublabel="this year" icon={Target} accent="success" delay={0.05} />

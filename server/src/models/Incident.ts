@@ -24,6 +24,20 @@ export interface IIncident extends mongoose.Document {
     fileType: string;
   }[];
   resolutionNotes?: string;
+  activityLog: {
+    action: string;
+    performedBy: mongoose.Types.ObjectId;
+    performedByRole: string;
+    timestamp: Date;
+    notes?: string;
+  }[];
+  allocatedResources: {
+    resourceId: mongoose.Types.ObjectId;
+    resourceNumber: string;
+    name: string;
+    type: string;
+    assignedAt: Date;
+  }[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -114,6 +128,56 @@ const incidentSchema = new mongoose.Schema<IIncident>(
     resolutionNotes: {
       type: String,
     },
+    activityLog: [
+      {
+        action: {
+          type: String,
+          required: true,
+        },
+        performedBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+        performedByRole: {
+          type: String,
+          required: true,
+        },
+        timestamp: {
+          type: Date,
+          default: Date.now,
+        },
+        notes: {
+          type: String,
+        },
+      },
+    ],
+    allocatedResources: [
+      {
+        resourceId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Resource",
+          required: true,
+        },
+        resourceNumber: {
+          type: String,
+          required: true,
+        },
+        name: {
+          type: String,
+          required: true,
+        },
+        type: {
+          type: String,
+          required: true,
+        },
+        assignedAt: {
+          type: Date,
+          required: true,
+          default: Date.now,
+        },
+      },
+    ],
   },
   {
     timestamps: true,

@@ -71,8 +71,8 @@ function RescueDashboard() {
   return (
     <AppShell title="Command center" actions={
       <>
-        <Button variant="outline" className="rounded-full"><Radio className="h-4 w-4 mr-1.5" />Open comms</Button>
-        <Button className="rounded-full shadow-glow" asChild><Link to="/rescue/incidents"><Truck className="h-4 w-4 mr-1.5" />Active Queue</Link></Button>
+        <Button variant="outline" className="rounded-full" asChild><Link to="/rescue/operations"><Truck className="h-4 w-4 mr-1.5" />Field operations</Link></Button>
+        <Button className="rounded-full shadow-glow" asChild><Link to="/rescue/incidents"><AlertTriangle className="h-4 w-4 mr-1.5" />Active Queue</Link></Button>
       </>
     }>
       <p className="text-muted-foreground -mt-1 mb-6">{activeCount} active incidents · 4 teams deployed · system nominal</p>

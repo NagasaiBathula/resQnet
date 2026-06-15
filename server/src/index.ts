@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
 import incidentRoutes from "./routes/incidents.js";
+import resourceRoutes from "./routes/resources.js";
 import User from "./models/User.js";
 import bcrypt from "bcryptjs";
 
@@ -118,6 +119,19 @@ connectDB().then(async () => {
       if (!exists) {
         await User.create(u);
         console.log(`✓ Seeded missing demo account: ${u.email}`);
+      } else {
+        exists.state = u.state;
+        exists.district = u.district;
+        exists.role = u.role;
+        exists.status = u.status;
+        exists.address = u.address;
+        exists.mobileNumber = u.mobileNumber;
+        exists.name = u.name;
+        if (u.age) exists.age = u.age;
+        if (u.skills) exists.skills = u.skills;
+        if (u.availability) exists.availability = u.availability;
+        if (u.organizationName) exists.organizationName = u.organizationName;
+        await exists.save();
       }
     }
 
@@ -136,6 +150,7 @@ connectDB().then(async () => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/incidents", incidentRoutes);
+app.use("/api/resources", resourceRoutes);
 
 // Health Check API
 app.get("/api/health", (req, res) => {

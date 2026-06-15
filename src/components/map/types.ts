@@ -1,6 +1,6 @@
 import { Coordinate } from "@/lib/constants/map-defaults";
 
-export type MarkerType = "incident" | "shelter" | "user";
+export type MarkerType = "incident" | "shelter" | "user" | "resource";
 
 export interface MapMarker {
   id: string;

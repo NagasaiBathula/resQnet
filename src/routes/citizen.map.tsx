@@ -5,13 +5,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SectionTitle, typeIcon, typeColor, SeverityBadge } from "@/components/shared";
-import { MapPin, Search, Locate, ShieldAlert, Building2 } from "lucide-react";
+import { MapPin, Search, Locate, ShieldAlert, Building2, Truck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { Map } from "@/components/map/map";
 import { MapProvider, useMapController } from "@/components/map/map-provider";
 import { mapService } from "@/services/mapService";
 import { incidentService } from "@/services/incidentService";
+import { resourceService } from "@/services/resourceService";
 import { Shelter } from "@/lib/mock-data";
 import { MapMarker } from "@/components/map/types";
 import { Coordinate, DEFAULT_CENTER, DEFAULT_ZOOM } from "@/lib/constants/map-defaults";
@@ -45,12 +46,15 @@ function MapView() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [incidents, setIncidents] = useState<any[]>([]);
   const [shelters, setShelters] = useState<Shelter[]>([]);
+  const [resources, setResources] = useState<any[]>([]);
   const [isLocating, setIsLocating] = useState<boolean>(false);
   const controller = useMapController();
 
   useEffect(() => {
     // Retrieve incidents from real MongoDB incidentService
     incidentService.getIncidents().then(setIncidents).catch(err => console.error(err));
+    // Retrieve resources
+    resourceService.getResources().then(setResources).catch(err => console.error(err));
     // Shelters remain mock data in this phase
     mapService.getShelters().then(setShelters);
   }, []);
@@ -75,7 +79,27 @@ function MapView() {
     status: s.status,
   }));
 
-  const allMarkers = [...incidentMarkers, ...shelterMarkers];
+  const resourceMarkers: MapMarker[] = resources
+    .filter(res => (res.status === "Assigned" || res.status === "In Use") && res.assignedIncident)
+    .map(res => {
+      const incId = res.assignedIncident?._id || res.assignedIncident;
+      const inc = incidents.find(i => i._id === incId);
+      if (!inc) return null;
+      return {
+        id: res._id,
+        position: {
+          lat: inc.coordinates.lat + 0.0003,
+          lng: inc.coordinates.lng - 0.0003,
+        },
+        type: "resource" as any,
+        title: `${res.name} (${res.resourceId})`,
+        subtitle: `Deployed at ${inc.incidentNumber} · Status: ${res.status}`,
+        status: res.status,
+      };
+    })
+    .filter(Boolean) as MapMarker[];
+
+  const allMarkers = [...incidentMarkers, ...shelterMarkers, ...resourceMarkers];
 
   // Geolocation Handler
   const handleMyLocation = () => {
@@ -115,6 +139,7 @@ function MapView() {
 
     if (filter === "all") return true;
     if (filter === "shelter") return marker.type === "shelter";
+    if (filter === "resource") return marker.type === "resource";
 
     if (marker.type === "incident") {
       const originalIncident = incidents.find((i) => i._id === marker.id);
@@ -158,7 +183,7 @@ function MapView() {
       }
     >
       <p className="text-muted-foreground -mt-1 mb-6">
-        Live incidents, shelters, and rescue assets in your region.
+        Live incidents, shelters, and active stockpile resources in your region.
       </p>
       
       <div className="grid lg:grid-cols-[1fr_360px] gap-4">
@@ -189,7 +214,7 @@ function MapView() {
               </div>
 
               <div className="flex flex-wrap gap-1 mb-4">
-                {["all", "flood", "fire", "medical", "cyclone", "shelter"].map((f) => (
+                {["all", "flood", "fire", "medical", "cyclone", "shelter", "resource"].map((f) => (
                   <Badge
                     key={f}
                     variant="outline"
