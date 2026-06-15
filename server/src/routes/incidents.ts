@@ -352,7 +352,7 @@ router.put("/:id/resources", protect, authorize("authority", "admin"), async (re
 
         // Close out assignment history
         const activeHistory = resource.assignmentHistory.find(
-          h => h.incidentId.toString() === incident._id.toString() && !h.releasedAt
+          (h: any) => h.incidentId.toString() === incident._id.toString() && !h.releasedAt
         );
 
         if (activeHistory) {
@@ -398,7 +398,7 @@ router.put("/:id/resources", protect, authorize("authority", "admin"), async (re
           const prevIncident = await Incident.findById(resource.assignedIncident);
           if (prevIncident) {
             const activeHistory = resource.assignmentHistory.find(
-              h => h.incidentId.toString() === prevIncident._id.toString() && !h.releasedAt
+              (h: any) => h.incidentId.toString() === prevIncident._id.toString() && !h.releasedAt
             );
             if (activeHistory) {
               activeHistory.releasedAt = new Date();

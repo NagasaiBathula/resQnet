@@ -232,7 +232,7 @@ router.put("/:id/status", protect, authorize("rescue", "authority", "admin"), as
       if (incident) {
         // Find assignment history and close it
         const activeHistory = resource.assignmentHistory.find(
-          h => h.incidentId.toString() === incident._id.toString() && !h.releasedAt
+          (h: any) => h.incidentId.toString() === incident._id.toString() && !h.releasedAt
         );
 
         if (activeHistory) {
@@ -296,7 +296,7 @@ router.put("/:id/release", protect, authorize("authority", "admin"), async (req:
     if (incident) {
       // Close out assignment history
       const activeHistory = resource.assignmentHistory.find(
-        h => h.incidentId.toString() === incident._id.toString() && !h.releasedAt
+        (h: any) => h.incidentId.toString() === incident._id.toString() && !h.releasedAt
       );
 
       if (activeHistory) {
