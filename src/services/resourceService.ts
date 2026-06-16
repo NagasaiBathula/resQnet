@@ -24,6 +24,8 @@ export interface UpdateResourceInput {
   description?: string;
   state?: string;
   district?: string;
+  managedByState?: string;
+  managedByDistrict?: string;
 }
 
 export const resourceService = {
@@ -106,6 +108,7 @@ export const resourceService = {
     const res = await fetch(`${API_URL}/api/resources/${id}/release`, {
       method: "PUT",
       headers: getHeaders(),
+      body: JSON.stringify({}),
     });
     if (!res.ok) {
       const error = await res.json();

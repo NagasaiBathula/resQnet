@@ -8,24 +8,15 @@ import {
   MessageSquareText,
   Bell,
   Settings,
-  LifeBuoy,
-  Heart,
+    Heart,
   FileText,
   Compass,
   Users,
-  Truck,
-  Radio,
-  Wrench,
-  BarChart3,
-  Activity,
   ShieldAlert,
   Building2,
-  Award,
-  GraduationCap,
   Boxes,
   Shield,
   LogOut,
-  ChevronLeft,
   Search,
   Sun,
   Moon,
@@ -83,78 +74,53 @@ const NAV: Record<Role, { label: string; items: { title: string; url: string; ic
   ],
   volunteer: [
     {
-      label: "Main",
+      label: "Operations",
       items: [
         { title: "Dashboard", url: "/volunteer", icon: LayoutDashboard },
-        { title: "Available Missions", url: "/volunteer/missions", icon: Compass },
-        { title: "Active Mission", url: "/volunteer/active", icon: Activity },
-      ],
-    },
-    {
-      label: "Grow",
-      items: [
-        { title: "Training Center", url: "/volunteer/training", icon: GraduationCap },
-        { title: "Achievements", url: "/volunteer/achievements", icon: Award },
-        { title: "Resources", url: "/volunteer/resources", icon: Boxes },
+        { title: "Missions", url: "/volunteer/missions", icon: Compass },
       ],
     },
     {
       label: "Account",
-      items: [
-        { title: "Notifications", url: "/volunteer/notifications", icon: Bell },
-        { title: "Profile", url: "/volunteer/profile", icon: Settings },
-      ],
+      items: [{ title: "Profile", url: "/volunteer/profile", icon: Settings }],
     },
   ],
   rescue: [
     {
       label: "Operations",
       items: [
-        { title: "Command Center", url: "/rescue", icon: LayoutDashboard },
-        { title: "Active Incidents", url: "/rescue/incidents", icon: AlertTriangle },
-        { title: "Dispatch", url: "/rescue/dispatch", icon: Radio },
-        { title: "Vehicle Tracking", url: "/rescue/vehicles", icon: Truck },
+        { title: "Dashboard", url: "/rescue", icon: LayoutDashboard },
+        { title: "Missions", url: "/rescue/missions", icon: AlertTriangle },
       ],
     },
     {
-      label: "Manage",
-      items: [
-        { title: "Personnel", url: "/rescue/personnel", icon: Users },
-        { title: "Resources", url: "/rescue/resources", icon: Wrench },
-        { title: "Analytics", url: "/rescue/analytics", icon: BarChart3 },
-      ],
+      label: "Account",
+      items: [{ title: "Profile", url: "/rescue/profile", icon: Settings }],
     },
-    { label: "Account", items: [{ title: "Profile", url: "/rescue/profile", icon: Settings }] },
   ],
   authority: [
     {
-      label: "Command",
+      label: "Operations",
       items: [
-        { title: "National Overview", url: "/authority", icon: LayoutDashboard },
-        { title: "Live Monitoring", url: "/authority/monitoring", icon: Activity },
-        { title: "Analytics", url: "/authority/analytics", icon: BarChart3 },
-      ],
-    },
-    {
-      label: "Manage",
-      items: [
-        { title: "Registration Requests", url: "/authority/requests", icon: FileText },
-        { title: "Shelters", url: "/authority/shelters", icon: Building2 },
-        { title: "Volunteers", url: "/authority/volunteers", icon: Users },
-        { title: "Rescue Teams", url: "/authority/teams", icon: Shield },
+        { title: "Dashboard", url: "/authority", icon: LayoutDashboard },
+        { title: "Incidents", url: "/authority/incidents", icon: AlertTriangle },
+        { title: "People", url: "/authority/people", icon: Users },
         { title: "Resources", url: "/authority/resources", icon: Boxes },
       ],
     },
-    { label: "Account", items: [{ title: "Profile", url: "/authority/profile", icon: Settings }] },
+    {
+      label: "Account",
+      items: [{ title: "Profile", url: "/authority/profile", icon: Settings }],
+    },
   ],
   admin: [
     {
       label: "Admin",
       items: [
-        { title: "Overview", url: "/admin", icon: LayoutDashboard },
-        { title: "Registration Requests", url: "/admin/requests", icon: FileText },
+        { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
         { title: "Users", url: "/admin/users", icon: Users },
-        { title: "System Health", url: "/admin/health", icon: Activity },
+        { title: "Authorities", url: "/admin/authorities", icon: Shield },
+        { title: "Resources", url: "/admin/resources", icon: Boxes },
         { title: "Settings", url: "/admin/settings", icon: Settings },
       ],
     },
@@ -291,9 +257,11 @@ export function AppShell({
 }) {
   const { user } = useAuth();
   const navigate = useNavigate();
+
   useEffect(() => {
     if (!user) navigate({ to: "/login" });
   }, [user, navigate]);
+
   useEffect(() => {
     try {
       const t = localStorage.getItem("resqnet.theme");
@@ -302,7 +270,9 @@ export function AppShell({
       /* ignore */
     }
   }, []);
+
   if (!user) return null;
+
   return (
     <SidebarProvider>
       <AppSidebar />

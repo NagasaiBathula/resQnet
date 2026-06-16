@@ -8,8 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import {
-  Calendar,
-  User,
+    User,
   Phone,
   Mail,
   Shield,
@@ -19,8 +18,7 @@ import {
   CheckCircle2,
   Clock,
   XCircle,
-  Star,
-} from "lucide-react";
+  } from "lucide-react";
 import { PillBadge } from "./feature-page";
 import { type ReactNode } from "react";
 

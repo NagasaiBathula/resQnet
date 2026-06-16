@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { FeaturePage, PillBadge } from "@/components/feature-page";
-import { Activity, Server, Database, Cpu, Cloud } from "lucide-react";
+import { Activity, Database, Cpu, Cloud } from "lucide-react";
 
 const data = Array.from({ length: 24 }).map((_, i) => ({
   t: `${i}:00`,

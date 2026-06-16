@@ -7,18 +7,19 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { typeIcon, typeColor, SeverityBadge } from "@/components/shared";
 import { Progress } from "@/components/ui/progress";
-import { EmergencyType, Severity } from "@/lib/mock-data";
+import { Badge } from "@/components/ui/badge";
+import { Severity } from "@/lib/mock-data";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   ArrowLeft,
-  MapPin,
-  Camera,
+    Camera,
   CheckCircle2,
-  Upload,
-  ShieldAlert,
+    ShieldAlert,
   Locate,
+  X,
+  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -28,6 +29,7 @@ import { MapProvider, useMapController } from "@/components/map/map-provider";
 import { LocationSelector } from "@/components/location-selector";
 import { incidentService } from "@/services/incidentService";
 import { Coordinate, DEFAULT_CENTER } from "@/lib/constants/map-defaults";
+import { API_URL } from "@/lib/config";
 
 export const Route = createFileRoute("/citizen/report")({
   head: () => ({ meta: [{ title: "Report Emergency — ResQNet" }] }),
@@ -74,6 +76,19 @@ function ReportPage() {
   const [isLocating, setIsLocating] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // AI Triage & Vision States
+  const [photoBase64, setPhotoBase64] = useState<string | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [aiSummary, setAiSummary] = useState("");
+  const [aiCategorySuggested, setAiCategorySuggested] = useState("");
+  const [aiSeveritySuggested, setAiSeveritySuggested] = useState("");
+  const [aiPriority, setAiPriority] = useState("");
+  const [aiDamageAssessment, setAiDamageAssessment] = useState("");
+  const [aiConfidence, setAiConfidence] = useState<number | null>(null);
+  const [aiRecommendedResources, setAiRecommendedResources] = useState<string[]>([]);
+  const [isTriaging, setIsTriaging] = useState(false);
+  const [hasTriaged, setHasTriaged] = useState(false);
+
   // Default state/district from logged in user profile
   useEffect(() => {
     if (user) {
@@ -87,6 +102,84 @@ function ReportPage() {
 
   const next = () => setStep((s) => Math.min(total, s + 1));
   const back = () => setStep((s) => Math.max(1, s - 1));
+
+  // File Upload to Base64 Handler
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      setPhotoBase64(base64String);
+      setPhotoPreview(base64String);
+      toast.success("Photo attached successfully!");
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // AI Triage Action
+  const handleAITriage = async () => {
+    if (!desc.trim()) {
+      toast.error("Please specify a description first.");
+      return;
+    }
+    setIsTriaging(true);
+    try {
+      const token = localStorage.getItem("resqnet.token");
+      const headers = {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      };
+
+      const body = {
+        description: desc,
+        image: photoBase64,
+      };
+
+      const res = await fetch(`${API_URL}/api/ai/triage`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        throw new Error("AI triage API failed");
+      }
+
+      const data = await res.json();
+      
+      // Auto-fill values
+      if (data.title) setTitle(data.title);
+      if (data.category) {
+        const matched = TYPES.find(t => t.value.toLowerCase() === data.category.toLowerCase())?.value || data.category;
+        setCategory(matched);
+      }
+      if (data.severity) {
+        setSeverity(data.severity.toLowerCase() as Severity);
+      }
+
+      setAiSummary(data.summary || "");
+      setAiCategorySuggested(data.category || "");
+      setAiSeveritySuggested(data.severity || "");
+      setAiPriority(data.priority || "");
+      setAiDamageAssessment(data.damageAssessment || "");
+      setAiConfidence(data.confidence || null);
+      setAiRecommendedResources(data.recommendedResources || []);
+      setHasTriaged(true);
+      toast.success("AI Triage complete! Forms auto-populated.");
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Failed to triage using ResQNet AI. Please select options manually.");
+    } finally {
+      setIsTriaging(false);
+    }
+  };
 
   // Geolocation Handler
   const handleMyLocation = () => {
@@ -134,7 +227,14 @@ function ReportPage() {
         district,
         address,
         coordinates,
-        attachments: [],
+        attachments: photoBase64 ? [{ fileName: "incident_photo.jpg", fileType: "image/jpeg" }] : [],
+        aiSummary: aiSummary || undefined,
+        aiCategorySuggested: aiCategorySuggested || undefined,
+        aiSeveritySuggested: aiSeveritySuggested || undefined,
+        aiPriority: aiPriority || undefined,
+        aiDamageAssessment: aiDamageAssessment || undefined,
+        aiConfidence: aiConfidence !== null ? aiConfidence : undefined,
+        aiRecommendedResources: aiRecommendedResources.length > 0 ? aiRecommendedResources : undefined,
       });
       setCaseId(result.incidentNumber || "");
       setStep(total);
@@ -323,26 +423,40 @@ function ReportPage() {
                   exit={{ opacity: 0, x: -12 }}
                 >
                   <h2 className="text-xl font-semibold tracking-tight">
-                    Add photos (MVP Metadata)
+                    Add emergency photos
                   </h2>
                   <p className="text-sm text-muted-foreground mt-1">
-                    Optional. Helps responders understand the situation on-site.
+                    Optional. Helps responders perform visual damage assessment and triage.
                   </p>
-                  <div className="mt-6 grid grid-cols-3 gap-3">
-                    {[1, 2, 3].map((i) => (
-                      <button
-                        key={i}
-                        className="aspect-square rounded-2xl border-2 border-dashed flex flex-col items-center justify-center text-muted-foreground hover:bg-accent/40 hover:border-primary/40 transition"
-                      >
-                        <Camera className="h-6 w-6" />
-                        <span className="text-xs mt-1.5">Photo {i}</span>
-                      </button>
-                    ))}
+                  <div className="mt-6 flex flex-col items-center gap-4">
+                    {photoPreview ? (
+                      <div className="relative w-full max-w-sm aspect-video rounded-2xl overflow-hidden border border-border/80 shadow-elegant group">
+                        <img src={photoPreview} alt="Emergency preview" className="w-full h-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setPhotoPreview(null);
+                            setPhotoBase64(null);
+                          }}
+                          className="absolute top-2.5 right-2.5 h-8 w-8 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <label className="w-full max-w-sm aspect-video rounded-2xl border-2 border-dashed border-border/80 flex flex-col items-center justify-center text-muted-foreground hover:bg-accent/40 hover:border-primary/40 transition cursor-pointer">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handlePhotoUpload}
+                          className="hidden"
+                        />
+                        <Camera className="h-8 w-8 text-muted-foreground/60 mb-2" />
+                        <span className="text-sm font-semibold text-foreground">Select Emergency Photo</span>
+                        <span className="text-xs text-muted-foreground/75 mt-1">PNG, JPG, WEBP, or GIF</span>
+                      </label>
+                    )}
                   </div>
-                  <Button variant="outline" className="mt-4 rounded-full">
-                    <Upload className="h-4 w-4 mr-1.5" />
-                    Upload metadata profile
-                  </Button>
                 </motion.div>
               )}
 
@@ -360,7 +474,29 @@ function ReportPage() {
 
                   <div className="mt-6 space-y-4">
                     <div>
-                      <Label htmlFor="title-input">Incident Summary Title</Label>
+                      <Label htmlFor="desc-input">Detailed Description</Label>
+                      <Textarea
+                        id="desc-input"
+                        value={desc}
+                        onChange={(e) => setDesc(e.target.value)}
+                        rows={4}
+                        placeholder="Specify number of people affected, urgent medical needs, hazards, road access info..."
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Button
+                        type="button"
+                        onClick={handleAITriage}
+                        disabled={isTriaging || !desc.trim()}
+                        className="w-full sm:w-auto rounded-full gradient-primary text-white shadow-glow flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        <Sparkles className={cn("h-4 w-4", isTriaging && "animate-spin")} />
+                        {isTriaging ? "Analyzing Emergency..." : "Auto-Triage with ResQNet AI"}
+                      </Button>
+                    </div>
+                    <div>
+                      <Label htmlFor="title-input">Incident Summary Title (Auto-filled by AI)</Label>
                       <Input
                         id="title-input"
                         value={title}
@@ -369,17 +505,49 @@ function ReportPage() {
                         className="h-11 mt-1"
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="desc-input">Detailed Description</Label>
-                      <Textarea
-                        id="desc-input"
-                        value={desc}
-                        onChange={(e) => setDesc(e.target.value)}
-                        rows={5}
-                        placeholder="Specify number of people affected, urgent medical needs, hazards, road access info..."
-                        className="mt-1"
-                      />
-                    </div>
+                    {hasTriaged && (
+                      <div className="border border-primary/20 bg-primary/5 rounded-2xl p-4.5 space-y-3 mt-4">
+                        <div className="flex items-center gap-2 text-xs font-bold text-primary uppercase">
+                          <Sparkles className="h-4 w-4" /> ResQNet AI Triage Recommendation
+                        </div>
+                        <div className="grid grid-cols-2 gap-3 text-xs">
+                          <div>
+                            <span className="text-muted-foreground font-semibold">Suggested Category:</span>
+                            <div className="font-bold text-foreground mt-0.5">{aiCategorySuggested}</div>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground font-semibold">Suggested Severity / Priority:</span>
+                            <div className="font-bold text-foreground mt-0.5 capitalize">
+                              {aiSeveritySuggested} ({aiPriority})
+                            </div>
+                          </div>
+                        </div>
+                        {aiSummary && (
+                          <div className="text-xs">
+                            <span className="text-muted-foreground font-semibold">AI Briefing Summary:</span>
+                            <p className="text-foreground leading-relaxed mt-0.5 bg-card/60 p-2.5 rounded-xl border border-border/40">{aiSummary}</p>
+                          </div>
+                        )}
+                        {aiDamageAssessment && (
+                          <div className="text-xs border-t pt-2.5">
+                            <span className="text-muted-foreground font-semibold">AI Damage Assessment:</span>
+                            <p className="text-foreground leading-relaxed mt-0.5 bg-card/60 p-2.5 rounded-xl border border-border/40 italic">{aiDamageAssessment}</p>
+                          </div>
+                        )}
+                        {aiRecommendedResources.length > 0 && (
+                          <div className="text-xs border-t pt-2.5">
+                            <span className="text-muted-foreground font-semibold">Recommended Resource Hints:</span>
+                            <div className="flex flex-wrap gap-1.5 mt-1.5">
+                              {aiRecommendedResources.map((r, idx) => (
+                                <Badge key={idx} variant="secondary" className="text-[10px] py-0 px-2 rounded-full">
+                                  {r}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               )}

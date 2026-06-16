@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { incidentService } from "@/services/incidentService";
 import { IncidentDetailsDialog } from "@/components/incident-details-dialog";
-import { MapPin, Calendar, ArrowRight, Eye, ShieldAlert } from "lucide-react";
+import { MapPin, Calendar, Eye, ShieldAlert } from "lucide-react";
 
 export const Route = createFileRoute("/citizen/incidents")({
   head: () => ({ meta: [{ title: "My Incidents — ResQNet" }] }),

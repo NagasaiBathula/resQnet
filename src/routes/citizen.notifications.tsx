@@ -1,12 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/app-shell";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { notifications } from "@/lib/mock-data";
 import {
-  Bell,
-  AlertTriangle,
+    AlertTriangle,
   Truck,
   Building2,
   Users,
@@ -16,7 +15,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/lib/auth";
+import {} from "@/lib/auth";
 
 const ICONS = {
   sos: ShieldAlert,

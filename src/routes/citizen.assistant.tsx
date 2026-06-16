@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell } from "@/components/app-shell";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { aiSuggestedPrompts, generateAIResponse } from "@/lib/mock-data";
+import { aiSuggestedPrompts } from "@/lib/mock-data";
+import { API_URL } from "@/lib/config";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Sparkles, Send, ShieldAlert, Mic, MicOff } from "lucide-react";
@@ -102,7 +103,7 @@ function AssistantPage() {
     }
   };
 
-  const send = (text?: string) => {
+  const send = async (text?: string) => {
     // If voice recognition is active, stop it
     if (isRecording && recognitionRef.current) {
       recognitionRef.current.stop();
@@ -112,15 +113,49 @@ function AssistantPage() {
     const q = (text ?? input).trim();
     if (!q) return;
     setInput("");
-    setMessages((m) => [...m, { id: `u-${Date.now()}`, role: "user", text: q }]);
+
+    const newMsg: Msg = { id: `u-${Date.now()}`, role: "user", text: q };
+    setMessages((m) => [...m, newMsg]);
     setTyping(true);
-    setTimeout(() => {
+
+    try {
+      const token = localStorage.getItem("resqnet.token");
+      const headers = {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      };
+
+      // Create conversation history array
+      const conversationHistory = messages.concat(newMsg).map((m) => ({
+        role: m.role === "ai" ? "model" : "user",
+        text: m.text,
+      }));
+
+      const res = await fetch(`${API_URL}/api/ai/chat`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ messages: conversationHistory }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Chat request failed");
+      }
+
+      const data = await res.json();
       setMessages((m) => [
         ...m,
-        { id: `a-${Date.now()}`, role: "ai", text: generateAIResponse(q) },
+        { id: `a-${Date.now()}`, role: "ai", text: data.text || "No response generated." },
       ]);
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Failed to connect to ResQNet assistant");
+      setMessages((m) => [
+        ...m,
+        { id: `a-${Date.now()}`, role: "ai", text: "Offline: Unable to contact Gemini. Fallback: Please seek shelter or higher ground in case of floods, and disconnect electrical appliances." },
+      ]);
+    } finally {
       setTyping(false);
-    }, 900);
+    }
   };
 
   return (

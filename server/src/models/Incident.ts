@@ -38,6 +38,13 @@ export interface IIncident extends mongoose.Document {
     type: string;
     assignedAt: Date;
   }[];
+  aiSummary?: string;
+  aiCategorySuggested?: string;
+  aiSeveritySuggested?: string;
+  aiPriority?: string;
+  aiDamageAssessment?: string;
+  aiConfidence?: number;
+  aiRecommendedResources?: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -178,6 +185,30 @@ const incidentSchema = new mongoose.Schema<IIncident>(
         },
       },
     ],
+    aiSummary: {
+      type: String,
+    },
+    aiCategorySuggested: {
+      type: String,
+    },
+    aiSeveritySuggested: {
+      type: String,
+    },
+    aiPriority: {
+      type: String,
+      enum: ["P1", "P2", "P3", "P4"],
+    },
+    aiDamageAssessment: {
+      type: String,
+    },
+    aiConfidence: {
+      type: Number,
+    },
+    aiRecommendedResources: [
+      {
+        type: String,
+      },
+    ],
   },
   {
     timestamps: true,
@@ -198,6 +229,6 @@ incidentSchema.pre("save", async function (next) {
   next();
 });
 
-const Incident = mongoose.model<IIncident>("Incident", incidentSchema);
+const Incident = mongoose.models.Incident || mongoose.model<IIncident>("Incident", incidentSchema);
 
 export default Incident;

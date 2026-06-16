@@ -22,22 +22,11 @@ import { Route as RescueIndexRouteImport } from './routes/rescue.index'
 import { Route as CitizenIndexRouteImport } from './routes/citizen.index'
 import { Route as AuthorityIndexRouteImport } from './routes/authority.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
-import { Route as VolunteerTrainingRouteImport } from './routes/volunteer.training'
-import { Route as VolunteerResourcesRouteImport } from './routes/volunteer.resources'
 import { Route as VolunteerProfileRouteImport } from './routes/volunteer.profile'
-import { Route as VolunteerOperationsRouteImport } from './routes/volunteer.operations'
 import { Route as VolunteerNotificationsRouteImport } from './routes/volunteer.notifications'
 import { Route as VolunteerMissionsRouteImport } from './routes/volunteer.missions'
-import { Route as VolunteerIncidentsRouteImport } from './routes/volunteer.incidents'
-import { Route as VolunteerActiveRouteImport } from './routes/volunteer.active'
-import { Route as VolunteerAchievementsRouteImport } from './routes/volunteer.achievements'
-import { Route as RescueVehiclesRouteImport } from './routes/rescue.vehicles'
-import { Route as RescueResourcesRouteImport } from './routes/rescue.resources'
 import { Route as RescueProfileRouteImport } from './routes/rescue.profile'
-import { Route as RescuePersonnelRouteImport } from './routes/rescue.personnel'
-import { Route as RescueOperationsRouteImport } from './routes/rescue.operations'
-import { Route as RescueIncidentsRouteImport } from './routes/rescue.incidents'
-import { Route as RescueDispatchRouteImport } from './routes/rescue.dispatch'
+import { Route as RescueMissionsRouteImport } from './routes/rescue.missions'
 import { Route as RescueAnalyticsRouteImport } from './routes/rescue.analytics'
 import { Route as CitizenSosRouteImport } from './routes/citizen.sos'
 import { Route as CitizenSheltersRouteImport } from './routes/citizen.shelters'
@@ -49,21 +38,17 @@ import { Route as CitizenMapRouteImport } from './routes/citizen.map'
 import { Route as CitizenIncidentsRouteImport } from './routes/citizen.incidents'
 import { Route as CitizenHistoryRouteImport } from './routes/citizen.history'
 import { Route as CitizenAssistantRouteImport } from './routes/citizen.assistant'
-import { Route as AuthorityVolunteersRouteImport } from './routes/authority.volunteers'
-import { Route as AuthorityTeamsRouteImport } from './routes/authority.teams'
 import { Route as AuthoritySheltersRouteImport } from './routes/authority.shelters'
 import { Route as AuthorityResourcesRouteImport } from './routes/authority.resources'
-import { Route as AuthorityRequestsRouteImport } from './routes/authority.requests'
 import { Route as AuthorityProfileRouteImport } from './routes/authority.profile'
-import { Route as AuthorityMonitoringRouteImport } from './routes/authority.monitoring'
+import { Route as AuthorityPeopleRouteImport } from './routes/authority.people'
 import { Route as AuthorityIncidentsRouteImport } from './routes/authority.incidents'
-import { Route as AuthorityDispatchRouteImport } from './routes/authority.dispatch'
 import { Route as AuthorityAnalyticsRouteImport } from './routes/authority.analytics'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
-import { Route as AdminRequestsRouteImport } from './routes/admin.requests'
+import { Route as AdminResourcesRouteImport } from './routes/admin.resources'
 import { Route as AdminHealthRouteImport } from './routes/admin.health'
-import { Route as RescueIncidentsIdRouteImport } from './routes/rescue.incidents.$id'
+import { Route as AdminAuthoritiesRouteImport } from './routes/admin.authorities'
 
 const VolunteerRoute = VolunteerRouteImport.update({
   id: '/volunteer',
@@ -130,24 +115,9 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
-const VolunteerTrainingRoute = VolunteerTrainingRouteImport.update({
-  id: '/training',
-  path: '/training',
-  getParentRoute: () => VolunteerRoute,
-} as any)
-const VolunteerResourcesRoute = VolunteerResourcesRouteImport.update({
-  id: '/resources',
-  path: '/resources',
-  getParentRoute: () => VolunteerRoute,
-} as any)
 const VolunteerProfileRoute = VolunteerProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
-  getParentRoute: () => VolunteerRoute,
-} as any)
-const VolunteerOperationsRoute = VolunteerOperationsRouteImport.update({
-  id: '/operations',
-  path: '/operations',
   getParentRoute: () => VolunteerRoute,
 } as any)
 const VolunteerNotificationsRoute = VolunteerNotificationsRouteImport.update({
@@ -160,54 +130,14 @@ const VolunteerMissionsRoute = VolunteerMissionsRouteImport.update({
   path: '/missions',
   getParentRoute: () => VolunteerRoute,
 } as any)
-const VolunteerIncidentsRoute = VolunteerIncidentsRouteImport.update({
-  id: '/incidents',
-  path: '/incidents',
-  getParentRoute: () => VolunteerRoute,
-} as any)
-const VolunteerActiveRoute = VolunteerActiveRouteImport.update({
-  id: '/active',
-  path: '/active',
-  getParentRoute: () => VolunteerRoute,
-} as any)
-const VolunteerAchievementsRoute = VolunteerAchievementsRouteImport.update({
-  id: '/achievements',
-  path: '/achievements',
-  getParentRoute: () => VolunteerRoute,
-} as any)
-const RescueVehiclesRoute = RescueVehiclesRouteImport.update({
-  id: '/vehicles',
-  path: '/vehicles',
-  getParentRoute: () => RescueRoute,
-} as any)
-const RescueResourcesRoute = RescueResourcesRouteImport.update({
-  id: '/resources',
-  path: '/resources',
-  getParentRoute: () => RescueRoute,
-} as any)
 const RescueProfileRoute = RescueProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
   getParentRoute: () => RescueRoute,
 } as any)
-const RescuePersonnelRoute = RescuePersonnelRouteImport.update({
-  id: '/personnel',
-  path: '/personnel',
-  getParentRoute: () => RescueRoute,
-} as any)
-const RescueOperationsRoute = RescueOperationsRouteImport.update({
-  id: '/operations',
-  path: '/operations',
-  getParentRoute: () => RescueRoute,
-} as any)
-const RescueIncidentsRoute = RescueIncidentsRouteImport.update({
-  id: '/incidents',
-  path: '/incidents',
-  getParentRoute: () => RescueRoute,
-} as any)
-const RescueDispatchRoute = RescueDispatchRouteImport.update({
-  id: '/dispatch',
-  path: '/dispatch',
+const RescueMissionsRoute = RescueMissionsRouteImport.update({
+  id: '/missions',
+  path: '/missions',
   getParentRoute: () => RescueRoute,
 } as any)
 const RescueAnalyticsRoute = RescueAnalyticsRouteImport.update({
@@ -265,16 +195,6 @@ const CitizenAssistantRoute = CitizenAssistantRouteImport.update({
   path: '/assistant',
   getParentRoute: () => CitizenRoute,
 } as any)
-const AuthorityVolunteersRoute = AuthorityVolunteersRouteImport.update({
-  id: '/volunteers',
-  path: '/volunteers',
-  getParentRoute: () => AuthorityRoute,
-} as any)
-const AuthorityTeamsRoute = AuthorityTeamsRouteImport.update({
-  id: '/teams',
-  path: '/teams',
-  getParentRoute: () => AuthorityRoute,
-} as any)
 const AuthoritySheltersRoute = AuthoritySheltersRouteImport.update({
   id: '/shelters',
   path: '/shelters',
@@ -285,29 +205,19 @@ const AuthorityResourcesRoute = AuthorityResourcesRouteImport.update({
   path: '/resources',
   getParentRoute: () => AuthorityRoute,
 } as any)
-const AuthorityRequestsRoute = AuthorityRequestsRouteImport.update({
-  id: '/requests',
-  path: '/requests',
-  getParentRoute: () => AuthorityRoute,
-} as any)
 const AuthorityProfileRoute = AuthorityProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
   getParentRoute: () => AuthorityRoute,
 } as any)
-const AuthorityMonitoringRoute = AuthorityMonitoringRouteImport.update({
-  id: '/monitoring',
-  path: '/monitoring',
+const AuthorityPeopleRoute = AuthorityPeopleRouteImport.update({
+  id: '/people',
+  path: '/people',
   getParentRoute: () => AuthorityRoute,
 } as any)
 const AuthorityIncidentsRoute = AuthorityIncidentsRouteImport.update({
   id: '/incidents',
   path: '/incidents',
-  getParentRoute: () => AuthorityRoute,
-} as any)
-const AuthorityDispatchRoute = AuthorityDispatchRouteImport.update({
-  id: '/dispatch',
-  path: '/dispatch',
   getParentRoute: () => AuthorityRoute,
 } as any)
 const AuthorityAnalyticsRoute = AuthorityAnalyticsRouteImport.update({
@@ -325,9 +235,9 @@ const AdminSettingsRoute = AdminSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminRequestsRoute = AdminRequestsRouteImport.update({
-  id: '/requests',
-  path: '/requests',
+const AdminResourcesRoute = AdminResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminHealthRoute = AdminHealthRouteImport.update({
@@ -335,10 +245,10 @@ const AdminHealthRoute = AdminHealthRouteImport.update({
   path: '/health',
   getParentRoute: () => AdminRoute,
 } as any)
-const RescueIncidentsIdRoute = RescueIncidentsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => RescueIncidentsRoute,
+const AdminAuthoritiesRoute = AdminAuthoritiesRouteImport.update({
+  id: '/authorities',
+  path: '/authorities',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -350,20 +260,17 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/rescue': typeof RescueRouteWithChildren
   '/volunteer': typeof VolunteerRouteWithChildren
+  '/admin/authorities': typeof AdminAuthoritiesRoute
   '/admin/health': typeof AdminHealthRoute
-  '/admin/requests': typeof AdminRequestsRoute
+  '/admin/resources': typeof AdminResourcesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/authority/analytics': typeof AuthorityAnalyticsRoute
-  '/authority/dispatch': typeof AuthorityDispatchRoute
   '/authority/incidents': typeof AuthorityIncidentsRoute
-  '/authority/monitoring': typeof AuthorityMonitoringRoute
+  '/authority/people': typeof AuthorityPeopleRoute
   '/authority/profile': typeof AuthorityProfileRoute
-  '/authority/requests': typeof AuthorityRequestsRoute
   '/authority/resources': typeof AuthorityResourcesRoute
   '/authority/shelters': typeof AuthoritySheltersRoute
-  '/authority/teams': typeof AuthorityTeamsRoute
-  '/authority/volunteers': typeof AuthorityVolunteersRoute
   '/citizen/assistant': typeof CitizenAssistantRoute
   '/citizen/history': typeof CitizenHistoryRoute
   '/citizen/incidents': typeof CitizenIncidentsRoute
@@ -375,47 +282,32 @@ export interface FileRoutesByFullPath {
   '/citizen/shelters': typeof CitizenSheltersRoute
   '/citizen/sos': typeof CitizenSosRoute
   '/rescue/analytics': typeof RescueAnalyticsRoute
-  '/rescue/dispatch': typeof RescueDispatchRoute
-  '/rescue/incidents': typeof RescueIncidentsRouteWithChildren
-  '/rescue/operations': typeof RescueOperationsRoute
-  '/rescue/personnel': typeof RescuePersonnelRoute
+  '/rescue/missions': typeof RescueMissionsRoute
   '/rescue/profile': typeof RescueProfileRoute
-  '/rescue/resources': typeof RescueResourcesRoute
-  '/rescue/vehicles': typeof RescueVehiclesRoute
-  '/volunteer/achievements': typeof VolunteerAchievementsRoute
-  '/volunteer/active': typeof VolunteerActiveRoute
-  '/volunteer/incidents': typeof VolunteerIncidentsRoute
   '/volunteer/missions': typeof VolunteerMissionsRoute
   '/volunteer/notifications': typeof VolunteerNotificationsRoute
-  '/volunteer/operations': typeof VolunteerOperationsRoute
   '/volunteer/profile': typeof VolunteerProfileRoute
-  '/volunteer/resources': typeof VolunteerResourcesRoute
-  '/volunteer/training': typeof VolunteerTrainingRoute
   '/admin/': typeof AdminIndexRoute
   '/authority/': typeof AuthorityIndexRoute
   '/citizen/': typeof CitizenIndexRoute
   '/rescue/': typeof RescueIndexRoute
   '/volunteer/': typeof VolunteerIndexRoute
-  '/rescue/incidents/$id': typeof RescueIncidentsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/admin/authorities': typeof AdminAuthoritiesRoute
   '/admin/health': typeof AdminHealthRoute
-  '/admin/requests': typeof AdminRequestsRoute
+  '/admin/resources': typeof AdminResourcesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/authority/analytics': typeof AuthorityAnalyticsRoute
-  '/authority/dispatch': typeof AuthorityDispatchRoute
   '/authority/incidents': typeof AuthorityIncidentsRoute
-  '/authority/monitoring': typeof AuthorityMonitoringRoute
+  '/authority/people': typeof AuthorityPeopleRoute
   '/authority/profile': typeof AuthorityProfileRoute
-  '/authority/requests': typeof AuthorityRequestsRoute
   '/authority/resources': typeof AuthorityResourcesRoute
   '/authority/shelters': typeof AuthoritySheltersRoute
-  '/authority/teams': typeof AuthorityTeamsRoute
-  '/authority/volunteers': typeof AuthorityVolunteersRoute
   '/citizen/assistant': typeof CitizenAssistantRoute
   '/citizen/history': typeof CitizenHistoryRoute
   '/citizen/incidents': typeof CitizenIncidentsRoute
@@ -427,28 +319,16 @@ export interface FileRoutesByTo {
   '/citizen/shelters': typeof CitizenSheltersRoute
   '/citizen/sos': typeof CitizenSosRoute
   '/rescue/analytics': typeof RescueAnalyticsRoute
-  '/rescue/dispatch': typeof RescueDispatchRoute
-  '/rescue/incidents': typeof RescueIncidentsRouteWithChildren
-  '/rescue/operations': typeof RescueOperationsRoute
-  '/rescue/personnel': typeof RescuePersonnelRoute
+  '/rescue/missions': typeof RescueMissionsRoute
   '/rescue/profile': typeof RescueProfileRoute
-  '/rescue/resources': typeof RescueResourcesRoute
-  '/rescue/vehicles': typeof RescueVehiclesRoute
-  '/volunteer/achievements': typeof VolunteerAchievementsRoute
-  '/volunteer/active': typeof VolunteerActiveRoute
-  '/volunteer/incidents': typeof VolunteerIncidentsRoute
   '/volunteer/missions': typeof VolunteerMissionsRoute
   '/volunteer/notifications': typeof VolunteerNotificationsRoute
-  '/volunteer/operations': typeof VolunteerOperationsRoute
   '/volunteer/profile': typeof VolunteerProfileRoute
-  '/volunteer/resources': typeof VolunteerResourcesRoute
-  '/volunteer/training': typeof VolunteerTrainingRoute
   '/admin': typeof AdminIndexRoute
   '/authority': typeof AuthorityIndexRoute
   '/citizen': typeof CitizenIndexRoute
   '/rescue': typeof RescueIndexRoute
   '/volunteer': typeof VolunteerIndexRoute
-  '/rescue/incidents/$id': typeof RescueIncidentsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -460,20 +340,17 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/rescue': typeof RescueRouteWithChildren
   '/volunteer': typeof VolunteerRouteWithChildren
+  '/admin/authorities': typeof AdminAuthoritiesRoute
   '/admin/health': typeof AdminHealthRoute
-  '/admin/requests': typeof AdminRequestsRoute
+  '/admin/resources': typeof AdminResourcesRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/users': typeof AdminUsersRoute
   '/authority/analytics': typeof AuthorityAnalyticsRoute
-  '/authority/dispatch': typeof AuthorityDispatchRoute
   '/authority/incidents': typeof AuthorityIncidentsRoute
-  '/authority/monitoring': typeof AuthorityMonitoringRoute
+  '/authority/people': typeof AuthorityPeopleRoute
   '/authority/profile': typeof AuthorityProfileRoute
-  '/authority/requests': typeof AuthorityRequestsRoute
   '/authority/resources': typeof AuthorityResourcesRoute
   '/authority/shelters': typeof AuthoritySheltersRoute
-  '/authority/teams': typeof AuthorityTeamsRoute
-  '/authority/volunteers': typeof AuthorityVolunteersRoute
   '/citizen/assistant': typeof CitizenAssistantRoute
   '/citizen/history': typeof CitizenHistoryRoute
   '/citizen/incidents': typeof CitizenIncidentsRoute
@@ -485,28 +362,16 @@ export interface FileRoutesById {
   '/citizen/shelters': typeof CitizenSheltersRoute
   '/citizen/sos': typeof CitizenSosRoute
   '/rescue/analytics': typeof RescueAnalyticsRoute
-  '/rescue/dispatch': typeof RescueDispatchRoute
-  '/rescue/incidents': typeof RescueIncidentsRouteWithChildren
-  '/rescue/operations': typeof RescueOperationsRoute
-  '/rescue/personnel': typeof RescuePersonnelRoute
+  '/rescue/missions': typeof RescueMissionsRoute
   '/rescue/profile': typeof RescueProfileRoute
-  '/rescue/resources': typeof RescueResourcesRoute
-  '/rescue/vehicles': typeof RescueVehiclesRoute
-  '/volunteer/achievements': typeof VolunteerAchievementsRoute
-  '/volunteer/active': typeof VolunteerActiveRoute
-  '/volunteer/incidents': typeof VolunteerIncidentsRoute
   '/volunteer/missions': typeof VolunteerMissionsRoute
   '/volunteer/notifications': typeof VolunteerNotificationsRoute
-  '/volunteer/operations': typeof VolunteerOperationsRoute
   '/volunteer/profile': typeof VolunteerProfileRoute
-  '/volunteer/resources': typeof VolunteerResourcesRoute
-  '/volunteer/training': typeof VolunteerTrainingRoute
   '/admin/': typeof AdminIndexRoute
   '/authority/': typeof AuthorityIndexRoute
   '/citizen/': typeof CitizenIndexRoute
   '/rescue/': typeof RescueIndexRoute
   '/volunteer/': typeof VolunteerIndexRoute
-  '/rescue/incidents/$id': typeof RescueIncidentsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -519,20 +384,17 @@ export interface FileRouteTypes {
     | '/register'
     | '/rescue'
     | '/volunteer'
+    | '/admin/authorities'
     | '/admin/health'
-    | '/admin/requests'
+    | '/admin/resources'
     | '/admin/settings'
     | '/admin/users'
     | '/authority/analytics'
-    | '/authority/dispatch'
     | '/authority/incidents'
-    | '/authority/monitoring'
+    | '/authority/people'
     | '/authority/profile'
-    | '/authority/requests'
     | '/authority/resources'
     | '/authority/shelters'
-    | '/authority/teams'
-    | '/authority/volunteers'
     | '/citizen/assistant'
     | '/citizen/history'
     | '/citizen/incidents'
@@ -544,47 +406,32 @@ export interface FileRouteTypes {
     | '/citizen/shelters'
     | '/citizen/sos'
     | '/rescue/analytics'
-    | '/rescue/dispatch'
-    | '/rescue/incidents'
-    | '/rescue/operations'
-    | '/rescue/personnel'
+    | '/rescue/missions'
     | '/rescue/profile'
-    | '/rescue/resources'
-    | '/rescue/vehicles'
-    | '/volunteer/achievements'
-    | '/volunteer/active'
-    | '/volunteer/incidents'
     | '/volunteer/missions'
     | '/volunteer/notifications'
-    | '/volunteer/operations'
     | '/volunteer/profile'
-    | '/volunteer/resources'
-    | '/volunteer/training'
     | '/admin/'
     | '/authority/'
     | '/citizen/'
     | '/rescue/'
     | '/volunteer/'
-    | '/rescue/incidents/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/register'
+    | '/admin/authorities'
     | '/admin/health'
-    | '/admin/requests'
+    | '/admin/resources'
     | '/admin/settings'
     | '/admin/users'
     | '/authority/analytics'
-    | '/authority/dispatch'
     | '/authority/incidents'
-    | '/authority/monitoring'
+    | '/authority/people'
     | '/authority/profile'
-    | '/authority/requests'
     | '/authority/resources'
     | '/authority/shelters'
-    | '/authority/teams'
-    | '/authority/volunteers'
     | '/citizen/assistant'
     | '/citizen/history'
     | '/citizen/incidents'
@@ -596,28 +443,16 @@ export interface FileRouteTypes {
     | '/citizen/shelters'
     | '/citizen/sos'
     | '/rescue/analytics'
-    | '/rescue/dispatch'
-    | '/rescue/incidents'
-    | '/rescue/operations'
-    | '/rescue/personnel'
+    | '/rescue/missions'
     | '/rescue/profile'
-    | '/rescue/resources'
-    | '/rescue/vehicles'
-    | '/volunteer/achievements'
-    | '/volunteer/active'
-    | '/volunteer/incidents'
     | '/volunteer/missions'
     | '/volunteer/notifications'
-    | '/volunteer/operations'
     | '/volunteer/profile'
-    | '/volunteer/resources'
-    | '/volunteer/training'
     | '/admin'
     | '/authority'
     | '/citizen'
     | '/rescue'
     | '/volunteer'
-    | '/rescue/incidents/$id'
   id:
     | '__root__'
     | '/'
@@ -628,20 +463,17 @@ export interface FileRouteTypes {
     | '/register'
     | '/rescue'
     | '/volunteer'
+    | '/admin/authorities'
     | '/admin/health'
-    | '/admin/requests'
+    | '/admin/resources'
     | '/admin/settings'
     | '/admin/users'
     | '/authority/analytics'
-    | '/authority/dispatch'
     | '/authority/incidents'
-    | '/authority/monitoring'
+    | '/authority/people'
     | '/authority/profile'
-    | '/authority/requests'
     | '/authority/resources'
     | '/authority/shelters'
-    | '/authority/teams'
-    | '/authority/volunteers'
     | '/citizen/assistant'
     | '/citizen/history'
     | '/citizen/incidents'
@@ -653,28 +485,16 @@ export interface FileRouteTypes {
     | '/citizen/shelters'
     | '/citizen/sos'
     | '/rescue/analytics'
-    | '/rescue/dispatch'
-    | '/rescue/incidents'
-    | '/rescue/operations'
-    | '/rescue/personnel'
+    | '/rescue/missions'
     | '/rescue/profile'
-    | '/rescue/resources'
-    | '/rescue/vehicles'
-    | '/volunteer/achievements'
-    | '/volunteer/active'
-    | '/volunteer/incidents'
     | '/volunteer/missions'
     | '/volunteer/notifications'
-    | '/volunteer/operations'
     | '/volunteer/profile'
-    | '/volunteer/resources'
-    | '/volunteer/training'
     | '/admin/'
     | '/authority/'
     | '/citizen/'
     | '/rescue/'
     | '/volunteer/'
-    | '/rescue/incidents/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -781,32 +601,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/volunteer/training': {
-      id: '/volunteer/training'
-      path: '/training'
-      fullPath: '/volunteer/training'
-      preLoaderRoute: typeof VolunteerTrainingRouteImport
-      parentRoute: typeof VolunteerRoute
-    }
-    '/volunteer/resources': {
-      id: '/volunteer/resources'
-      path: '/resources'
-      fullPath: '/volunteer/resources'
-      preLoaderRoute: typeof VolunteerResourcesRouteImport
-      parentRoute: typeof VolunteerRoute
-    }
     '/volunteer/profile': {
       id: '/volunteer/profile'
       path: '/profile'
       fullPath: '/volunteer/profile'
       preLoaderRoute: typeof VolunteerProfileRouteImport
-      parentRoute: typeof VolunteerRoute
-    }
-    '/volunteer/operations': {
-      id: '/volunteer/operations'
-      path: '/operations'
-      fullPath: '/volunteer/operations'
-      preLoaderRoute: typeof VolunteerOperationsRouteImport
       parentRoute: typeof VolunteerRoute
     }
     '/volunteer/notifications': {
@@ -823,41 +622,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VolunteerMissionsRouteImport
       parentRoute: typeof VolunteerRoute
     }
-    '/volunteer/incidents': {
-      id: '/volunteer/incidents'
-      path: '/incidents'
-      fullPath: '/volunteer/incidents'
-      preLoaderRoute: typeof VolunteerIncidentsRouteImport
-      parentRoute: typeof VolunteerRoute
-    }
-    '/volunteer/active': {
-      id: '/volunteer/active'
-      path: '/active'
-      fullPath: '/volunteer/active'
-      preLoaderRoute: typeof VolunteerActiveRouteImport
-      parentRoute: typeof VolunteerRoute
-    }
-    '/volunteer/achievements': {
-      id: '/volunteer/achievements'
-      path: '/achievements'
-      fullPath: '/volunteer/achievements'
-      preLoaderRoute: typeof VolunteerAchievementsRouteImport
-      parentRoute: typeof VolunteerRoute
-    }
-    '/rescue/vehicles': {
-      id: '/rescue/vehicles'
-      path: '/vehicles'
-      fullPath: '/rescue/vehicles'
-      preLoaderRoute: typeof RescueVehiclesRouteImport
-      parentRoute: typeof RescueRoute
-    }
-    '/rescue/resources': {
-      id: '/rescue/resources'
-      path: '/resources'
-      fullPath: '/rescue/resources'
-      preLoaderRoute: typeof RescueResourcesRouteImport
-      parentRoute: typeof RescueRoute
-    }
     '/rescue/profile': {
       id: '/rescue/profile'
       path: '/profile'
@@ -865,32 +629,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RescueProfileRouteImport
       parentRoute: typeof RescueRoute
     }
-    '/rescue/personnel': {
-      id: '/rescue/personnel'
-      path: '/personnel'
-      fullPath: '/rescue/personnel'
-      preLoaderRoute: typeof RescuePersonnelRouteImport
-      parentRoute: typeof RescueRoute
-    }
-    '/rescue/operations': {
-      id: '/rescue/operations'
-      path: '/operations'
-      fullPath: '/rescue/operations'
-      preLoaderRoute: typeof RescueOperationsRouteImport
-      parentRoute: typeof RescueRoute
-    }
-    '/rescue/incidents': {
-      id: '/rescue/incidents'
-      path: '/incidents'
-      fullPath: '/rescue/incidents'
-      preLoaderRoute: typeof RescueIncidentsRouteImport
-      parentRoute: typeof RescueRoute
-    }
-    '/rescue/dispatch': {
-      id: '/rescue/dispatch'
-      path: '/dispatch'
-      fullPath: '/rescue/dispatch'
-      preLoaderRoute: typeof RescueDispatchRouteImport
+    '/rescue/missions': {
+      id: '/rescue/missions'
+      path: '/missions'
+      fullPath: '/rescue/missions'
+      preLoaderRoute: typeof RescueMissionsRouteImport
       parentRoute: typeof RescueRoute
     }
     '/rescue/analytics': {
@@ -970,20 +713,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CitizenAssistantRouteImport
       parentRoute: typeof CitizenRoute
     }
-    '/authority/volunteers': {
-      id: '/authority/volunteers'
-      path: '/volunteers'
-      fullPath: '/authority/volunteers'
-      preLoaderRoute: typeof AuthorityVolunteersRouteImport
-      parentRoute: typeof AuthorityRoute
-    }
-    '/authority/teams': {
-      id: '/authority/teams'
-      path: '/teams'
-      fullPath: '/authority/teams'
-      preLoaderRoute: typeof AuthorityTeamsRouteImport
-      parentRoute: typeof AuthorityRoute
-    }
     '/authority/shelters': {
       id: '/authority/shelters'
       path: '/shelters'
@@ -998,13 +727,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthorityResourcesRouteImport
       parentRoute: typeof AuthorityRoute
     }
-    '/authority/requests': {
-      id: '/authority/requests'
-      path: '/requests'
-      fullPath: '/authority/requests'
-      preLoaderRoute: typeof AuthorityRequestsRouteImport
-      parentRoute: typeof AuthorityRoute
-    }
     '/authority/profile': {
       id: '/authority/profile'
       path: '/profile'
@@ -1012,11 +734,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthorityProfileRouteImport
       parentRoute: typeof AuthorityRoute
     }
-    '/authority/monitoring': {
-      id: '/authority/monitoring'
-      path: '/monitoring'
-      fullPath: '/authority/monitoring'
-      preLoaderRoute: typeof AuthorityMonitoringRouteImport
+    '/authority/people': {
+      id: '/authority/people'
+      path: '/people'
+      fullPath: '/authority/people'
+      preLoaderRoute: typeof AuthorityPeopleRouteImport
       parentRoute: typeof AuthorityRoute
     }
     '/authority/incidents': {
@@ -1024,13 +746,6 @@ declare module '@tanstack/react-router' {
       path: '/incidents'
       fullPath: '/authority/incidents'
       preLoaderRoute: typeof AuthorityIncidentsRouteImport
-      parentRoute: typeof AuthorityRoute
-    }
-    '/authority/dispatch': {
-      id: '/authority/dispatch'
-      path: '/dispatch'
-      fullPath: '/authority/dispatch'
-      preLoaderRoute: typeof AuthorityDispatchRouteImport
       parentRoute: typeof AuthorityRoute
     }
     '/authority/analytics': {
@@ -1054,11 +769,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/requests': {
-      id: '/admin/requests'
-      path: '/requests'
-      fullPath: '/admin/requests'
-      preLoaderRoute: typeof AdminRequestsRouteImport
+    '/admin/resources': {
+      id: '/admin/resources'
+      path: '/resources'
+      fullPath: '/admin/resources'
+      preLoaderRoute: typeof AdminResourcesRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/health': {
@@ -1068,27 +783,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminHealthRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/rescue/incidents/$id': {
-      id: '/rescue/incidents/$id'
-      path: '/$id'
-      fullPath: '/rescue/incidents/$id'
-      preLoaderRoute: typeof RescueIncidentsIdRouteImport
-      parentRoute: typeof RescueIncidentsRoute
+    '/admin/authorities': {
+      id: '/admin/authorities'
+      path: '/authorities'
+      fullPath: '/admin/authorities'
+      preLoaderRoute: typeof AdminAuthoritiesRouteImport
+      parentRoute: typeof AdminRoute
     }
   }
 }
 
 interface AdminRouteChildren {
+  AdminAuthoritiesRoute: typeof AdminAuthoritiesRoute
   AdminHealthRoute: typeof AdminHealthRoute
-  AdminRequestsRoute: typeof AdminRequestsRoute
+  AdminResourcesRoute: typeof AdminResourcesRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAuthoritiesRoute: AdminAuthoritiesRoute,
   AdminHealthRoute: AdminHealthRoute,
-  AdminRequestsRoute: AdminRequestsRoute,
+  AdminResourcesRoute: AdminResourcesRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
@@ -1098,29 +815,21 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface AuthorityRouteChildren {
   AuthorityAnalyticsRoute: typeof AuthorityAnalyticsRoute
-  AuthorityDispatchRoute: typeof AuthorityDispatchRoute
   AuthorityIncidentsRoute: typeof AuthorityIncidentsRoute
-  AuthorityMonitoringRoute: typeof AuthorityMonitoringRoute
+  AuthorityPeopleRoute: typeof AuthorityPeopleRoute
   AuthorityProfileRoute: typeof AuthorityProfileRoute
-  AuthorityRequestsRoute: typeof AuthorityRequestsRoute
   AuthorityResourcesRoute: typeof AuthorityResourcesRoute
   AuthoritySheltersRoute: typeof AuthoritySheltersRoute
-  AuthorityTeamsRoute: typeof AuthorityTeamsRoute
-  AuthorityVolunteersRoute: typeof AuthorityVolunteersRoute
   AuthorityIndexRoute: typeof AuthorityIndexRoute
 }
 
 const AuthorityRouteChildren: AuthorityRouteChildren = {
   AuthorityAnalyticsRoute: AuthorityAnalyticsRoute,
-  AuthorityDispatchRoute: AuthorityDispatchRoute,
   AuthorityIncidentsRoute: AuthorityIncidentsRoute,
-  AuthorityMonitoringRoute: AuthorityMonitoringRoute,
+  AuthorityPeopleRoute: AuthorityPeopleRoute,
   AuthorityProfileRoute: AuthorityProfileRoute,
-  AuthorityRequestsRoute: AuthorityRequestsRoute,
   AuthorityResourcesRoute: AuthorityResourcesRoute,
   AuthoritySheltersRoute: AuthoritySheltersRoute,
-  AuthorityTeamsRoute: AuthorityTeamsRoute,
-  AuthorityVolunteersRoute: AuthorityVolunteersRoute,
   AuthorityIndexRoute: AuthorityIndexRoute,
 }
 
@@ -1159,39 +868,17 @@ const CitizenRouteChildren: CitizenRouteChildren = {
 const CitizenRouteWithChildren =
   CitizenRoute._addFileChildren(CitizenRouteChildren)
 
-interface RescueIncidentsRouteChildren {
-  RescueIncidentsIdRoute: typeof RescueIncidentsIdRoute
-}
-
-const RescueIncidentsRouteChildren: RescueIncidentsRouteChildren = {
-  RescueIncidentsIdRoute: RescueIncidentsIdRoute,
-}
-
-const RescueIncidentsRouteWithChildren = RescueIncidentsRoute._addFileChildren(
-  RescueIncidentsRouteChildren,
-)
-
 interface RescueRouteChildren {
   RescueAnalyticsRoute: typeof RescueAnalyticsRoute
-  RescueDispatchRoute: typeof RescueDispatchRoute
-  RescueIncidentsRoute: typeof RescueIncidentsRouteWithChildren
-  RescueOperationsRoute: typeof RescueOperationsRoute
-  RescuePersonnelRoute: typeof RescuePersonnelRoute
+  RescueMissionsRoute: typeof RescueMissionsRoute
   RescueProfileRoute: typeof RescueProfileRoute
-  RescueResourcesRoute: typeof RescueResourcesRoute
-  RescueVehiclesRoute: typeof RescueVehiclesRoute
   RescueIndexRoute: typeof RescueIndexRoute
 }
 
 const RescueRouteChildren: RescueRouteChildren = {
   RescueAnalyticsRoute: RescueAnalyticsRoute,
-  RescueDispatchRoute: RescueDispatchRoute,
-  RescueIncidentsRoute: RescueIncidentsRouteWithChildren,
-  RescueOperationsRoute: RescueOperationsRoute,
-  RescuePersonnelRoute: RescuePersonnelRoute,
+  RescueMissionsRoute: RescueMissionsRoute,
   RescueProfileRoute: RescueProfileRoute,
-  RescueResourcesRoute: RescueResourcesRoute,
-  RescueVehiclesRoute: RescueVehiclesRoute,
   RescueIndexRoute: RescueIndexRoute,
 }
 
@@ -1199,28 +886,16 @@ const RescueRouteWithChildren =
   RescueRoute._addFileChildren(RescueRouteChildren)
 
 interface VolunteerRouteChildren {
-  VolunteerAchievementsRoute: typeof VolunteerAchievementsRoute
-  VolunteerActiveRoute: typeof VolunteerActiveRoute
-  VolunteerIncidentsRoute: typeof VolunteerIncidentsRoute
   VolunteerMissionsRoute: typeof VolunteerMissionsRoute
   VolunteerNotificationsRoute: typeof VolunteerNotificationsRoute
-  VolunteerOperationsRoute: typeof VolunteerOperationsRoute
   VolunteerProfileRoute: typeof VolunteerProfileRoute
-  VolunteerResourcesRoute: typeof VolunteerResourcesRoute
-  VolunteerTrainingRoute: typeof VolunteerTrainingRoute
   VolunteerIndexRoute: typeof VolunteerIndexRoute
 }
 
 const VolunteerRouteChildren: VolunteerRouteChildren = {
-  VolunteerAchievementsRoute: VolunteerAchievementsRoute,
-  VolunteerActiveRoute: VolunteerActiveRoute,
-  VolunteerIncidentsRoute: VolunteerIncidentsRoute,
   VolunteerMissionsRoute: VolunteerMissionsRoute,
   VolunteerNotificationsRoute: VolunteerNotificationsRoute,
-  VolunteerOperationsRoute: VolunteerOperationsRoute,
   VolunteerProfileRoute: VolunteerProfileRoute,
-  VolunteerResourcesRoute: VolunteerResourcesRoute,
-  VolunteerTrainingRoute: VolunteerTrainingRoute,
   VolunteerIndexRoute: VolunteerIndexRoute,
 }
 

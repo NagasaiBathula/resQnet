@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { FeaturePage, PillBadge } from "@/components/feature-page";
-import { HeartPulse, Phone, Ambulance, Activity, Droplet, Plus } from "lucide-react";
+import { HeartPulse, Phone, Ambulance, Activity, Droplet } from "lucide-react";
 
 const hospitals = [
   {

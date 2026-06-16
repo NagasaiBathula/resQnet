@@ -21,6 +21,13 @@ export interface CreateIncidentInput {
   district: string;
   address?: string;
   attachments?: { fileName: string; fileType: string }[];
+  aiSummary?: string;
+  aiCategorySuggested?: string;
+  aiSeveritySuggested?: string;
+  aiPriority?: string;
+  aiDamageAssessment?: string;
+  aiConfidence?: number;
+  aiRecommendedResources?: string[];
 }
 
 export const incidentService = {

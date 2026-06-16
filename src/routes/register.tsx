@@ -17,19 +17,15 @@ import {
   User,
   HeartHandshake,
   Truck,
-  MapPin,
-  Phone,
-  ShieldAlert,
-  FileText,
-  CheckCircle2,
-} from "lucide-react";
+      ShieldAlert,
+    } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { type Role } from "@/lib/mock-data";
 import { Checkbox } from "@/components/ui/checkbox";
 import { LocationSelector } from "@/components/location-selector";
-import { API_URL } from "@/lib/config";
+import {} from "@/lib/config";
 
 export const Route = createFileRoute("/register")({
   head: () => ({ meta: [{ title: "Register — ResQNet" }] }),

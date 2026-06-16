@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SectionTitle, typeIcon, typeColor, SeverityBadge } from "@/components/shared";
-import { MapPin, Search, Locate, ShieldAlert, Building2, Truck } from "lucide-react";
+import { MapPin, Search, Locate, ShieldAlert, Building2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { Map } from "@/components/map/map";
@@ -15,7 +15,7 @@ import { incidentService } from "@/services/incidentService";
 import { resourceService } from "@/services/resourceService";
 import { Shelter } from "@/lib/mock-data";
 import { MapMarker } from "@/components/map/types";
-import { Coordinate, DEFAULT_CENTER, DEFAULT_ZOOM } from "@/lib/constants/map-defaults";
+import { Coordinate, DEFAULT_CENTER } from "@/lib/constants/map-defaults";
 
 export const Route = createFileRoute("/citizen/map")({
   head: () => ({ meta: [{ title: "Emergency Map — ResQNet" }] }),

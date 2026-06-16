@@ -21,12 +21,13 @@ export const mapService = {
     return Promise.resolve(incidents);
   },
 
-  getShelters(): Promise<Shelter[]> {
+  async getShelters(): Promise<Shelter[]> {
     return Promise.resolve(shelters);
   },
 
-  getNearbyShelters(coord: Coordinate, limit = 5): Promise<Shelter[]> {
-    const sorted = [...shelters].sort((a, b) => {
+  async getNearbyShelters(coord: Coordinate, limit = 5): Promise<Shelter[]> {
+    const allShelters = await this.getShelters();
+    const sorted = [...allShelters].sort((a, b) => {
       const distA = calculateDistance(coord, a.coordinates);
       const distB = calculateDistance(coord, b.coordinates);
       return distA - distB;
@@ -39,8 +40,9 @@ export const mapService = {
     return Promise.resolve(incident);
   },
 
-  getShelterById(id: string): Promise<Shelter | undefined> {
-    const shelter = shelters.find((s) => s.id === id);
+  async getShelterById(id: string): Promise<Shelter | undefined> {
+    const allShelters = await this.getShelters();
+    const shelter = allShelters.find((s) => s.id === id);
     return Promise.resolve(shelter);
   },
 };

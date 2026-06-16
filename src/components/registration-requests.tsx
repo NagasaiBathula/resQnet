@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { PillBadge } from "./feature-page";
 import { UserProfileDetails } from "./user-profile-details";
 import { toast } from "sonner";
-import { Search, Filter, Check, X, Eye, FileText, AlertTriangle } from "lucide-react";
+import { Search, Check, X, Eye, AlertTriangle } from "lucide-react";
 import {
   Dialog,
   DialogContent,

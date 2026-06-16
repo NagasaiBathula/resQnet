@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import { Coordinate } from "@/lib/constants/map-defaults";
-import { MapComponentProps, MapMarker, MarkerType } from "./types";
+import { MapComponentProps, MarkerType } from "./types";
 import { useMapController } from "./map-provider";
 
 // Resolve Leaflet default icon path bugs by using custom SVGs in L.divIcon

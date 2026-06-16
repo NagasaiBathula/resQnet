@@ -1,15 +1,14 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { Logo } from "@/components/logo";
 import { useAuth, roleHome } from "@/lib/auth";
-import { demoUsers } from "@/lib/mock-data";
-import { Card, CardContent } from "@/components/ui/card";
+import {} from "@/lib/mock-data";
+// import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import {
-  ShieldAlert,
-  ArrowRight,
+    ArrowRight,
   User,
   HeartHandshake,
   Truck,

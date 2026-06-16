@@ -1,35 +1,23 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { AppShell } from "@/components/app-shell";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { incidents, missions, analytics } from "@/lib/mock-data";
-import { StatCard, SectionTitle, typeIcon, typeColor, SeverityBadge } from "@/components/shared";
+import { StatCard } from "@/components/shared";
 import {
+  Compass,
+  CheckCircle,
   Activity,
-  Award,
-  Users,
-  Target,
-  MapPin,
-  Clock,
-  ArrowRight,
-  TrendingUp,
   Heart,
-} from "lucide-react";
-import { motion } from "framer-motion";
-import {
-  LineChart,
-  Line,
-  ResponsiveContainer,
-  Tooltip,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-} from "recharts";
-import { cn } from "@/lib/utils";
+  Award,
+  ArrowRight,
+  ClipboardList,
+  MapPin,
+    } from "lucide-react";
 import { useState, useEffect } from "react";
 import { incidentService } from "@/services/incidentService";
+import { cn } from "@/lib/utils";
+import { getStatusBadgeTone } from "@/lib/constants/incident-status";
 
 export const Route = createFileRoute("/volunteer/")({
   head: () => ({ meta: [{ title: "Volunteer Dashboard — ResQNet" }] }),
@@ -38,183 +26,143 @@ export const Route = createFileRoute("/volunteer/")({
 
 function VolunteerDashboard() {
   const [assignedMissions, setAssignedMissions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     incidentService
       .getMyIncidents()
-      .then(setAssignedMissions)
-      .catch((err) => console.error("Error loading volunteer incidents:", err));
+      .then((data) => {
+        setAssignedMissions(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error loading volunteer incidents:", err);
+        setLoading(false);
+      });
   }, []);
 
-  const available = missions.filter((m) => m.status === "available").slice(0, 4);
-  const activeCount = assignedMissions.filter((i) => i.status !== "Resolved").length;
+  const pendingMissions = assignedMissions.filter((i) => i.status === "Assigned" || i.status === "Verified" || i.status === "Reported");
+  const inProgressMissions = assignedMissions.filter((i) => i.status === "In Progress");
+  const completedMissions = assignedMissions.filter((i) => i.status === "Resolved");
+
+  const totalAssigned = pendingMissions.length + inProgressMissions.length;
 
   return (
-    <AppShell
-      title="Mission control"
-      actions={
-        <Button asChild className="rounded-full shadow-glow">
-          <Link to="/volunteer/operations">
-            My Active Missions <ArrowRight className="h-4 w-4 ml-1.5" />
-          </Link>
-        </Button>
-      }
-    >
+    <AppShell title="Volunteer Missions Portal">
       <p className="text-muted-foreground -mt-1 mb-6">
-        You've helped <span className="text-foreground font-medium">142 citizens</span> this
-        quarter. Keep going.
+        Relief coordination dashboard. Track assigned emergencies, connect with rescue squads, and view operational updates.
       </p>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <Link to="/volunteer/operations" className="contents">
-          <StatCard
-            label="Active missions"
-            value={activeCount.toString()}
-            sublabel={`${assignedMissions.filter((i) => i.status === "In Progress").length} in progress`}
-            icon={Activity}
-            accent="primary"
-            delay={0}
-          />
-        </Link>
+      {/* Metrics Row */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatCard
-          label="Completed"
-          value="38"
-          sublabel="this year"
-          icon={Target}
-          accent="success"
+          label="Assigned Missions"
+          value={loading ? "..." : String(totalAssigned)}
+          sublabel="Immediate attention"
+          icon={Compass}
+          accent="primary"
+          delay={0}
+        />
+        <StatCard
+          label="Active In Progress"
+          value={loading ? "..." : String(inProgressMissions.length)}
+          sublabel="Field activities active"
+          icon={Activity}
+          accent="warning"
           delay={0.05}
         />
         <StatCard
-          label="Citizens assisted"
-          value="142"
-          sublabel="+12 this week"
-          icon={Heart}
-          accent="info"
+          label="Completed Missions"
+          value={loading ? "..." : String(completedMissions.length)}
+          sublabel="Cases closed"
+          icon={CheckCircle}
+          accent="success"
           delay={0.1}
         />
-        <StatCard
-          label="Impact score"
-          value="9,420"
-          sublabel="Top 4% nationwide"
-          icon={Award}
-          accent="warning"
-          delay={0.15}
-        />
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-4 mt-6">
-        <Card className="lg:col-span-2">
-          <CardContent className="p-5">
-            <SectionTitle
-              title="Mission feed"
-              action={
-                <Button asChild size="sm" variant="ghost">
-                  <Link to="/volunteer/missions">View all</Link>
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-6 mt-6">
+        {/* Left column: Assigned Mission List */}
+        <div className="space-y-6">
+          <Card className="border-border/60 shadow-sm">
+            <CardHeader className="p-5 border-b">
+              <CardTitle className="text-sm font-bold flex items-center justify-between">
+                <span className="flex items-center gap-2">
+                  <Compass className="h-4 w-4 text-primary" /> Active Assignments
+                </span>
+                <Button asChild size="sm" className="rounded-full shadow-sm text-xs">
+                  <Link to="/volunteer/missions">
+                    Missions Board <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
+                  </Link>
                 </Button>
-              }
-            />
-            <div className="space-y-2">
-              {available.map((m) => {
-                const Icon = typeIcon[m.type];
-                return (
-                  <Link to="/volunteer/active" key={m.id} className="block">
-                    <motion.div
-                      whileHover={{ x: 2 }}
-                      className="rounded-xl border p-4 hover:bg-accent/40 transition"
-                    >
-                      <div className="flex items-start gap-3">
-                        <div
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0 overflow-hidden divide-y">
+              {loading ? (
+                <div className="p-6 text-center text-xs text-muted-foreground">Syncing assignments...</div>
+              ) : assignedMissions.filter(m => m.status !== "Resolved").length === 0 ? (
+                <div className="p-8 text-center text-xs italic text-muted-foreground">
+                  No active missions assigned to you currently. Standby.
+                </div>
+              ) : (
+                assignedMissions.filter(m => m.status !== "Resolved").map((inc) => (
+                  <div key={inc._id} className="p-4 hover:bg-accent/40 transition flex items-center justify-between gap-4 text-xs">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono font-bold text-muted-foreground text-[10px]">
+                          {inc.incidentNumber}
+                        </span>
+                        <Badge
                           className={cn(
-                            "h-11 w-11 rounded-xl flex items-center justify-center shrink-0",
-                            typeColor[m.type],
+                            "text-[9px] px-1.5 py-0 font-medium rounded-full capitalize",
+                            getStatusBadgeTone(inc.status),
                           )}
                         >
-                          <Icon className="h-5 w-5" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-sm font-semibold">{m.title}</span>
-                            <SeverityBadge severity={m.priority} />
-                          </div>
-                          <div className="text-xs text-muted-foreground mt-1 flex gap-3 flex-wrap">
-                            <span>
-                              <MapPin className="h-3 w-3 inline mr-0.5" />
-                              {m.location} · {m.distanceKm} km
-                            </span>
-                            <span>
-                              <Clock className="h-3 w-3 inline mr-0.5" />
-                              {m.estDuration}
-                            </span>
-                            <span>
-                              <Users className="h-3 w-3 inline mr-0.5" />
-                              {m.volunteersAssigned}/{m.volunteersNeeded}
-                            </span>
-                          </div>
-                        </div>
-                        <Button size="sm" className="rounded-full shrink-0">
-                          Accept
-                        </Button>
+                          {inc.status}
+                        </Badge>
                       </div>
-                    </motion.div>
-                  </Link>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-5">
-            <SectionTitle title="Achievements" />
-            <div className="space-y-3">
-              {[
-                { t: "Floods Hero", d: "10 flood missions completed", p: 100 },
-                { t: "Lifesaver", d: "100 citizens assisted", p: 100 },
-                { t: "First Responder", d: "Reach 50 missions", p: 76 },
-                { t: "Marathon", d: "30 day streak", p: 40 },
-              ].map((a) => (
-                <div key={a.t} className="rounded-xl border p-3">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="font-medium">{a.t}</span>
-                    <span className="text-xs text-muted-foreground">{a.p}%</span>
+                      <div className="font-bold text-foreground">{inc.title}</div>
+                      <div className="text-[10px] text-muted-foreground flex items-center gap-1">
+                        <MapPin className="h-3.5 w-3.5" />
+                        <span>{inc.address || `${inc.district}, ${inc.state}`}</span>
+                      </div>
+                    </div>
+                    <Button asChild size="sm" variant="ghost" className="rounded-full text-xs">
+                      <Link to="/volunteer/missions">
+                        Open <ClipboardList className="h-3.5 w-3.5 ml-1" />
+                      </Link>
+                    </Button>
                   </div>
-                  <div className="text-[11px] text-muted-foreground">{a.d}</div>
-                  <Progress value={a.p} className="mt-2 h-1.5" />
-                </div>
-              ))}
+                ))
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right column: Growth & Impact Card */}
+        <Card className="border-border/60 shadow-sm h-fit">
+          <CardHeader className="p-5 border-b">
+            <CardTitle className="text-sm font-bold flex items-center gap-2">
+              <Award className="h-4 w-4 text-warning" /> Volunteer Impact
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-5 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full bg-warning/10 flex items-center justify-center text-warning shrink-0">
+                <Heart className="h-5 w-5 fill-current" />
+              </div>
+              <div className="text-xs">
+                <div className="font-bold">Active Responder</div>
+                <div className="text-muted-foreground">Certified Emergency Support</div>
+              </div>
+            </div>
+            <div className="text-xs text-muted-foreground leading-relaxed pt-2 border-t">
+              Thank you for stepping up during critical times. Complete assignments, coordinate with rescue personnel, and follow command instructions safely.
             </div>
           </CardContent>
         </Card>
       </div>
-
-      <Card className="mt-4">
-        <CardContent className="p-5">
-          <SectionTitle title="Your impact over time" />
-          <div className="h-60">
-            <ResponsiveContainer>
-              <LineChart data={analytics.monthlyTrends}>
-                <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                <XAxis dataKey="month" fontSize={11} stroke="currentColor" opacity={0.5} />
-                <YAxis fontSize={11} stroke="currentColor" opacity={0.5} />
-                <Tooltip
-                  contentStyle={{
-                    borderRadius: 12,
-                    border: "1px solid var(--color-border)",
-                    background: "var(--color-card)",
-                  }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="resolved"
-                  stroke="var(--color-primary)"
-                  strokeWidth={2.5}
-                  dot={false}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
     </AppShell>
   );
 }

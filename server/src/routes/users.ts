@@ -335,7 +335,7 @@ router.get(
   "/authorities",
   protect,
   authorize("admin"),
-  async (req: AuthenticatedRequest, res: Response) => {
+  async (_req: AuthenticatedRequest, res: Response) => {
     try {
       const authorities = await User.find({ role: "authority" }).sort({ createdAt: -1 });
       return res.json(authorities);

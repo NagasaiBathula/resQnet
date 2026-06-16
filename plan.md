@@ -1,347 +1,72 @@
-# ResQNet AI - MASTER DEVELOPMENT REFERENCE
+# PLAN.MD CORRECTIONS (Apply Before Continuing Development)
 
-Version: MVP v1.0
-Purpose: Single Source of Truth for Development
-Audience: Antigravity AI Development Agent
-Status: Active Development
+## Current Project Status
 
----
+The implementation order has differed from the original roadmap.
 
-# PROJECT OVERVIEW
+Completed:
 
-ResQNet AI is an AI-powered, offline-first disaster response and emergency coordination platform designed to connect:
+✓ Phase 0 - Foundation
 
-- Citizens
-- Volunteers
-- Rescue Teams
-- Authorities
+✓ Phase 1 - Authentication & User Management
 
-through a unified emergency response ecosystem.
+✓ Phase 2 - Maps Foundation
 
-The platform must continue functioning during disaster scenarios where internet connectivity may be unstable or unavailable.
+✓ Phase 3 - Offline First Architecture
 
-Primary focus:
+✓ Incident Lifecycle Management
 
-1. Offline First Architecture
-2. Maps & Location Intelligence
-3. Multi-Role Coordination
-4. AI-Powered Emergency Assistance
-5. End-to-End Incident Lifecycle Management
+✓ Resource Management
 
----
+✓ Dispatch & Command Operations
 
-# PROJECT OBJECTIVE
+✓ Workflow-Centric Architecture Refactor
 
-Build a complete MVP demonstrating:
+✓ Phase 9 - AI Layer (Google Gemini Integration)
 
-Citizen Reports Emergency
-↓
-Location Captured
-↓
-AI Classifies Incident
-↓
-Incident Stored
-↓
-Authority Receives Alert
-↓
-Rescue Team Assigned
-↓
-Volunteer Assigned
-↓
-Status Updates
-↓
-Incident Resolved
+✓ Phase 10 - System Integration
 
-The MVP must prioritize functionality, demo readiness, and architectural clarity.
+✓ Phase 11 - UI Polish
+
+The remaining roadmap below represents the official development path going forward. (All Phases Completed)
 
 ---
 
-# TECHNOLOGY STACK (LOCKED)
+# DATABASE COLLECTIONS
 
-IMPORTANT:
+MongoDB Atlas Collections:
 
-DO NOT CHANGE THE TECH STACK.
+* Users
+* Incidents
+* Resources
+* Shelters
+* Notifications
 
-DO NOT INTRODUCE ALTERNATIVE FRAMEWORKS.
+Optional:
 
-DO NOT REPLACE EXISTING ARCHITECTURE.
-
-All development must follow the stack below.
-
----
-
-## Frontend
-
-React 19
-
-TypeScript
-
-TanStack Start
-
-TanStack Router
-
-Tailwind CSS v4
-
-ShadCN UI
-
-Radix UI
-
-Framer Motion
-
-Recharts
-
-Lucide React
+* Missions (only if separated from incidents)
 
 ---
 
-## Maps
+# REMAINING DEVELOPMENT ORDER
 
-OpenStreetMap
-
-Leaflet
-
-React Leaflet
-
----
-
-## Offline Architecture
-
-PWA
-
-Service Worker
-
-IndexedDB
-
-Dexie.js
-
----
-
-## Backend
-
-Node.js
-
-Express.js
-
-JWT Authentication
-
-Role Based Access Control
-
----
-
-## Database
-
-MongoDB Atlas
-
-Collections:
-
-- Users
-- Incidents
-- Shelters
-- Missions
-- Notifications
-
----
-
-## AI
-
-Google Gemini API
-
-Google Gemini Vision
-
----
-
-## Deployment
-
-Frontend: Vercel
-
-Backend: Render
-
-Database: MongoDB Atlas
-
----
-
-# PROHIBITED TECHNOLOGIES
-
-DO NOT USE:
-
-- Next.js
-- Firebase
-- Supabase
-- PostgreSQL
-- MySQL
-- Redux
-- Auth0
-- Clerk
-- OpenAI
-- Azure OpenAI
-- Alternative Routing Libraries
-
-unless explicitly approved.
-
----
-
-# USER ROLES
-
-## Citizen
-
-Responsibilities:
-
-- Report emergencies
-- Trigger SOS
-- Find shelters
-- Receive AI guidance
-- Track incident status
-
----
-
-## Volunteer
-
-Responsibilities:
-
-- View available missions
-- Accept assignments
-- Submit updates
-- Complete missions
-
----
-
-## Rescue Team
-
-Responsibilities:
-
-- Monitor incidents
-- Manage emergency response
-- Update incident status
-- Resolve incidents
-
----
-
-## Authority
-
-Responsibilities:
-
-- Monitor all incidents
-- Manage resources
-- View analytics
-- Coordinate emergency response
-
----
-
-# DEVELOPMENT PHASES
-
----
-
-# PHASE 0 - FOUNDATION
+## PHASE 3 - OFFLINE FIRST ARCHITECTURE
 
 Goal:
 
-Establish architecture.
-
-Tasks:
-
-- Setup React Project
-- Configure TanStack Start
-- Configure Tailwind
-- Setup ShadCN
-- Configure Routing
-- Setup Backend
-- Configure MongoDB
-- Setup Environment Variables
-
-Deliverables:
-
-- Working Project Structure
-- Routing System
-- Layout System
-
----
-
-# PHASE 1 - AUTHENTICATION
-
-Goal:
-
-Implement role-based authentication.
+Implement the platform's core offline capability.
 
 Features:
 
-- Login
-- Register
-- Demo Login
-- Protected Routes
-- Session Persistence
-
-Roles:
-
-- Citizen
-- Volunteer
-- Rescue Team
-- Authority
-
-Demo Accounts:
-
-Citizen:
-citizen@resqnet.ai
-demo123
-
-Volunteer:
-volunteer@resqnet.ai
-demo123
-
-Rescue:
-rescue@resqnet.ai
-demo123
-
-Authority:
-authority@resqnet.ai
-demo123
-
-Deliverables:
-
-- Working Authentication
-- Role-Based Routing
-
----
-
-# PHASE 2 - MAPS FOUNDATION
-
-Goal:
-
-Build location intelligence layer.
-
-Features:
-
-- Interactive Map
-- Geolocation Capture
-- Incident Markers
-- Shelter Markers
-- User Location Marker
-
-Maps Stack:
-
-- OpenStreetMap
-- Leaflet
-- React Leaflet
-
-Deliverables:
-
-- Interactive Map
-- Geolocation Support
-
----
-
-# PHASE 3 - OFFLINE FIRST ARCHITECTURE
-
-Goal:
-
-Implement offline capabilities.
-
-Features:
-
-- Installable PWA
-- Service Worker
-- IndexedDB Storage
-- Connectivity Detection
-- Auto Synchronization
+* Installable PWA
+* Web Manifest
+* Service Worker
+* IndexedDB (Dexie.js)
+* Offline Incident Queue
+* Connectivity Detection
+* Auto Synchronization Engine
+* Offline Shelter Cache
+* Offline Mission Cache
 
 Offline Flow:
 
@@ -351,319 +76,195 @@ Create Incident
 ↓
 Store In IndexedDB
 ↓
-Add To Sync Queue
+Queue Sync Operation
 ↓
 Internet Restored
 ↓
-Auto Sync To Server
+Auto Sync To MongoDB
+↓
+Mark Synced
 
 Deliverables:
 
-- Working PWA
-- Offline Storage
-- Sync Engine
+* Installable PWA
+* Working Service Worker
+* IndexedDB Storage
+* Sync Queue
+* Auto Sync Engine
 
 ---
 
-# PHASE 4 - CITIZEN MODULE
+# PHASE 5 - AUTHORITY COMMAND WORKSPACE
 
-Goal:
+(Keep workflow-centric structure already adopted)
 
-Emergency reporting workflow.
+Routes:
 
-Pages:
+/authority
 
-- Dashboard
-- Report Emergency
-- SOS Center
-- Shelter Locator
-- Emergency History
-- Profile
+/authority/incidents
 
-Report Emergency Fields:
+/authority/people
 
-- Incident Type
-- Description
-- Severity
-- Location
-- Images
-
-Emergency Types:
-
-- Flood
-- Fire
-- Earthquake
-- Cyclone
-- Landslide
-- Medical
+/authority/resources
 
 Deliverables:
 
-- Complete Citizen Workflow
+* Unified Incident Workspace
+* Unified Assignment Dialog
+* Contextual Incident Lifecycle Actions
+* People Directory
+* Resource Inventory
 
 ---
 
-# PHASE 5 - AUTHORITY COMMAND CENTER
+# PHASE 6 - RESCUE TEAM COMMAND
 
-Goal:
+Routes:
 
-Centralized monitoring.
+/rescue
 
-Pages:
-
-- Dashboard
-- Incident Monitoring
-- Analytics
-- Resource Overview
-
-Dashboard Metrics:
-
-- Active Incidents
-- Resolved Incidents
-- Pending Incidents
-- Volunteers Active
-- Rescue Teams Active
+/rescue/missions
 
 Deliverables:
 
-- Authority Dashboard
-- Incident Monitoring
+* Mission Workspace
+* Equipment Lifecycle Controls
+* Timeline Integration
 
 ---
 
-# PHASE 6 - RESCUE TEAM MODULE
+# PHASE 7 - VOLUNTEER WORKSPACE
 
-Goal:
+Routes:
 
-Emergency response management.
+/volunteer
 
-Pages:
-
-- Dashboard
-- Incident Queue
-- Incident Details
-
-Status Flow:
-
-Pending
-↓
-Assigned
-↓
-In Progress
-↓
-Resolved
-
-Actions:
-
-- Assign Team
-- Update Status
-- Resolve Incident
+/volunteer/missions
 
 Deliverables:
 
-- Rescue Workflow
+* Read-Only Mission Workspace
+* Safety Checklists
+* Mission Tracking
 
 ---
 
-# PHASE 7 - VOLUNTEER MODULE
+# PHASE 8 - SYSTEM ADMINISTRATION
 
-Goal:
+Routes:
 
-Volunteer coordination.
+/admin
 
-Pages:
+/admin/users
 
-- Dashboard
-- Available Missions
-- Mission Details
+/admin/authorities
 
-Actions:
-
-- Accept Mission
-- Update Mission
-- Complete Mission
+/admin/resources
 
 Deliverables:
 
-- Volunteer Workflow
+* Global User Management
+* Authority Registry
+* Resource Transfers
+* Audit Controls
 
 ---
 
-# PHASE 8 - AI LAYER
+# PHASE 9 - AI LAYER
 
-Goal:
+Google Gemini Only
 
-Add intelligence to emergency management.
+Features:
 
-Feature 1:
-
-AI Emergency Assistant
-
-Capabilities:
-
-- Flood Guidance
-- Fire Safety
-- Earthquake Response
-- Medical Advice
-- Shelter Assistance
-
----
-
-Feature 2:
-
-AI Incident Classification
-
-Input:
-
-"Water entered my house."
-
-Output:
-
-Type: Flood
-Severity: High
-Priority: P2
-
----
-
-Feature 3:
-
-AI Incident Summary
-
-Convert citizen reports into structured summaries.
-
----
-
-Feature 4:
-
-AI Damage Assessment
-
-Input:
-
-Image Upload
-
-Output:
-
-Detected Damage
-Severity Level
-Recommendations
+* Emergency Assistant
+* Incident Classification
+* Incident Summary Generation
+* Gemini Vision Damage Assessment
 
 Deliverables:
 
-- Gemini Integration
-- AI Assistant
-- Classification
-- Summary Generation
-- Image Analysis
+* AI Assistant
+* Classification
+* Summary Generation
+* Image Analysis
 
 ---
 
-# PHASE 9 - SYSTEM INTEGRATION
+# PHASE 10 - SYSTEM INTEGRATION
 
-Goal:
+Connect:
 
-Connect all user roles.
-
-Workflow:
-
-Citizen Creates Incident
+Citizen
 ↓
-AI Classifies Incident
+Authority
 ↓
-Authority Receives Alert
+Rescue Team
 ↓
-Rescue Team Assigned
+Volunteer
 ↓
-Volunteer Assigned
-↓
-Status Updated
-↓
-Incident Resolved
+Resolution
 
 Deliverables:
 
-- Complete End-To-End Workflow
+* End-To-End Workflow Validation
 
 ---
 
-# PHASE 10 - UI POLISH
+# PHASE 11 - UI POLISH
 
-Goal:
+Features:
 
-Prepare project for demo and judging.
-
-Requirements:
-
-- Apple Inspired Design
-- Glassmorphism
-- Smooth Animations
-- Responsive Layout
-- Loading States
-- Skeleton Screens
-- Notifications
-- Toast Messages
-- Dark Mode
+* Glassmorphism
+* Apple Inspired Design
+* Skeleton Loaders
+* Toasts
+* Notifications
+* Responsive Layout
+* Dark Mode
 
 Deliverables:
 
-- Demo Ready Application
+* Demo Ready Product
 
 ---
 
-# NON-MVP FEATURES
+# FINAL VERIFICATION REQUIREMENTS
 
-DO NOT BUILD DURING MVP
+Before MVP Completion:
 
-- Disaster Prediction
-- Drone Integration
-- Satellite Monitoring
-- IoT Sensors
-- SMS Gateway
-- AI Resource Allocation
-- AI Duplicate Detection
-- Dynamic Route Optimization
-- Mesh Networking
-- National Disaster Network
+✓ npm run build passes
 
-These belong to Future Scope only.
+✓ TypeScript passes
 
----
+✓ MongoDB connected
 
-# MVP SUCCESS CRITERIA
+✓ Authentication verified
 
-The MVP is complete when:
+✓ Maps verified
 
-✓ Authentication Works
+✓ PWA installs successfully
 
-✓ Maps Work
+✓ Offline reporting works
 
-✓ PWA Installs Successfully
+✓ Sync engine works
 
-✓ Offline Reporting Works
+✓ Citizen workflow verified
 
-✓ Sync Engine Works
+✓ Authority workflow verified
 
-✓ Citizen Workflow Complete
+✓ Rescue workflow verified
 
-✓ Authority Workflow Complete
+✓ Volunteer workflow verified
 
-✓ Rescue Workflow Complete
+✓ Admin workflow verified
 
-✓ Volunteer Workflow Complete
+✓ AI Assistant verified
 
-✓ AI Assistant Works
+✓ AI Classification verified
 
-✓ AI Classification Works
+✓ AI Image Analysis verified
 
-✓ AI Image Analysis Works
+✓ End-to-End workflow verified
 
-✓ End-To-End Workflow Functions
-
----
-
-# PRODUCT POSITIONING
-
-ResQNet AI is an offline-first, AI-powered disaster response platform that enables citizens, volunteers, rescue teams, and authorities to coordinate effectively during emergencies, even when communication infrastructure is disrupted.
-
-Tagline:
-
-Turning Chaos Into Coordinated Action.
+✓ No critical runtime errors

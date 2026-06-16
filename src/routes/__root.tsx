@@ -143,6 +143,9 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  // Removed offline database seeding block
+
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

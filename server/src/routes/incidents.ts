@@ -1,5 +1,4 @@
 import express from "express";
-import mongoose from "mongoose";
 import { protect, authorize, AuthenticatedRequest } from "../middleware/auth.js";
 import Incident from "../models/Incident.js";
 import User from "../models/User.js";
@@ -27,6 +26,13 @@ router.post("/", protect, async (req: AuthenticatedRequest, res) => {
       district,
       address,
       attachments,
+      aiSummary,
+      aiCategorySuggested,
+      aiSeveritySuggested,
+      aiPriority,
+      aiDamageAssessment,
+      aiConfidence,
+      aiRecommendedResources,
     } = req.body;
 
     if (!title || !description || !category || !severity || !coordinates || !state || !district) {
@@ -52,12 +58,19 @@ router.post("/", protect, async (req: AuthenticatedRequest, res) => {
       reportedBy: req.user._id,
       reportedByRole: req.user.role,
       status: INCIDENT_STATUS.REPORTED,
+      aiSummary,
+      aiCategorySuggested,
+      aiSeveritySuggested,
+      aiPriority,
+      aiDamageAssessment,
+      aiConfidence,
+      aiRecommendedResources,
       activityLog: [
         {
           action: "Incident Reported",
           performedBy: req.user._id,
           performedByRole: req.user.role,
-          notes: `Emergency reported by ${req.user.name}.`,
+          notes: `Emergency reported by ${req.user.name}.${aiSummary ? " AI Triage Summary: " + aiSummary : ""}`,
           timestamp: new Date(),
         },
       ],

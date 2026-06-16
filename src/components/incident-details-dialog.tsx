@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,21 +11,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import {
-  Calendar,
-  User,
+    User,
   Phone,
   MapPin,
   ShieldAlert,
   CheckCircle2,
   Clock,
-  Eye,
-  AlertTriangle,
-  Truck,
+      Truck,
   History,
-  Wrench,
-  Play,
+    Play,
 } from "lucide-react";
 import {
   getStatusBadgeTone,

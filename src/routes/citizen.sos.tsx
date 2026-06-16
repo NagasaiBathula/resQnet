@@ -17,7 +17,7 @@ export const Route = createFileRoute("/citizen/sos")({
 function SOSPage() {
   const [active, setActive] = useState(false);
   const [stage, setStage] = useState(0); // 0..4
-  const [holdProgress, setHoldProgress] = useState(0);
+  const [_] = useState(0);
 
   useEffect(() => {
     if (!active) return;

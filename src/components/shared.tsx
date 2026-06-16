@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Severity, IncidentStatus, EmergencyType } from "@/lib/mock-data";
+import { EmergencyType } from "@/lib/mock-data";
 import { Droplets, Wind, Mountain, Flame, Layers, Heart } from "lucide-react";
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";

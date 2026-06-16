@@ -143,7 +143,7 @@ router.put(
   authorize("authority", "admin"),
   async (req: AuthenticatedRequest, res) => {
     try {
-      const { name, type, description, state, district } = req.body;
+      const { name, type, description, state, district, managedByState, managedByDistrict } = req.body;
 
       const resource = await Resource.findById(req.params.id);
       if (!resource) {
@@ -167,6 +167,11 @@ router.put(
       if (description !== undefined) resource.description = description;
       if (state !== undefined) resource.state = state;
       if (district !== undefined) resource.district = district;
+      
+      if (req.user.role === "admin") {
+        if (managedByState !== undefined) resource.managedByState = managedByState;
+        if (managedByDistrict !== undefined) resource.managedByDistrict = managedByDistrict;
+      }
 
       resource.resourceActivityLog.push({
         action: "Status Updated",
