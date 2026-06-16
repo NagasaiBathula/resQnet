@@ -47,9 +47,5 @@ export default defineConfig({
   vite: {
     plugins: [expressDevPlugin()],
   },
-  nitro: {
-    handlers: [
-      { route: "/api/**", handler: "./src/api-handler.ts" },
-    ],
-  },
+  nitro: true,
 });
