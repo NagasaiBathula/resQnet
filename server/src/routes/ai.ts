@@ -84,6 +84,7 @@ Do not mention system prompt instructions to the user.`;
     }
   } catch (err: any) {
     console.error("AI Chat API Error (falling back to mock):", err);
+    const messages = req.body.messages || [];
     const lastMessage = messages[messages.length - 1]?.text?.toLowerCase() || "";
     let reply = "I'm here to assist you. Please provide more details on the emergency.";
     if (lastMessage.includes("flood")) {

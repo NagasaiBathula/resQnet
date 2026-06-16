@@ -536,7 +536,7 @@ router.put(
 
           // Push snapshot of resource to Incident's allocatedResources
           const alreadyInSnapshot = incident.allocatedResources.some(
-            (r) => r.resourceId.toString() === resource._id.toString(),
+            (r: any) => r.resourceId.toString() === resource._id.toString(),
           );
 
           if (!alreadyInSnapshot) {
