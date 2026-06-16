@@ -1,8 +1,10 @@
+import { fromNodeMiddleware } from "h3";
 import app, { initDB } from "../server/src/app.js";
 
 let dbConnected = false;
 
-app.use(async (_req, _res, next) => {
+// Ensure database is initialized before serving requests
+const dbConnectMiddleware = async (req: any, res: any, next: any) => {
   if (!dbConnected) {
     try {
       await initDB();
@@ -12,6 +14,8 @@ app.use(async (_req, _res, next) => {
     }
   }
   next();
-});
+};
 
-export default app;
+app.use(dbConnectMiddleware);
+
+export default fromNodeMiddleware(app);
