@@ -47,4 +47,5 @@ export default defineConfig({
   vite: {
     plugins: [expressDevPlugin()],
   },
+  nitro: true,
 });
