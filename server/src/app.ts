@@ -38,6 +38,49 @@ app.use(
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
+let dbConnected = false;
+let dbConnectionError: string | null = null;
+
+const envCheckMiddleware = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  const missingVars = [];
+  if (!process.env.MONGODB_URI) missingVars.push("MONGODB_URI");
+  if (!process.env.JWT_SECRET) missingVars.push("JWT_SECRET");
+  if (!process.env.GEMINI_API_KEY) missingVars.push("GEMINI_API_KEY");
+
+  if (missingVars.length > 0) {
+    return res.status(500).json({
+      error: "Configuration Error",
+      message: `The following required environment variables are missing on Vercel: ${missingVars.join(", ")}. Please add them in Vercel Project Settings -> Environment Variables.`,
+    });
+  }
+  next();
+};
+
+const dbConnectMiddleware = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  if (!dbConnected) {
+    try {
+      await initDB();
+      dbConnected = true;
+      dbConnectionError = null;
+    } catch (err: any) {
+      dbConnectionError = err?.message || String(err);
+      console.error("Vercel lazy-connect DB error:", err);
+    }
+  }
+
+  if (!dbConnected || mongoose.connection.readyState === 0) {
+    return res.status(500).json({
+      error: "Database Connection Error",
+      message: `Failed to connect to MongoDB: ${dbConnectionError || "Unknown error"}. If you are using MongoDB Atlas, please ensure that your cluster's IP Access List is set to allow connections from anywhere (0.0.0.0/0), as Vercel serverless functions use dynamic IP addresses.`,
+    });
+  }
+  next();
+};
+
+// Register diagnostics & DB middlewares before routes
+app.use(envCheckMiddleware);
+app.use(dbConnectMiddleware);
+
 // Register routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
