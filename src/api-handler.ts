@@ -1,4 +1,4 @@
-import { defineEventHandler, toRequest } from "h3";
+import { defineEventHandler, readRawBody, getHeaders } from "h3";
 import app, { initDB } from "../server/src/app.js";
 import { Readable } from "stream";
 import EventEmitter from "events";
@@ -12,20 +12,17 @@ class MockRequest extends Readable {
   headers: Record<string, string>;
   rawHeaders: string[];
   body: any;
-  socket: { remoteAddress: string };
+  socket: { remoteAddress: string; destroy: () => void };
 
   constructor(url: string, method: string, headers: Record<string, string>, bodyText: string) {
     super();
     this.url = url;
     this.method = method;
-    this.headers = headers;
-    this.socket = { remoteAddress: "127.0.0.1" };
-    
-    // Construct rawHeaders array
-    this.rawHeaders = [];
-    for (const [key, value] of Object.entries(headers)) {
-      this.rawHeaders.push(key, value);
-    }
+    this.headers = { ...headers };
+    this.socket = { 
+      remoteAddress: "127.0.0.1",
+      destroy: () => {}
+    };
 
     // Try to parse body if it is JSON
     if (bodyText) {
@@ -38,11 +35,25 @@ class MockRequest extends Readable {
       this.body = {};
     }
 
-    // Push body data to the stream so body-parser can read it if needed
+    // Adjust content-length and content-encoding headers to match the uncompressed body text
     if (bodyText) {
-      this.push(Buffer.from(bodyText));
+      const bodyBuffer = Buffer.from(bodyText);
+      this.headers["content-length"] = String(bodyBuffer.length);
+      delete this.headers["content-encoding"];
+      
+      // Push body data to the stream so body-parser can read it
+      this.push(bodyBuffer);
+    } else {
+      this.headers["content-length"] = "0";
+      delete this.headers["content-encoding"];
     }
     this.push(null); // EOF
+
+    // Construct rawHeaders array from the adjusted headers
+    this.rawHeaders = [];
+    for (const [key, value] of Object.entries(this.headers)) {
+      this.rawHeaders.push(key, value);
+    }
   }
 }
 
@@ -144,31 +155,31 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  const webRequest = toRequest(event);
-  
-  // Extract path and query from webRequest.url
-  const urlObj = new URL(webRequest.url);
-  const pathWithQuery = urlObj.pathname + urlObj.search;
+  const pathWithQuery = event.path || "/";
+  const method = (event.method || "GET").toUpperCase();
 
   // Convert Web Headers to Record
+  const headers = getHeaders(event);
   const requestHeaders: Record<string, string> = {};
-  webRequest.headers.forEach((value, key) => {
-    requestHeaders[key] = value;
-  });
+  for (const [key, value] of Object.entries(headers)) {
+    if (value !== undefined) {
+      requestHeaders[key] = Array.isArray(value) ? value.join(", ") : String(value);
+    }
+  }
 
   // Read request body as text
   let bodyText = "";
-  if (webRequest.method !== "GET" && webRequest.method !== "HEAD") {
+  if (method !== "GET" && method !== "HEAD") {
     try {
-      bodyText = await webRequest.text();
+      bodyText = (await readRawBody(event, "utf-8")) || "";
     } catch (err) {
-      console.error("Error reading fetch request body:", err);
+      console.error("Error reading raw body in event handler:", err);
     }
   }
 
   // Await Express response completion via Promise
   return new Promise<Response>((resolve) => {
-    const req = new MockRequest(pathWithQuery, webRequest.method, requestHeaders, bodyText) as any;
+    const req = new MockRequest(pathWithQuery, method, requestHeaders, bodyText) as any;
     const res = new MockResponse(resolve) as any;
 
     // Run Express app

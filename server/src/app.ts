@@ -12,6 +12,12 @@ import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import path from "path";
 import { fileURLToPath } from "url";
+import crypto from "crypto";
+
+// Fallback for bcryptjs on Vercel/serverless environments
+bcrypt.setRandomFallback((len) => {
+  return Array.from(crypto.randomBytes(len));
+});
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
