@@ -28,6 +28,7 @@ dotenv.config({ path: path.resolve(__dirname, "../.env") });
 dotenv.config();
 
 const app = express();
+app.disable('etag');
 
 // Middlewares
 app.use(

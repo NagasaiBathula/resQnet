@@ -1,6 +1,6 @@
 import { defineEventHandler, readRawBody, getHeaders } from "h3";
 import app, { initDB } from "../server/src/app.js";
-import { Readable } from "stream";
+import { Readable, Stream } from "stream";
 import EventEmitter from "events";
 
 let dbConnected = false;
@@ -12,17 +12,19 @@ class MockRequest extends Readable {
   headers: Record<string, string>;
   rawHeaders: string[];
   body: any;
-  socket: { remoteAddress: string; destroy: () => void };
+  socket: Stream & { remoteAddress: string };
 
   constructor(url: string, method: string, headers: Record<string, string>, bodyText: string) {
     super();
     this.url = url;
     this.method = method;
     this.headers = { ...headers };
-    this.socket = { 
-      remoteAddress: "127.0.0.1",
-      destroy: () => {}
-    };
+    
+    // Create a real Stream instance for the socket to satisfy 'instanceof Stream' check in eos
+    const mockSocket = new Stream();
+    (mockSocket as any).remoteAddress = "127.0.0.1";
+    (mockSocket as any).destroy = () => {};
+    this.socket = mockSocket as any;
 
     // Try to parse body if it is JSON
     if (bodyText) {
@@ -132,7 +134,8 @@ class MockResponse extends EventEmitter {
         }
       }
 
-      const responseBody = Buffer.concat(this.body);
+      const hasNoBody = [204, 205, 304].includes(this.statusCode);
+      const responseBody = hasNoBody ? null : Buffer.concat(this.body);
       const fetchResponse = new Response(responseBody, {
         status: this.statusCode,
         headers: responseHeaders,
