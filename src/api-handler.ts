@@ -53,64 +53,83 @@ class MockResponse extends EventEmitter {
   body: Buffer[] = [];
   finished: boolean = false;
 
+  // We define these as instance properties so they are not overridden
+  // when Express calls Object.setPrototypeOf(res, app.response)
+  setHeader: (name: string, value: string | string[]) => this;
+  getHeader: (name: string) => string | string[] | undefined;
+  getHeaders: () => Record<string, string | string[]>;
+  hasHeader: (name: string) => boolean;
+  removeHeader: (name: string) => void;
+  writeHead: (statusCode: number, headers?: any) => this;
+  write: (chunk: any) => boolean;
+  end: (chunk?: any) => void;
+
   constructor(private resolve: (res: Response) => void) {
     super();
-  }
 
-  setHeader(name: string, value: string | string[]) {
-    this.headers[name.toLowerCase()] = value;
-    return this;
-  }
+    this.setHeader = (name: string, value: string | string[]) => {
+      this.headers[name.toLowerCase()] = value;
+      return this;
+    };
 
-  getHeader(name: string) {
-    return this.headers[name.toLowerCase()];
-  }
+    this.getHeader = (name: string) => {
+      return this.headers[name.toLowerCase()];
+    };
 
-  removeHeader(name: string) {
-    delete this.headers[name.toLowerCase()];
-  }
+    this.getHeaders = () => {
+      return { ...this.headers };
+    };
 
-  writeHead(statusCode: number, headers?: any) {
-    this.statusCode = statusCode;
-    if (headers) {
-      for (const [key, value] of Object.entries(headers)) {
-        this.setHeader(key, value as any);
+    this.hasHeader = (name: string) => {
+      return this.headers[name.toLowerCase()] !== undefined;
+    };
+
+    this.removeHeader = (name: string) => {
+      delete this.headers[name.toLowerCase()];
+    };
+
+    this.writeHead = (statusCode: number, headers?: any) => {
+      this.statusCode = statusCode;
+      if (headers) {
+        for (const [key, value] of Object.entries(headers)) {
+          this.setHeader(key, value as any);
+        }
       }
-    }
-    return this;
-  }
+      return this;
+    };
 
-  write(chunk: any) {
-    if (chunk) {
-      this.body.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
-    }
-    return true;
-  }
-
-  end(chunk: any) {
-    if (chunk) {
-      this.write(chunk);
-    }
-    this.finished = true;
-    
-    // Convert headers to Fetch Headers
-    const responseHeaders = new Headers();
-    for (const [key, value] of Object.entries(this.headers)) {
-      if (Array.isArray(value)) {
-        value.forEach(v => responseHeaders.append(key, v));
-      } else {
-        responseHeaders.set(key, String(value));
+    this.write = (chunk: any) => {
+      if (chunk) {
+        this.body.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
       }
-    }
+      return true;
+    };
 
-    const responseBody = Buffer.concat(this.body);
-    const fetchResponse = new Response(responseBody, {
-      status: this.statusCode,
-      headers: responseHeaders,
-    });
+    this.end = (chunk: any) => {
+      if (chunk) {
+        this.write(chunk);
+      }
+      this.finished = true;
+      
+      // Convert headers to Fetch Headers
+      const responseHeaders = new Headers();
+      for (const [key, value] of Object.entries(this.headers)) {
+        if (Array.isArray(value)) {
+          value.forEach(v => responseHeaders.append(key, v));
+        } else {
+          responseHeaders.set(key, String(value));
+        }
+      }
 
-    this.emit("finish");
-    this.resolve(fetchResponse);
+      const responseBody = Buffer.concat(this.body);
+      const fetchResponse = new Response(responseBody, {
+        status: this.statusCode,
+        headers: responseHeaders,
+      });
+
+      this.emit("finish");
+      this.resolve(fetchResponse);
+    };
   }
 }
 
