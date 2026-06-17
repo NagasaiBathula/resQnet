@@ -149,11 +149,12 @@ class MockResponse extends EventEmitter {
 
 export default defineEventHandler(async (event) => {
   // Lazy connect DB
-  if (!dbConnected) {
+  if (!dbConnected || mongoose.connection.readyState === 0) {
     try {
       await initDB();
       dbConnected = true;
     } catch (err) {
+      dbConnected = false;
       console.error("Vercel lazy-connect DB error:", err);
     }
   }

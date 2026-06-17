@@ -64,21 +64,22 @@ const envCheckMiddleware = (req: express.Request, res: express.Response, next: e
 };
 
 const dbConnectMiddleware = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-  if (!dbConnected) {
+  if (!dbConnected || mongoose.connection.readyState === 0) {
     try {
       await initDB();
       dbConnected = true;
       dbConnectionError = null;
     } catch (err: any) {
+      dbConnected = false;
       dbConnectionError = err?.message || String(err);
       console.error("Vercel lazy-connect DB error:", err);
     }
   }
 
-  if (!dbConnected || mongoose.connection.readyState === 0) {
+  if (mongoose.connection.readyState === 0) {
     return res.status(500).json({
       error: "Database Connection Error",
-      message: `Failed to connect to MongoDB: ${dbConnectionError || "Unknown error"}. If you are using MongoDB Atlas, please ensure that your cluster's IP Access List is set to allow connections from anywhere (0.0.0.0/0), as Vercel serverless functions use dynamic IP addresses.`,
+      message: `Failed to connect to MongoDB: ${dbConnectionError || "Disconnected"}. If you are using MongoDB Atlas, please ensure that your cluster's IP Access List is set to allow connections from anywhere (0.0.0.0/0), as Vercel serverless functions use dynamic IP addresses.`,
     });
   }
   next();
@@ -106,9 +107,16 @@ app.get("/api/health", (_req, res) => {
 
 // Database and Seeding Init
 export const initDB = async () => {
-  // Prevent duplicate connections on hot reload in dev
-  if (mongoose.connection.readyState >= 1) {
-    console.log("✓ MongoDB is already connected/connecting");
+  if (mongoose.connection.readyState === 1) {
+    console.log("✓ MongoDB is already connected");
+    return;
+  }
+  if (mongoose.connection.readyState === 2) {
+    console.log("MongoDB is connecting, waiting...");
+    await new Promise((resolve) => {
+      mongoose.connection.once("connected", resolve);
+      mongoose.connection.once("error", resolve);
+    });
     return;
   }
 
