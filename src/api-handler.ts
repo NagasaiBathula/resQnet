@@ -1,5 +1,5 @@
 import { defineEventHandler, readRawBody, getHeaders } from "h3";
-import app, { initDB } from "../server/src/app.js";
+import app, { initDB, mongoose } from "../server/src/app.js";
 import { Readable, Stream } from "stream";
 import EventEmitter from "events";
 

@@ -265,4 +265,5 @@ export const initDB = async () => {
   }
 };
 
+export { mongoose };
 export default app;
