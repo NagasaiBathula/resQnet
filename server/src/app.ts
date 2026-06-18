@@ -109,6 +109,11 @@ let connectionPromise: Promise<void> | null = null;
 
 // Database and Seeding Init
 export const initDB = async () => {
+  // Clear cached connection promise if the connection was lost/disconnected
+  if (mongoose.connection.readyState !== 1 && mongoose.connection.readyState !== 2) {
+    connectionPromise = null;
+  }
+
   if (mongoose.connection.readyState === 1) {
     console.log("✓ MongoDB is already connected");
     return;
